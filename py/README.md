@@ -12,7 +12,7 @@ export SPOTIPY_REDIRECT_URI='http://localhost:8888/callback'
 py start.py username
 ```
 # Output 
--Outputs all unique artists and genres, works for a username with one playlist, not multiple.
+- Outputs all unique artists and genres, works for a username with one playlist, not multiple.
 
 # Issues / Goals
-Takes about 15-30 seconds, probably need a database for spotify songs beforehand. I use my username fatalis222
+- Takes about 15-30 seconds, probably need a database for spotify songs beforehand. I use my username fatalis222
