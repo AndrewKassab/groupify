@@ -6,7 +6,7 @@ export SPOTIPY_CLIENT_SECRET='214084c09b6e4369b0e72ba244c3d786'
 export SPOTIPY_REDIRECT_URI='http://localhost:8888/callback'
 ```
 
--Run file: with argv[1] being spotify username with one playlist.
+- Run file: with argv[1] being spotify username with one playlist.
 # Example :
 ```
 py start.py username
