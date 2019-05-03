@@ -1,6 +1,10 @@
+# This factory generates a playlist assuming no preferences 
+# or checkboxes have been selected. 
+# TODO: Complete
+
 from PlaylistFactory import PlaylistFactory
 
-class UserGenrePlaylistFactory(PlaylistFactory):
+class DefaultPlaylistFactory(PlaylistFactory):
 
     def __init__(self):
         return None

@@ -1,9 +1,13 @@
+# This factory generates a playlist when the song pool is narrowed
+# down to music relating to specified genres
+# TODO: Complete
+
 from PlaylistFactory import PlaylistFactory
 
-class UserPlaylistFactory(PlaylistFactory):
+class UserGenrePlaylistFactory(PlaylistFactory):
 
     def __init__(self):
-            return None
+        return None
 
     # Run from constructor add users
     def create(self):

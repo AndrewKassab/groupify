@@ -1,6 +1,10 @@
+# This factory generates a playlist when the song pool is narrowed
+# down to music relating to specified genres and pre-existing playlists
+# TODO: Complete
+
 from PlaylistFactory import PlaylistFactory
 
-class DefaultFactory(PlaylistFactory):
+class UserGenreNarrowedPlaylistFactory(PlaylistFactory):
 
     def __init__(self):
         return None
