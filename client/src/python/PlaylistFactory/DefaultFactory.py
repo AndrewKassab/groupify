@@ -1,3 +1,5 @@
+from PlaylistFactory import PlaylistFactory
+
 class DefaultFactory(PlaylistFactory):
 
     def __init__(self):
