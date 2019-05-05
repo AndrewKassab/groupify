@@ -1,0 +1,3 @@
+Client ID: 2832305d25ab48839092c9e11fd94f59
+Client Secret: 214084c09b6e4369b0e72ba244c3d786
+Server: http://localhost:8888/callback
