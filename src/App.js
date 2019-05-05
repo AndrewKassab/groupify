@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Spotify from 'spotify-web-api-js'
-
-const spotifyWebApi = new Spotify();
 
 class App extends Component {
   constructor(){
@@ -11,9 +7,6 @@ class App extends Component {
     const params = this.getHashParams();
     this.state = {
       loggedIn: params.access_token ? true: false,
-    }
-    if (params.access_token){
-      spotifyWebApi.setAccessToken(params.access_token);
     }
   }
   getHashParams() {
