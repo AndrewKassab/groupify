@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import {
-    HelpBlock,
     FormGroup,
     FormControl,
-    ControlLabel
+    FormLabel
 } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import "./Signup.css";
@@ -60,14 +59,13 @@ export default class Signup extends Component {
         return (
             <form onSubmit={this.handleConfirmationSubmit}>
                 <FormGroup controlId="confirmationCode" bsSize="large">
-                    <ControlLabel>Confirmation Code</ControlLabel>
+                    <FormLabel>Confirmation Code</FormLabel>
                     <FormControl
                         autoFocus
                         type="tel"
                         value={this.state.confirmationCode}
                         onChange={this.handleChange}
                     />
-                    <HelpBlock>Please check your email for the code.</HelpBlock>
                 </FormGroup>
                 <LoaderButton
                     block
