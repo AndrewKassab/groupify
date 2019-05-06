@@ -13,8 +13,7 @@ export default ({
     <Button
         className={`LoaderButton ${className}`}
         disabled={disabled || isLoading}
-        {...props}
-    >
+        {...props}>
         {isLoading && <div className="spinning">(spin)</div>}
         {!isLoading ? text : loadingText}
     </Button>;
