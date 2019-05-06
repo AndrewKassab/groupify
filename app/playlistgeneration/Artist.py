@@ -2,9 +2,9 @@ class Artist:
 
   def __init__(self, id):
     self.id = id
-    self.genre = none 
-    self.relatedArtists = none # List of type artist
-    self.topSongs = none # List of type track
+    self.genre = None 
+    self.relatedArtists = None # List of type artist
+    self.topSongs = None # List of type track
     __retrieveRelatedArtists(self)
     __retrieveTopSongs(self)
 
