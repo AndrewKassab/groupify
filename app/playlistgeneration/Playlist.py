@@ -7,7 +7,7 @@ class Playlist:
 
     def __init__(self, songs, name, image):
        self.songs = songs
-       slef.name = name
+       self.name = name
        self.image = image
 
     def toJson():
