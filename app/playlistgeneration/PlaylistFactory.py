@@ -8,7 +8,7 @@ import random
 class PlaylistFactory(ABC):
 
     # playlist object 
-    playlist = ""
+    playlist = none
 
     # List of songs as a final result of creation
     songs = []
