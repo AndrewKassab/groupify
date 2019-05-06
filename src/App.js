@@ -1,32 +1,30 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { Nav, Navbar, NavItem } from "react-bootstrap";
+import "./App.css";
+import Routes from "./Routes";
 
 class App extends Component {
-  constructor(){
-    super();
-    const params = this.getHashParams();
-    this.state = {
-      loggedIn: params.access_token ? true: false,
+    render() {
+        return (
+            <div className="App container">
+                <Navbar fluid collapseOnSelect>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            <Link to="/">Groupify</Link>
+                        </Navbar.Brand>
+
+                    </Navbar.Header>
+                    <Navbar.Collapse>
+                        <Nav pullRight>
+                            <NavItem href="/signup">Sign up or log in using Spotify.</NavItem>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+                <Routes />
+            </div>
+        );
     }
-  }
-  getHashParams() {
-    var hashParams = {};
-    var e, r = /([^&;=]+)=?([^&;]*)/g,
-        q = window.location.hash.substring(1);
-    while ( e = r.exec(q)) {
-        hashParams[e[1]] = decodeURIComponent(e[2]);
-    }
-    return hashParams;
-  }
-  render() {
-    return (
-      <div className="App">
-        <a href="http://localhost:8888">
-          <button>Login with Spotify</button>
-        </a>
-      </div>
-    );
-  }
 }
 
 export default App;
