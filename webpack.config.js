@@ -8,6 +8,7 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, 'public'),
+    progress: true,
   },
   module: {
     rules: [
