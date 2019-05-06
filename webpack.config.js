@@ -1,13 +1,13 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const path = require("path");
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 module.exports = {
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js"
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
   },
   devServer: {
-    contentBase: path.join(__dirname, "public")
+    contentBase: path.join(__dirname, 'public'),
   },
   module: {
     rules: [
@@ -15,37 +15,37 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
-        }
+          loader: 'babel-loader',
+        },
       },
       {
         test: /\.html$/,
         use: [
           {
-            loader: "html-loader"
-          }
-        ]
+            loader: 'html-loader',
+          },
+        ],
       },
       {
         test: /\.(s?)css$/,
         use: [
-            "style-loader", // creates style nodes from JS strings
-            "css-loader", // translates CSS into CommonJS
-            "sass-loader" // compiles Sass to CSS, using Node Sass by default
-        ]
+          'style-loader', // creates style nodes from JS strings
+          'css-loader', // translates CSS into CommonJS
+          'sass-loader', // compiles Sass to CSS, using Node Sass by default
+        ],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: [
-          "file-loader"
-        ]
-      }
-    ]
+          'file-loader',
+        ],
+      },
+    ],
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: "./public/index.html",
-      filename: "./index.html"
-    })
-  ]
+      template: './public/index.html',
+      filename: './index.html',
+    }),
+  ],
 };

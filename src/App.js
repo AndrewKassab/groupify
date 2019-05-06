@@ -1,15 +1,18 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom";
-import { Nav, Navbar } from "react-bootstrap";
-import "./App.css";
-import Routes from "./Routes";
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { Nav, Navbar } from 'react-bootstrap';
+import './App.css';
+import Routes from './Routes';
 
 export default class App extends Component {
   render() {
     return (
       <Router>
         <div className="App container">
-          <Navbar fluid collapseOnSelect>
+          <Navbar
+            collapseOnSelect
+            fluid
+          >
             <Navbar.Brand>
               <Link to="/">Groupify</Link>
             </Navbar.Brand>

@@ -1,10 +1,19 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
-import Home from "./containers/Home";
-import Signup from "./containers/Signup";
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Home from './containers/Home';
+import Signup from './containers/Signup';
 
-export default () =>
+export default () => (
   <Switch>
-    <Route path="/" exact component={Home} />
-    <Route path="/signup" exact component={Signup} />
-  </Switch>;
+    <Route
+      component={Home}
+      exact
+      path="/"
+    />
+    <Route
+      component={Signup}
+      exact
+      path="/signup"
+    />
+  </Switch>
+);
