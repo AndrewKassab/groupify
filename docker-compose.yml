@@ -25,7 +25,7 @@ services:
       dockerfile: docker/Dockerfile-react
       cache_from:
         - node:12.1.0-alpine
-      target: base
+      target: base-stage
     env_file: .env
     environment:
       - PORT=3000

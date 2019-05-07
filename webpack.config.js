@@ -4,9 +4,9 @@ const path = require('path');
 
 module.exports = {
   output: {
-    path: path.resolve(__dirname, 'dist/assets'),
+    path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash].js',
-    publicPath: '/assets/',
+    // publicPath: '/assets/',
   },
   devServer: {
     contentBase: path.join(__dirname, 'public'),
