@@ -67,6 +67,14 @@ bit, though some still need more looking into. At the very least, it serves as a
 good guideline and can autofix some of the more egregious errors (missing
 semicolons, bad indentation, etc.). To run from outside of docker, use `yarn lint-docker`.
 
+### Code style
+
+All python code should use 4 space indentation. Other code should use 2 space
+indentation. There should always be one empty newline at the end of the file
+and no trailing whitespace. This can be automatically set in your editor using
+[Editorconfig](https://editorconfig.org/) (just a case of adding or enabling a
+package to Atom/VS Code/IntelliJ/PyCharm/Textmate etc.)
+
 ## TODOs
 
 1. Possibly install `pylint` to keep the backend code tidy
