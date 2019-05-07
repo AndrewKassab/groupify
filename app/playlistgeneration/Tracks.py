@@ -9,6 +9,6 @@ class Tracks:
 
   def __retrieveGenre(self): pass
     self.genre = # TODO: Request data from api
-  
+
   def __retrieveArtist(self): pass
-    self.artist = # Request data from api 
+    self.artist = # Request data from api

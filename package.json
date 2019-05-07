@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --open --mode development",
+    "start": "webpack-dev-server --mode development",
     "build": "webpack --mode production",
-    "lint": "eslint --fix --ext js src *.js"
+    "lint": "eslint --fix --ext js src *.js",
+    "lint-docker": "docker-compose run react yarn lint"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
