@@ -1,7 +1,26 @@
 # Frontend docker image
-FROM node:12.1.0-alpine
+FROM node:12.1.0-alpine as base-stage
 
 COPY package.json yarn.lock /app/
 WORKDIR /app
 
 ENV PATH="/app/node_modules/.bin:${PATH}"
+
+# Trigger the build process
+FROM base-stage as build-stage
+
+WORKDIR /app
+
+RUN yarn install
+COPY . /app/
+RUN yarn build
+
+# Host the files
+FROM nginx:1.15
+
+COPY --from=build-stage /app/public/ /usr/share/nginx/html
+COPY --from=build-stage /app/dist/ /usr/share/nginx/html/
+
+RUN cd /usr/share/nginx/html && mv assets/index.html .
+
+COPY docker/react-nginx.conf /etc/nginx/conf.d/default.conf

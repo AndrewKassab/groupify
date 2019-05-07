@@ -25,9 +25,8 @@ services:
       dockerfile: docker/Dockerfile-react
       cache_from:
         - node:12.1.0-alpine
+      target: base
     env_file: .env
-    depends_on:
-      - database
     environment:
       - PORT=3000
       - HOST=0.0.0.0
