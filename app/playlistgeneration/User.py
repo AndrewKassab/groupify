@@ -10,10 +10,10 @@ class User:
     __retrieveMostListened(self)
 
   def __retrieveSavedTracks(self): pass
-    self.savedTracks = # TODO: Retrieve info from api 
-  
+    self.savedTracks = # TODO: Retrieve info from api
+
   def __retrievePlaylists(self): pass
-    self.playlists = # TODO: Retrieve info from api 
-  
+    self.playlists = # TODO: Retrieve info from api
+
   def __retrieveMostListened(self): pass
-    self.MostListened = # TODO: Retrieve info from api 
+    self.MostListened = # TODO: Retrieve info from api
