@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
 import './App.css';
+import Header from './Header';
 import Routes from './Routes';
 
 export default class App extends Component {
@@ -9,10 +10,8 @@ export default class App extends Component {
     return (
       <Router>
         <div className="App container">
-          <Navbar
-            collapseOnSelect
-            fluid
-          >
+          <Header />
+          <Navbar collapseOnSelect fluid>
             <Navbar.Brand>
               <Link to="/">Groupify</Link>
             </Navbar.Brand>
