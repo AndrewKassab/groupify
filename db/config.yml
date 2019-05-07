@@ -2,8 +2,10 @@ default: &default
   adapter: postgresql
   encoding: utf8
   timeout: 5000
-  username: postgres
-  host: localhost
+  username: groupifyuser
+  password: groupifypass
+  host: <%= ENV['DB_HOST'] || 'localhost' %>
+  port: 5432
 
 development:
   <<: *default

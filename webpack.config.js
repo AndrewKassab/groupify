@@ -9,6 +9,9 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'public'),
     progress: true,
+    port: process.env.PORT || 8080,
+    host: process.env.HOST || 'localhost',
+    open: (!process.env.HEADLESS),
   },
   module: {
     rules: [

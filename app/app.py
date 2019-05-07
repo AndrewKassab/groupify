@@ -4,4 +4,4 @@ import datetime
 from flask import Flask
 
 # create the flask object
-app = Flask(__name__)
+print("started app on port {}".format(os.environ['PORT']))

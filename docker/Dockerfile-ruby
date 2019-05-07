@@ -1,0 +1,14 @@
+# Somehow manage all the stuff with the database?
+
+FROM ruby:2.6.3-alpine3.9
+
+COPY Gemfile Gemfile.lock /app/
+WORKDIR /app
+RUN apk add --virtual deps --no-cache build-base \
+  && apk add --no-cache --update libxml2-dev libxslt-dev libffi-dev \
+  postgresql-dev postgresql \
+  && bundle config build.nokogiri --use-system-libraries \
+  && bundle install \
+  && apk del deps
+
+EXPOSE 25569

@@ -15,3 +15,5 @@ namespace :db do
 end
 
 Rake::Task["db:structure:dump"].enhance(["db:schema:copy"])
+
+puts "loaded rake"
