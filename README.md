@@ -28,9 +28,24 @@ docker-compose up
 
 This will start all the necessary services (React, Postgres, Python) as well as
 automatically applying the latest database migrations (if any are pending). After
-this, the app can be accessed at [http://loclhost:3000](http://loclhost:3000).
+this, the app can be accessed at [http://localhost:3000](http://localhost:3000).
 Any changes to react files will automatically get reloaded in the browser
 (it should also be possible to get the backend to so this same _hot_ reloading).
+
+### Restart Scenarios
+
+Most of the time, the application is perfectly fine and will automatically update
+the frontend/backend without a restart. There are a few scenarios that do actually
+require a restart of the app though.
+
+- New package added to Yarn `package.json` for react. This requires restarting
+`docker-compose up`.
+- New package added to Python `requirements.txt` for the backend. This requires
+rebuilding python with `docker-compose build python` and then restarting with
+`docker-compose up`.
+- Database migrations added. This requires restarting `docker-compose up`.
+- Edits to anything outside of `src/` or `app/` will also generally require
+restarting `docker-compose up` for changes to take effect.
 
 ## Best practices
 
