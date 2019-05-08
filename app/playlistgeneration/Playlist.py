@@ -6,9 +6,9 @@
 class Playlist:
 
     def __init__(self, songs, name, image):
-       self.songs = songs
-       self.name = name
-       self.image = image
+        self.songs = songs
+        self.name = name
+        self.image = image
 
     def toJson():
         # TODO: Generate json data for the playlist?
