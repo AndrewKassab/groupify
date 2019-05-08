@@ -1,0 +1,5 @@
+.env
+.docker-env
+.env.local
+node_modules
+node_modules_docker

@@ -1,0 +1,83 @@
+version: "3.7"
+services:
+  python:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-python
+      cache_from:
+        - python:3.7.3-alpine3.9
+    command: docker/start-python.sh
+    env_file: .env
+    depends_on:
+      - database
+    environment:
+      - PORT=5000
+      - HOST=0.0.0.0
+      - DB_HOST=postgres
+      - FLASK_ENV=development
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/app:cached
+
+  react:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-react
+      cache_from:
+        - node:12.1.0-alpine
+      target: base-stage
+    env_file: .env
+    environment:
+      - PORT=3000
+      - HOST=0.0.0.0
+      - HEADLESS=true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app:cached
+      - type: volume
+        source: node_modules
+        target: /app/node_modules
+        volume:
+          nocopy: true
+    command: docker/start-react.sh
+
+  database:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-ruby
+      cache_from:
+        - ruby:2.6.3-alpine3.9
+    command: docker/run-migrations.sh
+    env_file: .env
+    environment:
+      - DB_HOST=postgres
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app:cached
+
+  postgres:
+    image: postgres:11.2-alpine
+    volumes:
+      - type: volume
+        source: postgres_data
+        target: /var/lib/postgresql/data
+        volume:
+          nocopy: true
+    environment:
+      POSTGRES_USER: groupifyuser
+      POSTGRES_PASSWORD: groupifypass
+      POSTGRES_DB: groupify_development
+    ports:
+      - target: 5432
+        published: 5432
+        protocol: tcp
+        mode: host
+
+volumes:
+  postgres_data:
+    driver: local
+  node_modules:
+    driver: local
