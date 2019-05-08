@@ -16,6 +16,7 @@ services:
       - FLASK_ENV=development
     ports:
       - 5000:5000
+    stop_signal: SIGINT
     volumes:
       - ./:/app:cached
 
@@ -32,6 +33,7 @@ services:
       - HEADLESS=true
     ports:
       - 3000:3000
+    stop_signal: SIGINT
     volumes:
       - ./:/app:cached
       - type: volume
