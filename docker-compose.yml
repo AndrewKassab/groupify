@@ -7,7 +7,6 @@ services:
       cache_from:
         - python:3.7.3-alpine3.9
     command: docker/start-python.sh
-    env_file: .env
     depends_on:
       - database
     environment:
@@ -27,7 +26,6 @@ services:
       cache_from:
         - node:12.1.0-alpine
       target: base-stage
-    env_file: .env
     environment:
       - PORT=3000
       - HOST=0.0.0.0
@@ -50,7 +48,6 @@ services:
       cache_from:
         - ruby:2.6.3-alpine3.9
     command: docker/run-migrations.sh
-    env_file: .env
     environment:
       - DB_HOST=postgres
     depends_on:
