@@ -1,0 +1,5 @@
+* text=auto
+
+# Make sure Docker files are LF
+*.sh text eol=lf
+docker/* text eol=lf
