@@ -14,6 +14,10 @@ module.exports = {
     port: process.env.PORT || 8080,
     host: process.env.HOST || 'localhost',
     open: (!process.env.HEADLESS),
+    watchOptions: {
+      poll: 1000,
+      aggregateTimeout: 300,
+    },
   },
   module: {
     rules: [
