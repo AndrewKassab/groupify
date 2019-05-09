@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker/wait-for postgres:5432 -t 60
+wait-for postgres:5432 -t 60
 
 rake db:create db:migrate
 

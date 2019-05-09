@@ -6,7 +6,7 @@ services:
       dockerfile: docker/Dockerfile-python
       cache_from:
         - python:3.7.3-alpine3.9
-    command: docker/start-python.sh
+    command: start-python.sh
     depends_on:
       - database
     environment:
@@ -41,7 +41,7 @@ services:
         target: /app/node_modules
         volume:
           nocopy: true
-    command: docker/start-react.sh
+    command: start-react.sh
 
   database:
     build:
@@ -49,7 +49,7 @@ services:
       dockerfile: docker/Dockerfile-ruby
       cache_from:
         - ruby:2.6.3-alpine3.9
-    command: docker/run-migrations.sh
+    command: run-migrations.sh
     environment:
       - DB_HOST=postgres
     depends_on:

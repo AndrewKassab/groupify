@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker/wait-for database:25569 -t 60 -- echo Connected!
+wait-for database:25569 -t 60 -- echo Connected!
 
 cd app
 

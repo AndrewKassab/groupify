@@ -11,4 +11,9 @@ RUN apk add --virtual deps --no-cache build-base \
   && bundle install \
   && apk del deps
 
+ENV PATH="/scripts:${PATH}"
+
+COPY docker/ /scripts/
+RUN dos2unix /scripts/*
+
 EXPOSE 25569
