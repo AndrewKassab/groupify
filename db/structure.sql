@@ -25,22 +25,21 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
--- Name: genres; Type: TABLE; Schema: public; Owner: -
+-- Name: auth_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.genres (
+CREATE TABLE public.auth_tokens (
     id bigint NOT NULL,
-    name character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    user_id integer NOT NULL,
+    token character varying NOT NULL
 );
 
 
 --
--- Name: genres_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: auth_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.genres_id_seq
+CREATE SEQUENCE public.auth_tokens_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -49,28 +48,28 @@ CREATE SEQUENCE public.genres_id_seq
 
 
 --
--- Name: genres_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: auth_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.genres_id_seq OWNED BY public.genres.id;
+ALTER SEQUENCE public.auth_tokens_id_seq OWNED BY public.auth_tokens.id;
 
 
 --
--- Name: group_spotify_accounts; Type: TABLE; Schema: public; Owner: -
+-- Name: group_users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.group_spotify_accounts (
+CREATE TABLE public.group_users (
     id bigint NOT NULL,
     group_id integer NOT NULL,
-    spotify_account_id integer NOT NULL
+    user_id integer NOT NULL
 );
 
 
 --
--- Name: group_spotify_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: group_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.group_spotify_accounts_id_seq
+CREATE SEQUENCE public.group_users_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -79,10 +78,10 @@ CREATE SEQUENCE public.group_spotify_accounts_id_seq
 
 
 --
--- Name: group_spotify_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: group_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.group_spotify_accounts_id_seq OWNED BY public.group_spotify_accounts.id;
+ALTER SEQUENCE public.group_users_id_seq OWNED BY public.group_users.id;
 
 
 --
@@ -92,9 +91,7 @@ ALTER SEQUENCE public.group_spotify_accounts_id_seq OWNED BY public.group_spotif
 CREATE TABLE public.groups (
     id bigint NOT NULL,
     user_id integer NOT NULL,
-    title character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    title character varying NOT NULL
 );
 
 
@@ -127,39 +124,6 @@ CREATE TABLE public.schema_migrations (
 
 
 --
--- Name: spotify_accounts; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.spotify_accounts (
-    id bigint NOT NULL,
-    user_id integer,
-    username character varying NOT NULL,
-    spotify_id character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: spotify_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.spotify_accounts_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: spotify_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.spotify_accounts_id_seq OWNED BY public.spotify_accounts.id;
-
-
---
 -- Name: spotify_playlists; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -167,9 +131,7 @@ CREATE TABLE public.spotify_playlists (
     id bigint NOT NULL,
     group_id integer NOT NULL,
     user_id integer NOT NULL,
-    spotify_id character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    spotify_id character varying
 );
 
 
@@ -193,36 +155,6 @@ ALTER SEQUENCE public.spotify_playlists_id_seq OWNED BY public.spotify_playlists
 
 
 --
--- Name: track_genres; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.track_genres (
-    id bigint NOT NULL,
-    track_id integer NOT NULL,
-    genre_id integer NOT NULL
-);
-
-
---
--- Name: track_genres_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.track_genres_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: track_genres_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.track_genres_id_seq OWNED BY public.track_genres.id;
-
-
---
 -- Name: tracks; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -231,8 +163,6 @@ CREATE TABLE public.tracks (
     name character varying,
     duration integer,
     spotify_id character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
     group_id integer,
     rank integer,
     artists character varying
@@ -259,45 +189,16 @@ ALTER SEQUENCE public.tracks_id_seq OWNED BY public.tracks.id;
 
 
 --
--- Name: user_genres; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.user_genres (
-    id bigint NOT NULL,
-    user_id integer NOT NULL,
-    genre_id integer NOT NULL
-);
-
-
---
--- Name: user_genres_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.user_genres_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: user_genres_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.user_genres_id_seq OWNED BY public.user_genres.id;
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.users (
     id bigint NOT NULL,
-    email character varying NOT NULL,
     name character varying NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    spotify_id character varying,
+    access_token character varying,
+    refresh_token character varying,
+    token_expiration timestamp without time zone
 );
 
 
@@ -321,17 +222,17 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: genres id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: auth_tokens id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.genres ALTER COLUMN id SET DEFAULT nextval('public.genres_id_seq'::regclass);
+ALTER TABLE ONLY public.auth_tokens ALTER COLUMN id SET DEFAULT nextval('public.auth_tokens_id_seq'::regclass);
 
 
 --
--- Name: group_spotify_accounts id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: group_users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.group_spotify_accounts ALTER COLUMN id SET DEFAULT nextval('public.group_spotify_accounts_id_seq'::regclass);
+ALTER TABLE ONLY public.group_users ALTER COLUMN id SET DEFAULT nextval('public.group_users_id_seq'::regclass);
 
 
 --
@@ -342,13 +243,6 @@ ALTER TABLE ONLY public.groups ALTER COLUMN id SET DEFAULT nextval('public.group
 
 
 --
--- Name: spotify_accounts id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.spotify_accounts ALTER COLUMN id SET DEFAULT nextval('public.spotify_accounts_id_seq'::regclass);
-
-
---
 -- Name: spotify_playlists id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -356,24 +250,10 @@ ALTER TABLE ONLY public.spotify_playlists ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
--- Name: track_genres id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.track_genres ALTER COLUMN id SET DEFAULT nextval('public.track_genres_id_seq'::regclass);
-
-
---
 -- Name: tracks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tracks ALTER COLUMN id SET DEFAULT nextval('public.tracks_id_seq'::regclass);
-
-
---
--- Name: user_genres id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_genres ALTER COLUMN id SET DEFAULT nextval('public.user_genres_id_seq'::regclass);
 
 
 --
@@ -392,19 +272,19 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
--- Name: genres genres_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: auth_tokens auth_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.genres
-    ADD CONSTRAINT genres_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.auth_tokens
+    ADD CONSTRAINT auth_tokens_pkey PRIMARY KEY (id);
 
 
 --
--- Name: group_spotify_accounts group_spotify_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: group_users group_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.group_spotify_accounts
-    ADD CONSTRAINT group_spotify_accounts_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.group_users
+    ADD CONSTRAINT group_users_pkey PRIMARY KEY (id);
 
 
 --
@@ -424,27 +304,11 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
--- Name: spotify_accounts spotify_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.spotify_accounts
-    ADD CONSTRAINT spotify_accounts_pkey PRIMARY KEY (id);
-
-
---
 -- Name: spotify_playlists spotify_playlists_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.spotify_playlists
     ADD CONSTRAINT spotify_playlists_pkey PRIMARY KEY (id);
-
-
---
--- Name: track_genres track_genres_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.track_genres
-    ADD CONSTRAINT track_genres_pkey PRIMARY KEY (id);
 
 
 --
@@ -456,14 +320,6 @@ ALTER TABLE ONLY public.tracks
 
 
 --
--- Name: user_genres user_genres_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_genres
-    ADD CONSTRAINT user_genres_pkey PRIMARY KEY (id);
-
-
---
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -472,24 +328,31 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: index_genres_on_name; Type: INDEX; Schema: public; Owner: -
+-- Name: index_auth_tokens_on_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_genres_on_name ON public.genres USING btree (name);
-
-
---
--- Name: index_group_spotify_accounts_on_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_group_spotify_accounts_on_group_id ON public.group_spotify_accounts USING btree (group_id);
+CREATE INDEX index_auth_tokens_on_token ON public.auth_tokens USING btree (token);
 
 
 --
--- Name: index_group_spotify_accounts_on_spotify_account_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_auth_tokens_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_group_spotify_accounts_on_spotify_account_id ON public.group_spotify_accounts USING btree (spotify_account_id);
+CREATE INDEX index_auth_tokens_on_user_id ON public.auth_tokens USING btree (user_id);
+
+
+--
+-- Name: index_group_users_on_group_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_group_users_on_group_id_and_user_id ON public.group_users USING btree (group_id, user_id);
+
+
+--
+-- Name: index_group_users_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_group_users_on_user_id ON public.group_users USING btree (user_id);
 
 
 --
@@ -497,27 +360,6 @@ CREATE INDEX index_group_spotify_accounts_on_spotify_account_id ON public.group_
 --
 
 CREATE INDEX index_groups_on_user_id ON public.groups USING btree (user_id);
-
-
---
--- Name: index_spotify_accounts_on_spotify_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_spotify_accounts_on_spotify_id ON public.spotify_accounts USING btree (spotify_id);
-
-
---
--- Name: index_spotify_accounts_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_spotify_accounts_on_user_id ON public.spotify_accounts USING btree (user_id);
-
-
---
--- Name: index_spotify_accounts_on_username; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_spotify_accounts_on_username ON public.spotify_accounts USING btree (username);
 
 
 --
@@ -535,20 +377,6 @@ CREATE INDEX index_spotify_playlists_on_user_id ON public.spotify_playlists USIN
 
 
 --
--- Name: index_track_genres_on_genre_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_track_genres_on_genre_id ON public.track_genres USING btree (genre_id);
-
-
---
--- Name: index_track_genres_on_track_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_track_genres_on_track_id ON public.track_genres USING btree (track_id);
-
-
---
 -- Name: index_tracks_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -563,33 +391,19 @@ CREATE INDEX index_tracks_on_spotify_id ON public.tracks USING btree (spotify_id
 
 
 --
--- Name: index_user_genres_on_genre_id; Type: INDEX; Schema: public; Owner: -
+-- Name: auth_tokens fk_rails_0d66c22f4c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX index_user_genres_on_genre_id ON public.user_genres USING btree (genre_id);
-
-
---
--- Name: index_user_genres_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_genres_on_user_id ON public.user_genres USING btree (user_id);
+ALTER TABLE ONLY public.auth_tokens
+    ADD CONSTRAINT fk_rails_0d66c22f4c FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
--- Name: group_spotify_accounts fk_rails_02ab1618d8; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: group_users fk_rails_1486913327; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.group_spotify_accounts
-    ADD CONSTRAINT fk_rails_02ab1618d8 FOREIGN KEY (spotify_account_id) REFERENCES public.spotify_accounts(id);
-
-
---
--- Name: track_genres fk_rails_5ca60a330d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.track_genres
-    ADD CONSTRAINT fk_rails_5ca60a330d FOREIGN KEY (genre_id) REFERENCES public.genres(id);
+ALTER TABLE ONLY public.group_users
+    ADD CONSTRAINT fk_rails_1486913327 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -609,35 +423,11 @@ ALTER TABLE ONLY public.spotify_playlists
 
 
 --
--- Name: group_spotify_accounts fk_rails_804114d80e; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: group_users fk_rails_a9d5f48449; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.group_spotify_accounts
-    ADD CONSTRAINT fk_rails_804114d80e FOREIGN KEY (group_id) REFERENCES public.groups(id);
-
-
---
--- Name: user_genres fk_rails_891e09a06e; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_genres
-    ADD CONSTRAINT fk_rails_891e09a06e FOREIGN KEY (genre_id) REFERENCES public.genres(id);
-
-
---
--- Name: track_genres fk_rails_968410268d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.track_genres
-    ADD CONSTRAINT fk_rails_968410268d FOREIGN KEY (track_id) REFERENCES public.tracks(id);
-
-
---
--- Name: user_genres fk_rails_b570792877; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_genres
-    ADD CONSTRAINT fk_rails_b570792877 FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.group_users
+    ADD CONSTRAINT fk_rails_a9d5f48449 FOREIGN KEY (group_id) REFERENCES public.groups(id);
 
 
 --
@@ -646,14 +436,6 @@ ALTER TABLE ONLY public.user_genres
 
 ALTER TABLE ONLY public.spotify_playlists
     ADD CONSTRAINT fk_rails_bd6209a3bc FOREIGN KEY (group_id) REFERENCES public.groups(id);
-
-
---
--- Name: spotify_accounts fk_rails_f2f39d3641; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.spotify_accounts
-    ADD CONSTRAINT fk_rails_f2f39d3641 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -666,6 +448,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190425233315'),
 ('20190503000150'),
 ('20190504085846'),
-('20190506201347');
+('20190506201347'),
+('20190509235700'),
+('20190510001300');
 
 
