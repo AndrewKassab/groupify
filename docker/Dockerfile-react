@@ -4,7 +4,10 @@ FROM node:12.1.0-alpine as base-stage
 COPY package.json yarn.lock /app/
 WORKDIR /app
 
-ENV PATH="/app/node_modules/.bin:${PATH}"
+ENV PATH="/app/node_modules/.bin:/scripts:${PATH}"
+
+COPY docker/ /scripts/
+RUN dos2unix /scripts/*
 
 # Trigger the build process
 FROM base-stage as build-stage

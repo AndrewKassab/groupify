@@ -6,17 +6,18 @@ services:
       dockerfile: docker/Dockerfile-python
       cache_from:
         - python:3.7.3-alpine3.9
-    command: docker/start-python.sh
-    env_file: .env
+    command: start-python.sh
     depends_on:
       - database
     environment:
       - PORT=5000
       - HOST=0.0.0.0
       - DB_HOST=postgres
+      - DB_PORT=5432
       - FLASK_ENV=development
     ports:
       - 5000:5000
+    stop_signal: SIGINT
     volumes:
       - ./:/app:cached
 
@@ -27,13 +28,13 @@ services:
       cache_from:
         - node:12.1.0-alpine
       target: base-stage
-    env_file: .env
     environment:
       - PORT=3000
       - HOST=0.0.0.0
       - HEADLESS=true
     ports:
       - 3000:3000
+    stop_signal: SIGINT
     volumes:
       - ./:/app:cached
       - type: volume
@@ -41,7 +42,7 @@ services:
         target: /app/node_modules
         volume:
           nocopy: true
-    command: docker/start-react.sh
+    command: start-react.sh
 
   database:
     build:
@@ -49,8 +50,7 @@ services:
       dockerfile: docker/Dockerfile-ruby
       cache_from:
         - ruby:2.6.3-alpine3.9
-    command: docker/run-migrations.sh
-    env_file: .env
+    command: run-migrations.sh
     environment:
       - DB_HOST=postgres
     depends_on:
