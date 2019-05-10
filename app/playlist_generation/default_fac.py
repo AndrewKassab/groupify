@@ -8,6 +8,7 @@ class DefaultPlaylistFactory(PlaylistFactory):
 
     # Lvl 1 filter
     def filter_intersect(self):
+        return None
 
     # Lvl 1 filter
     def filter_union(self):
