@@ -27,7 +27,6 @@ class PlaylistFactory(ABC):
         create_playlist()
         return self.playlist
 
-
     # Lvl 1 filter
     def __union_tracks()
         for user in users:
@@ -46,7 +45,8 @@ class PlaylistFactory(ABC):
     def __filter_common_tracks():
         min_required = len(users)/2 
         for track in union_songs:
-            if ( track)
+            if track.amt_saved >= min_required:
+                common_songs.append(track)
 
     # Lvl 2 filter
     @abstractmethod
