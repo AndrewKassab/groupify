@@ -1,25 +1,9 @@
 # This factory generates a playlist when the song pool is narrowed
 # down to music relating to specified genres and pre-existing playlists
-# TODO: Complete
 
 from PlaylistFactory import PlaylistFactory
 
 class UserGenreNarrowedPlaylistFactory(PlaylistFactory):
-
-    def __init__(self):
-        return None
-
-    # Run from constructor add users
-    def create(self):
-        return None
-
-    # Lvl 1 filter
-    def filter_intersect(self):
-        return None
-
-    # Lvl 1 filter
-    def filter_union(self):
-        return None
 
     # Lvl 2 filter
     def filter_intersect_most_played(self):

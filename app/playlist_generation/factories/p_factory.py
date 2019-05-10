@@ -9,15 +9,16 @@ class PlaylistFactory(ABC):
     def __init__(self, users, length):
         self.users = users
         self.playlist_length = length
-        self.intersect_songs = []
+        self.common_songs = []
         self.union_songs = []
         self.playlist = None
         super().__init__()
 
     # Run from constructor add users
     def create(self): 
-        __filter_intersect(self)
-        __filter_union(self)
+        __union_tracks()
+        __squish_tracks()
+        __filter_common_tracks(self)
         __filter_intersect_most_played(self)
         __filter_union_most_played(self)
         __filter_union_similarities(self)
@@ -27,14 +28,25 @@ class PlaylistFactory(ABC):
         return self.playlist
 
     # Lvl 1 filter
-    @abstractmethod
-    def __filter_intersect(self): 
-        pass
+    def __union_tracks()
+        for user in users:
+            union_songs = union_songs + user.saved_tracks
+
+    # Squish duplicate tracks into one 
+    # TODO: Use hashing and buckets to locate duplicates for efficiency
+    def __squish_tracks(self):
+        for trackOne in union_songs:
+            for trackTwo in union_songs:
+                if ( trackOne.songId == trackTwo.songId ) and ( id(trackOne) != id(trackTwo) ):
+                    trackOne.add_users(trackTwo.users)
+                    union_songs.remove(trackTwo)
 
     # Lvl 1 filter
-    @abstractmethod
-    def __filter_union(self): 
-        pass
+    def __filter_common_tracks():
+        min_required = len(users)/2 
+        for track in union_songs:
+            if track.amt_saved >= min_required:
+                common_songs.append(track)
 
     # Lvl 2 filter
     @abstractmethod

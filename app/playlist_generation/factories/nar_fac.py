@@ -1,19 +1,10 @@
-# This factory generates a playlist assuming no preferences
-# or checkboxes have been selected.
-# TODO: Complete
+# This factory generates a playlist when the song pool is narrowed
+# down to music from specific pre-existing playlists
 
 from PlaylistFactory import PlaylistFactory
 
-class DefaultPlaylistFactory(PlaylistFactory):
-
-    # Lvl 1 filter
-    def filter_intersect(self):
-        return None
-
-    # Lvl 1 filter
-    def filter_union(self):
-        return None
-
+class NarrowedPlaylistFactory(PlaylistFactory):
+    
     # Lvl 2 filter
     def filter_intersect_most_played(self):
         return None
