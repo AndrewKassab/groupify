@@ -7,7 +7,7 @@ class User:
         self.username = username
         self.saved_tracks = None # Dictionary of Type Track
         self.playlists = None # List of Type Playlist
-        self.most_listened = None # List of Type Track
+        self.most_listened = None # Dictionary of Type Track
         __retrieve_saved_tracks(self)
         __retrieve_playlists(self)
         __retrieve_most_listened(self)
@@ -37,7 +37,7 @@ class User:
 
     # Check if the specific track is a most listened to track
     def is_most_listened(track):
-        if track.song_id in self.most_listened:
+        if track.song_id in self.most_listened.values():
             return True
         return False
     
