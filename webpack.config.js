@@ -18,6 +18,7 @@ module.exports = {
       poll: 1000,
       aggregateTimeout: 300,
     },
+    historyApiFallback: true,
   },
   module: {
     rules: [
