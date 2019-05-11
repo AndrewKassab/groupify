@@ -42,7 +42,6 @@ class PlaylistFactory(ABC):
 
     # Filter each track group by most played
     def __filter_most_played(self, track_group): 
-        pass
         most_played = {}    
         time_length = 0
         for track in track_group:
