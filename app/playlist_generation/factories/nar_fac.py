@@ -1,7 +1,7 @@
 # This factory generates a playlist when the song pool is narrowed
 # down to music from specific pre-existing playlists
 
-from PlaylistFactory import PlaylistFactory
+from p_factory import PlaylistFactory
 
 class NarrowedPlaylistFactory(PlaylistFactory):
     
