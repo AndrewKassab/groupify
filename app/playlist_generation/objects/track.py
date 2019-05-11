@@ -7,6 +7,7 @@ class Track:
         self.users = users # Users who have this track saved
         self.amt_saved = len(users)
         self.time_length = None
+        self.mp_priority = 0
         __retrieve_genre(self)
         __retrieve_artist(self)
 
