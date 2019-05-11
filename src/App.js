@@ -1,32 +1,25 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
-import { Nav, Navbar } from 'react-bootstrap';
-import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+import Header from './Header';
 import Routes from './Routes';
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+
+library.add(fas)
+
+// To add a FontAwesome icon:
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default class App extends Component {
   render() {
     return (
-      <Router>
-        <div className="App container">
-          <Navbar
-            collapseOnSelect
-            fluid
-          >
-            <Navbar.Brand>
-              <Link to="/">Groupify</Link>
-            </Navbar.Brand>
-
-            <Navbar.Collapse>
-              <Nav pullRight>
-                <Nav.Item><Link to="/signup">Sign up or log in using Spotify.</Link></Nav.Item>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-
+      <BrowserRouter>
+        <div>
+          <Header />
           <Routes />
         </div>
-      </Router>
+      </BrowserRouter>
     );
   }
 }

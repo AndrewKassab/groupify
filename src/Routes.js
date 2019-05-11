@@ -1,19 +1,19 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Home from './containers/Home';
-import Signup from './containers/Signup';
+import LoginPage from './containers/LoginPage';
+import Main from './containers/Main';
 
 export default () => (
   <Switch>
     <Route
-      component={Home}
+      component={LoginPage}
       exact
       path="/"
     />
     <Route
-      component={Signup}
+      component={Main}
       exact
-      path="/signup"
+      path="/main"
     />
   </Switch>
 );
