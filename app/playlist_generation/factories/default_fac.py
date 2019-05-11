@@ -1,13 +1,12 @@
 # This factory generates a playlist assuming no preferences
 # or checkboxes have been selected.
 
-from PlaylistFactory import PlaylistFactory
+from p_factory import PlaylistFactory
 
 class DefaultPlaylistFactory(PlaylistFactory):
 
     def create(self):
         __union_tracks()
-        __squish_tracks()
         __filter_common_tracks(self)
         __filter_intersect_most_played(self)
         __filter_union_most_played(self)

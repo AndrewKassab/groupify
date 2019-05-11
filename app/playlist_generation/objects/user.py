@@ -1,3 +1,6 @@
+from track import Track
+from playlist import Playlist
+
 class User:
 
     def __init__(self, username):
@@ -34,7 +37,7 @@ class User:
 
     # Check if the specific track is a most listened to track
     def is_most_listened(track):
-        if track.songid in self.most_listened:
+        if track.song_id in self.most_listened:
             return True
         return False
     

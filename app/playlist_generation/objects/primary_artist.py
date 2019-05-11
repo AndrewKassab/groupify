@@ -1,3 +1,5 @@
+from artist import Artist
+
 class PrimaryArtist(Artist):
 
   def __init__(self, artist_id):
