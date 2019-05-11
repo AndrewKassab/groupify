@@ -10,10 +10,17 @@ class Tracks:
         __retrieve_genre(self)
         __retrieve_artist(self)
 
-    def __retrieve_genre(self): pass
-        # Retrieve genre 
+    # TODO:
+    def __retrieve_genre(self): 
+        pass
+        # Retrieve info from api
+        # set self.genre
     
-    def __retrieve_artist(self): pass
+    # TODO:
+    def __retrieve_artist(self): 
+        pass
+        # Retrieve info from api
+        # Create PrimaryArtist object(artist_id)
         self.artist = # Request data from api 
     
     def __retrieve_track_length(self): pass

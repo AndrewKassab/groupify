@@ -9,12 +9,16 @@ class Playlist:
         if songs is None:
             __retrieve_info(self)
 
+    # TODO:
     def __retrieve_info(self):
+        pass
         # Retrive info from api 
         # Add each song_id to self.songs 
         # set self.name
         # set self.image
         # set self.time_length
 
+    # TODO:
     def toJson():
-        # TODO: Generate json data for the playlist?
+        pass
+        # Generate json data for the playlist?
