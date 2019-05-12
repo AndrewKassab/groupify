@@ -5,15 +5,7 @@ import Main from './containers/Main';
 
 export default () => (
   <Switch>
-    <Route
-      component={LoginPage}
-      exact
-      path="/"
-    />
-    <Route
-      component={Main}
-      exact
-      path="/main"
-    />
+    <Route exact path="/" component={LoginPage} />
+    <Route exact path="/main" component={Main} />
   </Switch>
 );

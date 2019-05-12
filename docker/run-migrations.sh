@@ -15,7 +15,7 @@ goodbye() {
 # mark that the process is completed
 counter=0
 while true; do
-  nc -vl 25569
+  nc -vlp 25569
   counter=$((counter+1))
   echo "Received status check (#$counter)"
 done
