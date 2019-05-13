@@ -11,19 +11,25 @@ function PlaylistShow({ playlist }) {
   const [editName, setEditName] = useState(name);
   const [editMode, setEditMode] = useState(false);
 
-  let editor = (
+  const saveName = () => {
+    setName(editName);
+    setEditMode(false);
+  };
+
+  const editor = (
     <InputGroup>
       <FormControl
         defaultValue={name}
+        onChange={e => setEditName(e.target.value)}
       />
       <InputGroup.Append>
-        <Button variant="outline-secondary">Save</Button>
+        <Button variant="outline-secondary" onClick={saveName}>Save</Button>
         <Button variant="outline-secondary" onClick={() => setEditMode(false)}>Cancel</Button>
       </InputGroup.Append>
     </InputGroup>
   );
 
-  let display = (
+  const display = (
     <ButtonToolbar className="d-flex justify-content-between">
       <h2>{ name }</h2>
       <div>

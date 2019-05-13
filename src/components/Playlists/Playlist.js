@@ -23,12 +23,10 @@ function Playlist({ match, playlists }) {
     );
   }
 
-  const show = (props => <PlaylistShow {...props} playlist={playlist} />);
-  const edit = (props => <PlaylistEdit {...props} playlist={playlist} />);
+  const show = (props => <PlaylistShow {...props} playlist={playlist} key={playlist.id} />);
 
   return (
     <Switch>
-      <Route path={`${match.url}/edit`} render={edit} />
       <Route exact path={match.url} render={show} />
       <Redirect to={match.url} />
     </Switch>

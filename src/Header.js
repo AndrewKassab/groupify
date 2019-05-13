@@ -14,13 +14,11 @@ export default function Header() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse>
           <Nav className="mr-auto">
-            <Nav.Link as={Link} to="/playlists">Playlists main</Nav.Link>
-            {/* <Nav.Link href="#pricing">Pricing</Nav.Link> */}
-            <NavDropdown id="collasible-nav-dropdown" title="Playlists">
+            <Nav.Link as={Link} to="/playlists">All Playlists</Nav.Link>
+            {/* <NavDropdown id="collasible-nav-dropdown" title="Playlists">
               <NavDropdown.Item as={Link} to="/playlists">List Playlists</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/playlists/1">View Playlist (id: 1)</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/playlists/1/edit">Edit Playlist (id: 1)</NavDropdown.Item>
-            </NavDropdown>
+            </NavDropdown> */}
           </Nav>
           <Nav>
             <CreateModal />
