@@ -6,7 +6,6 @@ import Main from './containers/Main';
 export default () => (
   <Switch>
     <Route exact path="/" component={LoginPage} />
-    {/* <Route exact path="/main" component={Main} /> */}
     <Route path="/playlists" component={Main} />
   </Switch>
 );
