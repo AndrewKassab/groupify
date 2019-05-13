@@ -11,11 +11,11 @@ function PlaylistList({ playlists }) {
 
       <ListGroup variant="flush">
         {
-          playlists.map((playlist) =>
-            <ListGroup.Item action as={NavLink} to={`/playlists/${playlist.id}`} activeClassName="active" key={`plist-${playlist.id}`}>
+          playlists.map(playlist => (
+            <ListGroup.Item action activeClassName="active" as={NavLink} key={`plist-${playlist.id}`} to={`/playlists/${playlist.id}`}>
               { playlist.name }
             </ListGroup.Item>
-          )
+          ))
         }
       </ListGroup>
     </div>

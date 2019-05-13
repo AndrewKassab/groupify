@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import { Row, Col, Container } from 'react-bootstrap';
+import { Switch, Route } from 'react-router';
 import PlaylistList from '../components/Playlists/PlaylistList';
 import Playlist from '../components/Playlists/Playlist';
 import mockdata from './mockdata';
 
-import { Row, Col, Container } from 'react-bootstrap';
-import { Switch, Route } from 'react-router';
 
 export default class Main extends Component {
   constructor(props) {
@@ -12,20 +12,19 @@ export default class Main extends Component {
 
     this.state = {
       playlists: mockdata.playlists,
-    }
+    };
   }
 
   render() {
     return (
-      <Container className='mt-3'>
+      <Container className="mt-3">
         <Row>
-          <Col md={4} lg={3}>
+          <Col lg={3} md={4}>
             <PlaylistList playlists={this.state.playlists} />
           </Col>
           <Col className="ml-sm-auto">
             <Switch>
               <Route path="/playlists/:id" render={props => <Playlist {...props} playlists={this.state.playlists} />} />
-              {/* <Route render={() => <h3>Please choose a playlist</h3>} /> */}
               <Route component={NoPlaylist} />
             </Switch>
           </Col>
@@ -37,14 +36,6 @@ export default class Main extends Component {
 
 function NoPlaylist() {
   return (
-    <Container fluid className="h-100">
-      <Row className="h-100">
-        <Col className="align-self-center">
-          <div className="card card-block">
-            Center
-          </div>
-        </Col>
-      </Row>
-    </Container>
+    <h3 className="text-muted text-center mt-5">Please select a playlist</h3>
   );
 }

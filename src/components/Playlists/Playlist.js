@@ -1,14 +1,14 @@
 import React from 'react';
 import { Col, Row, Alert } from 'react-bootstrap';
+import {
+  Link, Switch, Route, Redirect,
+} from 'react-router-dom';
 import PlaylistShow from './PlaylistShow';
 import PlaylistCreate from './PlaylistCreate';
 import PlaylistEdit from './PlaylistEdit';
-import { Link, Switch, Route, Redirect } from 'react-router-dom';
 
 function Playlist({ match, playlists }) {
-  let playlist = playlists.find((plist) =>
-    plist.id == match.params.id
-  );
+  const playlist = playlists.find(plist => plist.id == match.params.id);
 
   if (match.params.id == 'create') {
     return <PlaylistCreate />;
@@ -16,9 +16,9 @@ function Playlist({ match, playlists }) {
 
   if (!playlist) {
     return (
-      <Alert variant='danger'>
+      <Alert variant="danger">
         No such playlist found!
-        Return to all <Alert.Link as={Link} to='/playlists'>playlists</Alert.Link>.
+        Return to all <Alert.Link as={Link} to="/playlists">playlists</Alert.Link>.
       </Alert>
     );
   }

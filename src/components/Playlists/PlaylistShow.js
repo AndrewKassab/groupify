@@ -1,6 +1,6 @@
 import React from 'react';
-import TrackList from '../Tracks/TrackList';
 import { Link } from 'react-router-dom';
+import TrackList from '../Tracks/TrackList';
 
 function PlaylistShow({ playlist }) {
   return (

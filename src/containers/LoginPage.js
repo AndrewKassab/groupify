@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
+import { Row, Col, Container } from 'react-bootstrap';
 import logo from '../images/logo.svg';
 
-import { Row, Col, Container } from 'react-bootstrap';
 
 export default class LoginPage extends Component {
   render() {

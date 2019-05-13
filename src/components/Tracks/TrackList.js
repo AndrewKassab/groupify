@@ -17,14 +17,14 @@ function TrackList({ tracks }) {
         </thead>
         <tbody>
           {
-            tracks.map((track, index) =>
+            tracks.map((track, index) => (
               <tr key={`track-${track.id}`}>
                 <td>{ index + 1 }</td>
                 <td>{ track.name }</td>
                 <td>{ track.artists }</td>
                 <td>{ track.duration }</td>
               </tr>
-            )
+            ))
           }
         </tbody>
       </Table>

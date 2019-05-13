@@ -12,12 +12,12 @@ export default class PlaylistCreate extends Component {
   }
 
   handleInputChange(event) {
-    const target = event.target;
+    const { target } = event;
     const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
+    const { name } = target;
 
     this.setState({
-      [name]: value
+      [name]: value,
     });
   }
 
@@ -26,57 +26,62 @@ export default class PlaylistCreate extends Component {
       <div>
 
         {/* Content */}
-        <br></br>
-        <br></br>
+        <br />
+        <br />
         <p>Select playlists to draw songs from:</p>
 
         <label>
           kanye
-            <input
-            name="kanye"
-            type="checkbox"
+          <input
             checked={this.state.kanye}
-            onChange={this.handleInputChange} />
+            name="kanye"
+            onChange={this.handleInputChange}
+            type="checkbox"
+          />
         </label>
-        <br></br>
+        <br />
         <label>
           lofi beats to study
-            <input
-            name="lofi"
-            type="checkbox"
+          <input
             checked={this.state.lofi}
-            onChange={this.handleInputChange} />
+            name="lofi"
+            onChange={this.handleInputChange}
+            type="checkbox"
+          />
         </label>
-        <br></br>
+        <br />
         <label>
           Christmas Music
-            <input
-            name="christmas"
-            type="checkbox"
+          <input
             checked={this.state.isGoing}
-            onChange={this.handleInputChange} />
+            name="christmas"
+            onChange={this.handleInputChange}
+            type="checkbox"
+          />
         </label>
-        <br></br>
+        <br />
         <label>
           3 am music
-            <input
-            name="3am"
-            type="checkbox"
+          <input
             checked={this.state.am}
-            onChange={this.handleInputChange} />
+            name="3am"
+            onChange={this.handleInputChange}
+            type="checkbox"
+          />
         </label>
-        <br></br>
+        <br />
         <label>
           turn up
-            <input
-            name="turnup"
-            type="checkbox"
+          <input
             checked={this.state.turnup}
-            onChange={this.handleInputChange} />
+            name="turnup"
+            onChange={this.handleInputChange}
+            type="checkbox"
+          />
         </label>
 
-        <br></br>
-        <br></br>
+        <br />
+        <br />
         <p>Select playlist length:</p>
         <select>
           <option selected value="30">30:00</option>
@@ -87,7 +92,7 @@ export default class PlaylistCreate extends Component {
           <option value="145">1:45:00</option>
           <option value="200">2:00:00</option>
         </select>
-        <br></br>
+        <br />
         <br />
         <input type="submit" value="Create Playlist" />
       </div>
