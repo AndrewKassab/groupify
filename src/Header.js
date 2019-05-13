@@ -4,6 +4,7 @@ import {
 } from 'react-bootstrap';
 // import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router-dom';
+import CreateModal from './components/Playlists/CreateModal';
 
 export default function Header() {
   return (
@@ -22,7 +23,7 @@ export default function Header() {
             </NavDropdown>
           </Nav>
           <Nav>
-            <Nav.Link as={Link} to="/playlists/create">Create Playlist</Nav.Link>
+            <CreateModal />
             <Nav.Link as={Link} to="/logout">Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>

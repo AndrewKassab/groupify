@@ -1,6 +1,8 @@
 // List overrides to bootstrap styling here
 
-
+$theme-colors: (
+  "primary": #57b9a7,
+);
 // import Bootstrap
 @import '~bootstrap/scss/bootstrap.scss';
 
