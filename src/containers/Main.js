@@ -26,7 +26,7 @@ export default class Main extends Component {
     return (
       <Container className='mt-3'>
         <Row>
-          <Col md={4} lg={3} className="h-100 position-fixed">
+          <Col md={4} lg={3}>
             <PlaylistList playlists={this.state.playlists} />
           </Col>
           <Col className="ml-sm-auto">

@@ -1,14 +1,16 @@
 import React from 'react';
 import { Col, Row, Alert } from 'react-bootstrap';
-import TrackList from '../Tracks/TrackList';
-import { Link } from 'react-router-dom';
+import PlaylistShow from './PlaylistShow';
+import { Link, Switch, Route } from 'react-router-dom';
 
 function Playlist({ match, playlists }) {
-  console.log(match.params.id);
-
   let playlist = playlists.find((plist) =>
     plist.id == match.params.id
   );
+
+  if (match.params.id == 'create') {
+    return <PlaylistCreate />;
+  }
 
   if (!playlist) {
     return (
@@ -19,12 +21,14 @@ function Playlist({ match, playlists }) {
     );
   }
 
-  return (
-    <div>
-      <h2>{ playlist.name }</h2>
+  const show = (props => <PlaylistShow {...props} playlist={playlist} />);
+  const edit = (props => <PlaylistEdit {...props} playlist={playlist} />);
 
-      <TrackList tracks={playlist.tracks} />
-    </div>
+  return (
+    <Switch>
+      <Route path={`${match.url}/edit`} render={edit} />
+      <Route render={show} />
+    </Switch>
   );
 }
 
