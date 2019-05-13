@@ -1,7 +1,6 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 
-
 function TrackList({ tracks }) {
   return (
     <div className="pt-3">
@@ -13,6 +12,7 @@ function TrackList({ tracks }) {
             <th>#</th>
             <th>Name</th>
             <th>Artists</th>
+            <th>Length</th>
           </tr>
         </thead>
         <tbody>
@@ -21,7 +21,8 @@ function TrackList({ tracks }) {
               <tr key={`track-${track.id}`}>
                 <td>{ index + 1 }</td>
                 <td>{ track.name }</td>
-                <td>__artists__</td>
+                <td>{ track.artists }</td>
+                <td>{ track.duration }</td>
               </tr>
             )
           }

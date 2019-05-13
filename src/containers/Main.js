@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PlaylistList from '../components/Playlists/PlaylistList';
 import Playlist from '../components/Playlists/Playlist';
+import mockdata from './mockdata';
 
 import { Row, Col, Container } from 'react-bootstrap';
 import { Switch, Route } from 'react-router';
@@ -10,15 +11,7 @@ export default class Main extends Component {
     super(props);
 
     this.state = {
-      playlists: [
-        {id: 1, name: "Hello world", tracks: [
-          {id: 1, name: 'blah'},
-          {id: 2, name: 'blah2'}
-        ]},
-        {id: 2, name: "Other playlist", tracks: [
-          {id: 3, name: "other"},
-        ]},
-      ]
+      playlists: mockdata.playlists,
     }
   }
 

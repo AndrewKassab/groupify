@@ -3,7 +3,7 @@ import { Col, Row, Alert } from 'react-bootstrap';
 import PlaylistShow from './PlaylistShow';
 import PlaylistCreate from './PlaylistCreate';
 import PlaylistEdit from './PlaylistEdit';
-import { Link, Switch, Route } from 'react-router-dom';
+import { Link, Switch, Route, Redirect } from 'react-router-dom';
 
 function Playlist({ match, playlists }) {
   let playlist = playlists.find((plist) =>
@@ -29,7 +29,8 @@ function Playlist({ match, playlists }) {
   return (
     <Switch>
       <Route path={`${match.url}/edit`} render={edit} />
-      <Route render={show} />
+      <Route exact path={match.url} render={show} />
+      <Redirect to={match.url} />
     </Switch>
   );
 }
