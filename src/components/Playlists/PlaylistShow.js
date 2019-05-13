@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom';
 import TrackList from '../Tracks/TrackList';
 import { Button, ButtonToolbar, InputGroup, FormControl } from 'react-bootstrap';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 function PlaylistShow({ playlist }) {
 
   const [name, setName] = useState(playlist.name);
   const [editName, setEditName] = useState(name);
   const [editMode, setEditMode] = useState(false);
 
-  const editor = (
+  let editor = (
     <InputGroup>
       <FormControl
         defaultValue={name}
@@ -21,13 +23,16 @@ function PlaylistShow({ playlist }) {
     </InputGroup>
   );
 
-  const display = (
+  let display = (
     <ButtonToolbar className="d-flex justify-content-between">
       <h2>{ name }</h2>
       <div>
-        <Button variant="outline-secondary" onClick={() => setEditMode(true)}>Change Name</Button>
+        <Button className="mr-1" variant="outline-secondary" onClick={() => setEditMode(true)}>Change Name</Button>
 
-        <Button variant="outline-primary">Add to Spotify</Button>
+        <Button className="mr-1" variant="outline-primary">Add to Spotify</Button>
+        <Button variant="outline-danger">DELETE</Button>
+
+        {/* <FontAwesomeIcon icon="ellipsis-v" /> */}
       </div>
     </ButtonToolbar>
   );

@@ -26,8 +26,6 @@ export default class PlaylistCreate extends Component {
       <div>
 
         {/* Content */}
-        <br />
-        <br />
         <p>Select playlists to draw songs from:</p>
 
         <label>
