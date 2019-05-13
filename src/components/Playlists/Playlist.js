@@ -1,6 +1,8 @@
 import React from 'react';
 import { Col, Row, Alert } from 'react-bootstrap';
 import PlaylistShow from './PlaylistShow';
+import PlaylistCreate from './PlaylistCreate';
+import PlaylistEdit from './PlaylistEdit';
 import { Link, Switch, Route } from 'react-router-dom';
 
 function Playlist({ match, playlists }) {
