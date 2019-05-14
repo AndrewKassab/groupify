@@ -9,9 +9,9 @@ class User:
         self.saved_tracks = None # Dictionary of Type Track
         self.playlists = None # List of Type Playlist
         self.most_listened = None # Dictionary of Type Track
-        __retrieve_saved_tracks(self)
-        __retrieve_playlists(self)
-        __retrieve_most_listened(self)
+        self.__retrieve_saved_tracks()
+        self.__retrieve_playlists()
+        self.__retrieve_most_listened()
 
     # TODO:
     def __retrieve_saved_tracks(self): 
@@ -30,14 +30,14 @@ class User:
         # add each playlist to self.playlists
     
     # TODO:
-    def __retrieve_most_listened(self, timeRange): 
+    def __retrieve_most_listened(self): 
         pass
         # Retrieve info from api
         # For each song_id key, find its corresponding value object in self.saved_tracks
         # and add it to self.most_listened
 
     # Check if the specific track is a most listened to track
-    def is_most_listened(track):
+    def is_most_listened(self,track):
         if track.song_id in self.most_listened.values():
             return True
         return False
