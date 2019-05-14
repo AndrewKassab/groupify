@@ -4,16 +4,16 @@
 
 from abc import ABC, abstractmethod
 import random
-# TODO: Import necessary objects
+# TODO: import playlist
 
 class PlaylistFactory(ABC):
 
     def __init__(self, users, desired_length):
         self.users = users
-        self.desired_length = length
+        self.desired_length = desired_length
         self.common_tracks = {}
         self.union_tracks = {}
-        self.playlist = None
+        self.tracks = {}
         super().__init__()
 
     # Creates the playlist by running appropriate methods to filter songs
@@ -27,17 +27,17 @@ class PlaylistFactory(ABC):
             # avoid duplicates , but make sure to add user to track object
             for track in user.saved_tracks.values():
                 if track.song_id in self.union_tracks:
-                    self.union_tracks[songid].add_user(user)
+                    self.union_tracks[track.song_id].add_user(user)
                 else: 
                     self.union_tracks[track.song_id] = track
 
     # Create the group of common tracks, remove them from union group
-    def __filter_common_tracks():
-        min_required = len(users)/2 
-        for track in union_tracks.values():
+    def __filter_common_tracks(self):
+        min_required = len(self.users)/2 
+        for track in self.union_tracks.values():
             if track.amt_saved >= min_required:
-                common_tracks[track.song_id] = track
-                del union_tracks[track.song_id]
+                self.common_tracks[track.song_id] = track
+                del self.union_tracks[track.song_id]
 
 
     # Filter each track group by most played
@@ -46,13 +46,13 @@ class PlaylistFactory(ABC):
         time_length = 0
         for track in track_group:
             if track.is_users_most_played():
-                most_played_group[track.song_id] = track
+                most_played[track.song_id] = track
                 del track_group[track.song_id]
                 time_length = time_length + track.time_length
         # arbitrarily add a few more songs if the group is too short
-        while time_length < ( 2 * desired_length ):
+        while time_length < ( 2 * self.desired_length ):
             random_track = random.choice(list(track_group.values()))
-            most_played_group[random_track.song_id] = random_track
+            most_played[random_track.song_id] = random_track
             time_length = time_length + random_track.time_length
 
 
@@ -72,20 +72,20 @@ class PlaylistFactory(ABC):
     def __combine(self):
 
         # Convert both lists to sets
-        union_set = set(union_tracks)
-        common_set = set(common_tracks)
+        union_set = set(self.union_tracks)
+        common_set = set(self.common_tracks)
 
         # Merge the sets
         union_set.union(common_set)
 
         # Finally convert to list
-        songs = list(union_set)
+        self.tracks = list(union_set)
 
-    def __create_playlist():
+    def __create_playlist(self, track_list):
 
         # TODO:
         # playlist_name = Groupify-DATE
         # playlist_image = groupify album art by default (?)
 
-        playlist = playlist( songs, playlist_name, playlist_image )
+        playlist = Playlist( self.tracks , "", "")
         return playlist

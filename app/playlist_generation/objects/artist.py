@@ -6,7 +6,7 @@ class Artist:
         self.artist_id = id
         self.genres = None # List of genre ids
         self.top_songs = None # List of songids 
-        __retrieve_top_songs(self)
+        self.__retrieve_top_songs()
 
     def __retrieve_top_songs(self):
         # Retrieve info from api
