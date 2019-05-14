@@ -1,13 +1,35 @@
 import os
 import json
 import datetime
-from flask import Flask
+import psycopg2
+from flask import Flask, request, flash, url_for, redirect, render_template
+
+from .models import db
+from db import config
+import yaml
+
 app = Flask(__name__)
 
-# See:
-# http://flask.pocoo.org/docs/1.0/quickstart
-# for more info on using Flask
+user = os.environ('DB_USER')
+password = os.environ('DB_PASS')
+host = os.environ('DB_HOST')
+port = os.environ('DB_PORT')
+database = f'groupify_{os.environ('FLASK_ENV')}'
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
+DATABASE_URI = f'postgres+psychpg2://{user}:{password}@{host}:{port}/{database}'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
+
+con = psycopg2.connect(
+    dbname="Database name",
+    user=user,
+    password=password,
+)
+
+# cursor
+cur = con.cursor()
+
+cur.close()
+
+# close the connection
+con.close()
