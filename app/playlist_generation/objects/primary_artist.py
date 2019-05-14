@@ -14,3 +14,6 @@ class PrimaryArtist(Artist):
         # Create artist objects()
         # add to self.related_artists
 
+    # TEST: For testing purposes only!
+    def add_related_artist(self, artist):
+      self.related_artists[artist.artist_id] = artist
