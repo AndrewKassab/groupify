@@ -5,7 +5,8 @@ const path = require('path');
 module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[contenthash].js',
+    filename: '[name].bundle.[contenthash].js',
+    publicPath: '/',
     // publicPath: '/assets/',
   },
   devServer: {
@@ -18,6 +19,7 @@ module.exports = {
       poll: 1000,
       aggregateTimeout: 300,
     },
+    historyApiFallback: true,
   },
   module: {
     rules: [
