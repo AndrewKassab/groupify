@@ -5,16 +5,8 @@ from p_factory import PlaylistFactory
 
 class UserGenrePlaylistFactory(PlaylistFactory):
 
-    # Lvl 2 filter
-    def filter_intersect_most_played(self):
-        return None
-
-    # Lvl 2 filter
-    def filter_union_most_played(self):
-        return None
-
-    # Lvl 3 filter
-    def filter_union_similarities(self):
+    # filter with preference for similar genres
+    def filter_similarities(self):
         return None
 
     # Lvl 4 filter

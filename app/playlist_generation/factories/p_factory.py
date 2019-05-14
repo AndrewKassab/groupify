@@ -4,7 +4,8 @@
 
 from abc import ABC, abstractmethod
 import random
-from objects.playlist import Playlist
+import sys
+sys.path.append("../")
 
 class PlaylistFactory(ABC):
 
@@ -17,9 +18,15 @@ class PlaylistFactory(ABC):
         super().__init__()
 
     # Creates the playlist by running appropriate methods to filter songs
-    @abstractmethod
-    def create(self): 
-        pass 
+    def create(self):
+        self.__union_tracks()
+        self.__filter_common_tracks()
+        self.__filter_most_played(self.common_tracks)
+        self.__filter_most_played(self.__union_tracks)
+        self.__filter_similarities()
+        self.__filter_by_length()
+        self.__combine()
+        self.__create_playlist()
 
     # Create a union of all user's saved tracks
     def __union_tracks(self):
@@ -59,10 +66,9 @@ class PlaylistFactory(ABC):
             time_length = time_length + random_track.time_length
 
 
-    # Lvl 3 filter
-    # TODO:
+    # Filters by similarities defined by the extending class
     @abstractmethod
-    def __filter_union_similarities(self): 
+    def __filter_similarities(self): 
         pass
 
     # Lvl 4 filter
