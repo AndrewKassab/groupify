@@ -1,4 +1,5 @@
-# Requires access to Spotify() object
+import settings
+
 class Artist:
 
     def __init__(self, artist_id):
@@ -7,20 +8,16 @@ class Artist:
         self.top_songs = None # List of songids 
         __retrieve_top_songs(self)
 
-    # TODO:
     def __retrieve_top_songs(self):
-        pass
         # Retrieve info from api
         # add each songid to self.top_songs
-        # Limit of 50 songs, can use 'short_term' 'medium_term' and 'long_term'
+        # Gets the top 10 tracks from the artist
 
-        # top_songs_list = sp.artist_top_tracks(self.artist_id) # API call: returns dict of song list info
-        # self.top_songs = [item['id'] for item in top_songs_list['items']] # Return the list of song ids
+        top_songs_list = spotify.artist_top_tracks(self.artist_id)
+        self.top_songs = [item['id'] for item in top_songs_list['items']]
 
-    # TODO:
     def __retrieve_genres(self):
-        pass
         # Retrieve info from api 
-        # set self.genre
+        # set self.genres
 
-        # self.genres = artist(self.artist_id)['genres'] # API call: returns list of genre ids
+        self.genres = spotify.artist(self.artist_id)['genres']

@@ -1,3 +1,5 @@
+import settings
+
 class Track:
 
     def __init__(self, song_id, users):

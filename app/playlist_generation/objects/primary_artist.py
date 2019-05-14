@@ -1,3 +1,4 @@
+import settings
 from artist import Artist
 
 class PrimaryArtist(Artist):
