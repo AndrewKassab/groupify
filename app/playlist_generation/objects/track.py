@@ -9,7 +9,7 @@ class Track:
         self.users = users # Users who have this track saved
         self.amt_saved = len(users)
         self.time_length = None
-        self.mp_priority = 0
+        self.mp_priority = 0 # indicated how important a song is to include
         self.__retrieve_genre()
         self.__retrieve_artist()
 
@@ -41,5 +41,15 @@ class Track:
     def is_users_most_played(self):
         for user in self.users:
             if user.is_most_listened(self)
-                return True
+                self.priority += 1
+        if priority >= 1:
+            return True
+        else:
+            return False
+
+    # Checks if an artist is a related artist to the creator of this track
+    def is_related_artist(self, artist):
+        for current_artist in self.artists:
+            if self.artist.is_related_artist(artist):
+                return True 
         return False

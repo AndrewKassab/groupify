@@ -4,7 +4,7 @@
 
 from abc import ABC, abstractmethod
 import random
-from ..object.playlist import Playlist
+from objects.playlist import Playlist
 
 class PlaylistFactory(ABC):
 
@@ -33,8 +33,10 @@ class PlaylistFactory(ABC):
 
     # Create the group of common tracks, remove them from union group
     def __filter_common_tracks(self):
-        # TODO: handle 2 people edge case
-        min_required = len(self.users)/2 
+        if len(self.users) == 2 or len(self.users) == 3:
+            min_required = 2
+        else: 
+            min_required = len(self.users)/2 
         for track in self.union_tracks.values():
             if track.amt_saved >= min_required:
                 self.common_tracks[track.song_id] = track
