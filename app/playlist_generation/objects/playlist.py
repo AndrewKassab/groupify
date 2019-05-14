@@ -1,3 +1,5 @@
+import settings
+
 class Playlist:
 
     def __init__(self, playlist_id, songs=None, name=None, image=None, time_length=None):
