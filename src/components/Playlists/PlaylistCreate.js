@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form } from 'react-bootstrap';
 
-export default class PlaylistCreate extends Component {
+class PlaylistCreate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -90,10 +90,9 @@ export default class PlaylistCreate extends Component {
           <option value="145">1:45:00</option>
           <option value="200">2:00:00</option>
         </select>
-        <br />
-        <br />
-        <input type="submit" value="Create Playlist" />
       </div>
     );
   }
 }
+
+export default PlaylistCreate;
