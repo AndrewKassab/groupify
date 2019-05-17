@@ -6,15 +6,14 @@ from p_factory import PlaylistFactory
 class DefaultPlaylistFactory(PlaylistFactory):
 
     def create(self):
-        __union_tracks()
-        __filter_common_tracks(self)
-        __filter_most_played(self, self.common_tracks)
-        __filter_most_played(self, self.__union_tracks)
-        __filter_union_similarities(self)
-        __filter_by_length(self)
-        __combine(self)
-        __create_playlist()
-        return self.playlist
+        self.__union_tracks()
+        self.__filter_common_tracks()
+        self.__filter_most_played(self.common_tracks)
+        self.__filter_most_played(self.__union_tracks)
+        self.__filter_union_similarities()
+        self.__filter_by_length()
+        self.__combine()
+        self.__create_playlist()
 
     # Lvl 2 filter
     def filter_intersect_most_played(self):
