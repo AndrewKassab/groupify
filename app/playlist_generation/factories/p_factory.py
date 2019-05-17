@@ -23,7 +23,8 @@ class PlaylistFactory(ABC):
         self.__filter_common_tracks()
         self.__filter_most_played(self.common_tracks)
         self.__filter_most_played(self.__union_tracks)
-        self.__filter_similarities()
+        self.__filter_similarities(self.common_tracks)
+        self.__filter_similarities(self.union_tracks)
         self.__filter_by_length()
         self.__combine()
         self.__create_playlist()
@@ -65,12 +66,25 @@ class PlaylistFactory(ABC):
             most_played[random_track.song_id] = random_track
             time_length = time_length + random_track.time_length
 
-
     # Filters by similarities defined by the extending class
-    @abstractmethod
-    def __filter_similarities(self): 
-        pass
-
+    def __filter_similarities(self, track_group): 
+        similar_group = {}
+        time_length = 0
+        # TODO: Change values to be less precise
+        # While the new group is too long and track_group still has songs to check
+        while time_length > ( self.desired_length * 1.5 ) and track_group:
+            # Randomly select a song
+            random_track = random.choice(list(track_group.values()))
+            for track in track_group:
+                if random_track.is_similar(track):
+                    similar_group[track.song_id] = track
+                    time_length += track.time_length
+                    if similar_group[random_track.song_id] != random_track:
+                        similar_group[random_track.song_id] = random_track
+                        time_length += random_track.time_length
+                    del track_group[track.song_id]
+            del track_group[random_track]
+            
     # Lvl 4 filter
     # TODO:
     @abstractmethod

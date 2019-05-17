@@ -47,9 +47,11 @@ class Track:
         else:
             return False
 
-    # Checks if an artist is a related artist to the creator of this track
-    def is_related_artist(self, artist):
-        for current_artist in self.artists:
-            if self.artist.is_related_artist(artist):
-                return True 
+    # TODO: Checks if 2 tracks have some similarity or relation
+    def is_similar(self, track):
+        # Check if the artist that track 2 is by falls under related 
+        if self.artist.is_related_artist(track.artist):
+            return True
+        # Check if the genres are related (??) depending on factory settings
+            #return True
         return False
