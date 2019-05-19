@@ -6,6 +6,8 @@ from objects.playlist import Playlist
 
 class User:
 
+    #remove retrieve saved tracks
+
     def __init__(self, username):
         self.username = username
         self.saved_tracks = {} # Dictionary of Type Track
@@ -46,24 +48,35 @@ class User:
 
         playlists = sp.user_playlists(self.username)
         for i in playlists['items']:
+                total_duration = 0
                 playlist_tracks = {}
                 results = sp.user_playlist(self.username, i['id'],fields="tracks,next")
                 tracks = results['tracks']
                 for j, item in enumerate(tracks['items']):
                     track = item['track']
-                    self.saved_tracks.update({track['id']:track['name']})
-                    playlist_tracks.update({track['id']:track['name']})
-                self.playlists.append(Playlist(i['id'],playlist_tracks,i['name']))
+                    track_duration = track['duration_ms']
+                    total_duration += track_duration
+
+                    artist_name = track['artists'][0]['name']
+                    result = sp.search(artist_name,1,0,"artist")
+                    genres = []
+                    for k in result['artists']['items'][0]['genres']:
+                        genres.append(k)
+
+                    song = Track(track['id'],self.username,artist_name,genres,track_duration)
+                    self.saved_tracks.update({track['id']:song})
+                    playlist_tracks.update({track['id']:song})
+                self.playlists.append(Playlist(i['id'],playlist_tracks,i['name'],None,total_duration))
 
         #view songs in saved tracks
     #    for i in self.saved_tracks.values():
     #        print(i)
-
-        for i in self.playlists:
-            print("Playlist:" + "  Id:" + i.playlist_id + "   Title:" + i.name)
-            for j,k in i.tracks.items():
-                print("Id:" +j + "   Title:" + k)
-            print()
+        #
+        # for i in self.playlists:
+        #     print("Playlist:" + "  Id:" + i.playlist_id + "   Title:" + i.name)
+        #     for j,k in i.tracks.items():
+        #         print("Id:" +j + "   Title:" + k)
+        #     print()
 
 
 
