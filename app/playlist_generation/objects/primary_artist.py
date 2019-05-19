@@ -1,4 +1,4 @@
-import settings
+from app.playlist_generation.objects.settings import *
 from artist import Artist
 
 class PrimaryArtist(Artist):
@@ -14,6 +14,7 @@ class PrimaryArtist(Artist):
         # Retrieve data from api 
         # Create artist objects()
         # add to self.related_artists
+        self.related_artists = spotify.artist_related_artists(self.artist_id)
 
     # TEST: For testing purposes only!
     def add_related_artist(self, artist):
