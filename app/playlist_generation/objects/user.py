@@ -8,11 +8,9 @@ class User:
 
     def __init__(self, username):
         self.username = username
-        self.saved_tracks = None # Dictionary of Type Track
+        self.saved_tracks = {} # Dictionary of Type Track
         self.playlists = [] # List of Type Playlist
         self.most_listened = None # Dictionary of Type Track
-
-        self.trackName_id = [] #For testing
 
         self.__retrieve_saved_tracks()
         self.__retrieve_playlists()
@@ -46,20 +44,27 @@ class User:
             token = util.prompt_for_user_token(self.username)
         sp = spotipy.Spotify(auth=token)
 
-        
         playlists = sp.user_playlists(self.username)
         for i in playlists['items']:
-                self.playlists.append(i)
+                playlist_tracks = {}
                 results = sp.user_playlist(self.username, i['id'],fields="tracks,next")
                 tracks = results['tracks']
                 for j, item in enumerate(tracks['items']):
                     track = item['track']
-                    s = "track: "+ track['name'] + " , id: " + track['id']
-                    self.trackName_id.append(s)
+                    self.saved_tracks.update({track['id']:track['name']})
+                    playlist_tracks.update({track['id']:track['name']})
+                self.playlists.append(Playlist(i['id'],playlist_tracks,i['name']))
 
-        #view songs and ids in all playlists
-        #for i in self.trackName_id:
-        #    print(i)
+        #view songs in saved tracks
+    #    for i in self.saved_tracks.values():
+    #        print(i)
+
+        for i in self.playlists:
+            print("Playlist:" + "  Id:" + i.playlist_id + "   Title:" + i.name)
+            for j,k in i.tracks.items():
+                print("Id:" +j + "   Title:" + k)
+            print()
+
 
 
     # TODO:
