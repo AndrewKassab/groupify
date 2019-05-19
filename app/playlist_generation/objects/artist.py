@@ -4,7 +4,6 @@ class Artist:
 
     def __init__(self, artist_id):
         self.artist_id = id
-        self.genres = None # List of genre ids
         self.top_songs = None # List of songids 
         self.__retrieve_top_songs()
 
@@ -15,9 +14,3 @@ class Artist:
 
         top_songs_list = spotify.artist_top_tracks(self.artist_id)
         self.top_songs = [item['id'] for item in top_songs_list['items']]
-
-    def __retrieve_genres(self):
-        # Retrieve info from api 
-        # set self.genres
-
-        self.genres = spotify.artist(self.artist_id)['genres']

@@ -12,14 +12,7 @@ class Track:
         self.time_length = None
         self.mp_priority = 0
         self.__retrieve_artist()
-        self.__retrieve_genres()
 
-    # TODO:
-    def __retrieve_genres(self): 
-        pass
-        # Retrieve info from api
-        # set self.genres
-        self.genres = self.artist.genres
     
     # TODO:
     def __retrieve_artist(self): 
