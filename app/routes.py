@@ -1,7 +1,8 @@
 from app import app, db
 from app.models import User
+from app.config import ERR_401, ERR_404
 
-from flask import jsonify
+from flask import jsonify, request, abort, Response
 
 @app.route('/')
 def root():
@@ -13,7 +14,7 @@ def root():
 
 # List playlists
 @app.route('/api/playlists', methods=['GET'])
-def list_playlists(request):
+def list_playlists():
 
     user = authenticate_user(request)
 
@@ -57,20 +58,42 @@ def delete_playlist(request):
     # TODO
     return None
 
-@app.errorhandler(401)
-def custom_401(error):
-    return Response('<Bad Request user not found authenticated- flask_start.py>', 401, {''})
-
-
 def authenticate_user(request):
 
-    if 'auth_token' not in request:
+    if 'token' not in request.form:
         abort(401)
 
     # get the username / user
-    user = None
+    user = User(token=request.form['token'])
 
     if user is None:
         abort(401)
 
     return user
+
+@app.errorhandler(401)
+def custom_401(error):
+    return std_error_handler(error)
+
+@app.errorhandler(404)
+def custom_404(error):
+    return std_error_handler(error)
+
+def std_error_handler(error):
+    response = jsonify({
+        'message':f'{get_error_msg(error)}',
+        'code':f'{error.code}',
+        'status':'error'
+    })
+
+    response.status_code = error.code
+
+    return response
+
+def get_error_msg(error):
+    if(error.code==404):
+        return ERR_404
+    if(error.code==401):
+        return ERR_401
+    else:
+        return f'{error}'
