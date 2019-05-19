@@ -1,4 +1,4 @@
-import settings
+from app.playlist_generation.objects.settings import *
 
 class Track:
 
@@ -39,7 +39,7 @@ class Track:
 
     # Check if this track is a most played track by any of its users
     def is_users_most_played(self):
-        for user in self.users:
-            if user.is_most_listened(self)
-                return True
+        #for user in self.users:
+        #    if user.is_most_listened(self)
+        #        return True
         return False

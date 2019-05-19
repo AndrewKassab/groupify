@@ -1,8 +1,6 @@
-import objects.settings
-import sys
-sys.path.append('../')
-from objects.track import Track
-from objects.playlist import Playlist
+from app.playlist_generation.objects.settings import *
+from app.playlist_generation.objects.track import *
+from app.playlist_generation.objects.playlist import *
 
 class User:
 
@@ -63,7 +61,9 @@ class User:
                     for k in result['artists']['items'][0]['genres']:
                         genres.append(k)
 
-                    song = Track(track['id'],self.username,artist_name,genres,track_duration)
+                    #song = Track(track['id'],self.username,artist_name,genres,track_duration)
+                    song = Track(track['id'], {})
+
                     self.saved_tracks.update({track['id']:song})
                     playlist_tracks.update({track['id']:song})
                 self.playlists.append(Playlist(i['id'],playlist_tracks,i['name'],None,total_duration))

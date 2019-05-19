@@ -1,4 +1,4 @@
-import settings
+from app.playlist_generation.objects.settings import *
 from artist import Artist
 
 class PrimaryArtist(Artist):
