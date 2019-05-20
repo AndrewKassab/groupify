@@ -1,6 +1,12 @@
-from app.playlist_generation.objects.settings import *
-from app.playlist_generation.objects.track import *
-from app.playlist_generation.objects.playlist import *
+#import objects.settings
+import sys
+sys.path.append('../')
+from objects.track import Track
+from objects.playlist import Playlist
+
+#from app.playlist_generation.objects.settings import *
+#from app.playlist_generation.objects.track import *
+#from app.playlist_generation.objects.playlist import *
 
 class User:
 
@@ -12,16 +18,8 @@ class User:
         self.playlists = [] # List of Type Playlist
         self.most_listened = None # Dictionary of Type Track
 
-        self.__retrieve_saved_tracks()
         self.__retrieve_playlists()
         self.__retrieve_most_listened()
-
-    # TODO:
-    def __retrieve_saved_tracks(self):
-        pass
-        # Retrieve info from api
-        # For each songid create a track object(songid, self)
-        # add each track to self.tracks
 
     # TODO:
     def __retrieve_playlists(self):
@@ -57,16 +55,11 @@ class User:
 
                     artist_name = track['artists'][0]['name']
                     result = sp.search(artist_name,1,0,"artist")
-                    genres = []
-                    for k in result['artists']['items'][0]['genres']:
-                        genres.append(k)
 
-                    #song = Track(track['id'],self.username,artist_name,genres,track_duration)
-                    song = Track(track['id'], {})
-
+                    song = Track(track['id'],self.username,artist_name,track_duration)
                     self.saved_tracks.update({track['id']:song})
                     playlist_tracks.update({track['id']:song})
-                self.playlists.append(Playlist(i['id'],playlist_tracks,i['name'],None,total_duration))
+                self.playlists.append(Playlist(i['id'],playlist_tracks,i['name'],total_duration))
 
         #view songs in saved tracks
     #    for i in self.saved_tracks.values():
