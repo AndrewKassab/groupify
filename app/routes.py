@@ -12,6 +12,8 @@ def root():
 
     return jsonify(u.to_dict())
 
+@app.route('/api/spotify/')
+
 # List playlists
 @app.route('/api/playlists', methods=['GET'])
 def list_playlists():
@@ -19,30 +21,53 @@ def list_playlists():
     user = authenticate_user(request)
 
     #TODO
+    # Get the playlists from the user
+
     return None
 
 
 # Edit playlist
-@app.route('/api/playlists/:id',methods=['POST'])
-def edit_playlist(request):
+@app.route('/api/playlists/<int:group_id>',methods=['POST'])
+def edit_playlist(group_id):
 
     user = authenticate_user(request)
 
-    # TODO
-    return None
+    # Get the group from the database
+    # and get the name from the request
+    group = Group.query.filter_by(id=group_id).first()
+    name = request.form['name']
+
+    if group is None or name is None:
+        abort(404)
+
+    group.title = name
+    db.commit()
+
+    response = jsonify({'playlist': {
+        'id': group_id,
+        'name': name,
+        },
+        'status': 'success'
+    })
+
+    response.status_code = 200
+
+    return response
 
 # Playlist details
-@app.route('/api/playlists/:id',methods=['GET'])
-def get_playlist_details(request):
+@app.route('/api/playlists/<int:group_id>',methods=['GET'])
+def get_playlist_details(group_id):
 
     user = authenticate_user(request)
 
     # TODO
+
+
     return None
 
 # Create playlist
 @app.route('/api/playlists/create',methods=['POST'])
-def create_playlist(request):
+def create_playlist():
 
     user = authenticate_user(request)
 
@@ -50,13 +75,19 @@ def create_playlist(request):
     return None
 
 # Delete playlist
-@app.route('/api/playlists/:id',methods=['DELETE'])
-def delete_playlist(request):
+@app.route('/api/playlists/<int:group_id>',methods=['DELETE'])
+def delete_playlist(group_id):
 
     user = authenticate_user(request)
 
     # TODO
     return None
+
+@app.route('/api/logout',methods=['DELETE'])
+def logout():
+
+    user = authenticate_user(request)
+
 
 def authenticate_user(request):
 
@@ -64,7 +95,7 @@ def authenticate_user(request):
         abort(401)
 
     # get the username / user
-    user = User(token=request.form['token'])
+    user = User.query.filter_by(token=request.form['token']).first()
 
     if user is None:
         abort(401)
@@ -72,12 +103,12 @@ def authenticate_user(request):
     return user
 
 @app.errorhandler(401)
-def custom_401(error,code):
-    return std_error_handler(error,code)
+def custom_401(error):
+    return std_error_handler(error)
 
 @app.errorhandler(404)
 def custom_404(error):
-    return std_error_handler(error,f'error.code')
+    return std_error_handler(error)
 
 def std_error_handler(error):
     response = jsonify({
@@ -92,8 +123,8 @@ def std_error_handler(error):
 
 def get_error_msg(error):
     if(error.code==404):
-        return ERR_404
+        return '404 MESSAGE'
     if(error.code==401):
-        return ERR_401
+        return '401 MESSAGE'
     else:
         return f'{error}'
