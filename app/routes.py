@@ -88,6 +88,15 @@ def logout():
 
     user = authenticate_user(request)
 
+@app.route('/api/login')
+def get_user_auth():
+
+    
+
+    return None
+
+
+
 
 def authenticate_user(request):
 
