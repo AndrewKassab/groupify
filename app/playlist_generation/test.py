@@ -21,7 +21,11 @@ user1 = User(username)
 #########################################
 playlists = user1.playlists
 for i in playlists:
+    print("-------------------------------------------------------------------------------------")
     print("Id:"+ i.playlist_id + "   " + "Name:" + i.name + "  Time Length:" , i.time_length)
+    for j,k in i.tracks.items():
+        print("Id:" +j+ "\nTitle:" + k.name + "\nArtist name:" + k.artist + " Duration:" , k.time_length , "ms")
+        print()
     print()
 
 

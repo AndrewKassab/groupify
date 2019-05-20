@@ -28,8 +28,6 @@ class User:
         # *** for every songId in the playlist, retrieve its value pair
         # from self.saved_tracks instead of creating a new object
         # add each playlist to self.playlists
-
-
         #Currently adds all playlists as objects, and adds all track names and ids to trackName_id
         import spotipy
         import spotipy.util as util
@@ -54,9 +52,8 @@ class User:
                     total_duration += track_duration
 
                     artist_name = track['artists'][0]['name']
-                    result = sp.search(artist_name,1,0,"artist")
 
-                    song = Track(track['id'],self.username,artist_name,track_duration)
+                    song = Track(track['id'],self.username,artist_name,track_duration,track['name'])
                     self.saved_tracks.update({track['id']:song})
                     playlist_tracks.update({track['id']:song})
                 self.playlists.append(Playlist(i['id'],playlist_tracks,i['name'],total_duration))

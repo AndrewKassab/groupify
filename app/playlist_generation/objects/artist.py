@@ -1,10 +1,11 @@
-from app.playlist_generation.objects.settings import *
+#import objects.settings
+#from app.playlist_generation.objects.settings import *
 
 class Artist:
 
     def __init__(self, artist_id):
         self.artist_id = id
-        self.top_songs = None # List of songids 
+        self.top_songs = None # List of songids
         self.__retrieve_top_songs()
 
     def __retrieve_top_songs(self):

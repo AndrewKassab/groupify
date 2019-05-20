@@ -5,9 +5,10 @@
 
 class Track:
 
-    def __init__(self, song_id, users,artist_name,track_duration):
+    def __init__(self, song_id, users,artist_name,track_duration, name):
         self.song_id = song_id
         #self.genres = None
+        self.name = name
         self.artist = artist_name # Type Artist
         self.users = users # Users who have this track saved
         self.amt_saved = len(users)
