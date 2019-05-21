@@ -22,6 +22,12 @@ class PrimaryArtist(Artist):
         # add to self.related_artists
         self.related_artists = spotify.artist_related_artists(self.artist_id)
 
+    def is_related_artist(self, artist):
+        for current_artist in self.related_artists:
+          if current_artist.artist_id == artist.artist_id:
+              return True
+        return False
+
     # TEST: For testing purposes only!
     def add_related_artist(self, artist):
       self.related_artists[artist.artist_id] = artist

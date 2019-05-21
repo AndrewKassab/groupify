@@ -4,7 +4,8 @@
 
 from abc import ABC, abstractmethod
 import random
-from ..object.playlist import Playlist
+import sys
+sys.path.append("../")
 
 class PlaylistFactory(ABC):
 
@@ -17,9 +18,16 @@ class PlaylistFactory(ABC):
         super().__init__()
 
     # Creates the playlist by running appropriate methods to filter songs
-    @abstractmethod
-    def create(self): 
-        pass 
+    def create(self):
+        self.__union_tracks()
+        self.__filter_common_tracks()
+        self.__filter_most_played(self.common_tracks)
+        self.__filter_most_played(self.__union_tracks)
+        self.__filter_similarities(self.common_tracks)
+        self.__filter_similarities(self.union_tracks)
+        self.__filter_by_length()
+        self.__combine()
+        self.__create_playlist()
 
     # Create a union of all user's saved tracks
     def __union_tracks(self):
@@ -33,8 +41,10 @@ class PlaylistFactory(ABC):
 
     # Create the group of common tracks, remove them from union group
     def __filter_common_tracks(self):
-        # TODO: handle 2 people edge case
-        min_required = len(self.users)/2 
+        if len(self.users) == 2 or len(self.users) == 3:
+            min_required = 2
+        else: 
+            min_required = len(self.users)/2 
         for track in self.union_tracks.values():
             if track.amt_saved >= min_required:
                 self.common_tracks[track.song_id] = track
@@ -56,13 +66,25 @@ class PlaylistFactory(ABC):
             most_played[random_track.song_id] = random_track
             time_length = time_length + random_track.time_length
 
-
-    # Lvl 3 filter
-    # TODO:
-    @abstractmethod
-    def __filter_union_similarities(self): 
-        pass
-
+    # Filters by similarities defined by the extending class
+    def __filter_similarities(self, track_group): 
+        similar_group = {}
+        time_length = 0
+        # TODO: Change values to be less precise
+        # While the new group is too long and track_group still has songs to check
+        while time_length > ( self.desired_length * 1.5 ) and track_group:
+            # Randomly select a song
+            random_track = random.choice(list(track_group.values()))
+            for track in track_group:
+                if random_track.is_similar(track):
+                    similar_group[track.song_id] = track
+                    time_length += track.time_length
+                    if similar_group[random_track.song_id] != random_track:
+                        similar_group[random_track.song_id] = random_track
+                        time_length += random_track.time_length
+                    del track_group[track.song_id]
+            del track_group[random_track]
+            
     # Lvl 4 filter
     # TODO:
     @abstractmethod
