@@ -5,16 +5,11 @@ from p_factory import PlaylistFactory
 
 class NarrowedPlaylistFactory(PlaylistFactory):
     
-    # Lvl 2 filter
-    def filter_intersect_most_played(self):
-        return None
+    # TODO: Override union_tracks to only takes tracks from desired playlists
+    def __union_tracks(self):
+        pass
 
-    # Lvl 2 filter
-    def filter_union_most_played(self):
-        return None
-
-    # Lvl 3 filter
-    def filter_union_similarities(self):
+    def filter_similarities(self):
         return None
 
     # Lvl 4 filter
