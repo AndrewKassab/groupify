@@ -1,6 +1,6 @@
 from app import app, db
 from app.models import User
-from app.config import ERR_401, ERR_404
+from spotify import *
 
 from flask import jsonify, request, abort, Response
 
@@ -12,7 +12,10 @@ def root():
 
     return jsonify(u.to_dict())
 
-@app.route('/api/spotify/')
+@app.route('/api/signup')
+def signup():
+    authorization_header = user_Authorization()
+
 
 # List playlists
 @app.route('/api/playlists', methods=['GET'])
