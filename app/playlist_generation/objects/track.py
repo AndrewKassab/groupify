@@ -7,23 +7,15 @@ class Track:
 
     def __init__(self, song_id, users,artist_name,name):
         self.song_id = song_id
-        #self.genres = None
         self.name = name
         self.artist = artist_name # Type Artist
         self.users = users # Users who have this track saved
         self.amt_saved = len(users)
         self.time_length = None
         self.mp_priority = 0 # indicated how important a song is to include
-        self.__retrieve_genre()
         self.__retrieve_artist()
         self.__retrieve_track_length()
 
-    # TODO:
-    def __retrieve_genre(self): 
-        pass
-        # Retrieve info from api
-        # set self.genre
-    
     # TODO:
     def __retrieve_artist(self): 
         pass
