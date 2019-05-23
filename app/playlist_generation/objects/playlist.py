@@ -4,13 +4,15 @@
 
 class Playlist:
 
-    def __init__(self, playlist_id, tracks, name, time_length):
+    def __init__(self, playlist_id = None, tracks = None, name = None):
         self.playlist_id = playlist_id
         self.tracks = tracks
         self.name = name
-        self.time_length = time_length
-        # For pre-existing user playlists
-        if tracks is None:
+        self.time_length = None
+        # Generated playlist
+        if playlist_id is None:
+            # skip retrieving info but set time_length to the sum of track lengths 
+        else: 
             self.__retrieve_info()
 
     # TODO:

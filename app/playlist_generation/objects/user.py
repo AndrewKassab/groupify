@@ -17,7 +17,6 @@ class User:
         self.saved_tracks = {} # Dictionary of Type Track
         self.playlists = [] # List of Type Playlist
         self.most_listened = None # Dictionary of Type Track
-
         self.__retrieve_playlists()
         self.__retrieve_most_listened()
 
