@@ -1,8 +1,8 @@
 from app import app, db
 from app.models import User
-from spotify import *
+from app.spotify import *
 
-from flask import jsonify, request, abort, Response
+from flask import jsonify, request, abort, Response, redirect
 
 @app.route('/')
 def root():
@@ -14,8 +14,9 @@ def root():
 
 @app.route('/api/signup')
 def signup():
-    authorization_header = user_Authorization()
+    response = getUser()
 
+    return redirect(response)
 
 # List playlists
 @app.route('/api/playlists', methods=['GET'])
@@ -23,10 +24,18 @@ def list_playlists():
 
     user = authenticate_user(request)
 
-    #TODO
-    # Get the playlists from the user
+    # The list of playlists to eventually be returned
+    playlists = []
 
-    return None
+    # Iterate through all of the user's groups
+    for group in user.groups:
+
+        playlists.append({'id': group.id, 'name': group.title, 'state':'done'})
+
+    response = jsonify()
+    response.status_code = 200
+
+    return response({'playlists': playlists, 'status':'success'},200)
 
 
 # Edit playlist
@@ -46,16 +55,12 @@ def edit_playlist(group_id):
     group.title = name
     db.commit()
 
-    response = jsonify({'playlist': {
+    return response({'playlist': {
         'id': group_id,
         'name': name,
         },
         'status': 'success'
-    })
-
-    response.status_code = 200
-
-    return response
+    }, 200)
 
 # Playlist details
 @app.route('/api/playlists/<int:group_id>',methods=['GET'])
@@ -93,13 +98,12 @@ def logout():
 
 @app.route('/api/login')
 def get_user_auth():
-
-    
-
     return None
 
-
-
+@app.route('/callback/')
+def callback():
+    getUserToken(request.args['code'])
+    return redirect('localhost:3000')
 
 def authenticate_user(request):
 
@@ -123,15 +127,15 @@ def custom_404(error):
     return std_error_handler(error)
 
 def std_error_handler(error):
-    response = jsonify({
-        'message':f'{get_error_msg(error)}',
-        'code':f'{error.code}',
-        'status':'error'
-    })
+    response = jsonify()
 
     response.status_code = error.code
 
-    return response
+    return response({
+        'message':f'{get_error_msg(error)}',
+        'code':f'{error.code}',
+        'status':'error'
+    },error.code)
 
 def get_error_msg(error):
     if(error.code==404):
@@ -140,3 +144,8 @@ def get_error_msg(error):
         return '401 MESSAGE'
     else:
         return f'{error}'
+
+def response(json,code):
+    response = jsonify(json)
+    response.status_code = code
+    return response
