@@ -103,7 +103,7 @@ def get_user_auth():
 @app.route('/callback/')
 def callback():
     getUserToken(request.args['code'])
-    return redirect('localhost:3000')
+    return redirect('http://localhost:3000')
 
 def authenticate_user(request):
 
