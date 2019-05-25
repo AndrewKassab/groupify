@@ -38,7 +38,7 @@ class User:
 
         playlists = sp.user_playlists(self.username)
         for current_playlist in playlists['items']:
-            self.playlists.append(Playlist(current_playlist['id'],current_playlist,self.username))
+            self.playlists.append(Playlist(current_playlist['id'],current_playlist,self))
 
     # TODO:
 

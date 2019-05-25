@@ -7,7 +7,7 @@ class Playlist:
         self.tracks = {}
         self.duration = 0
         self.user = user
-        print("eeee")
+        #print("eeee")
         self.__retrieve_info(playlist_obj)
 
     def __retrieve_info(self, playlist_obj):
