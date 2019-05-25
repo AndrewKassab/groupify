@@ -104,11 +104,11 @@ class PlaylistFactory(ABC):
         # Finally convert to list
         self.tracks = list(union_set)
 
+    # TODO: Create SPOTIFY playlist object or JSON for spotify
     def __create_playlist(self):
-
-        # TODO:
+        pass
         # playlist_name = Groupify-DATE
         # playlist_image = groupify album art by default (?)
 
-        playlist = Playlist( self.tracks , "", "")
-        return playlist
+        # playlist = Playlist( self.tracks , "", "")
+        # return playlist

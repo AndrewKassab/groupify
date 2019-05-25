@@ -5,34 +5,27 @@
 
 class Track:
 
-    def __init__(self, song_id, users,artist_name,name):
-        self.song_id = song_id
-        self.name = name
-        self.artist = artist_name # Type Artist
-        self.users = users # Users who have this track saved
-        self.amt_saved = len(users)
-        self.time_length = None
+    def __init__(self, track_obj, user): 
+        self.song_id = None 
+        self.name = None 
+        self.artists = [] # Type Artist
+        self.users = [user] # Users who have this track saved
+        self.amt_saved = 1
+        self.duration = 0
         self.mp_priority = 0 # indicated how important a song is to include
-        self.__retrieve_artist()
-        self.__retrieve_track_length()
+        self.__retrieve_info(track_obj)
 
-    # TODO:
-    def __retrieve_artist(self): 
-        pass
-        # Retrieve info from api
-        # Create PrimaryArtist object(artist_id)
-        # set self.artist
-    
-    # TODO:
-    def __retrieve_track_length(self): 
-        pass
-        # Retrieve info from api
-        # set self.time_length
+    def __retrieve_info(self, track_obj):
+        self.song_id = track_obj['id']
+        self.name = track_obj['name']
+        self.duration = track_obj['duration_ms']
+        for artist in track_obj['artists']:
+            self.artists.append(Artist(artist))
 
     # Add a user to the list of users who have this track saved
     def add_user(self, newuser):
         self.users = self.users + newuser
-        self.amt_saved = len(self.users)
+        self.amt_saved += 1
 
     # Check if this track is a most played track by any of its users
     def is_users_most_played(self):
