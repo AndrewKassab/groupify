@@ -103,7 +103,7 @@ def get_user_auth():
 @app.route('/callback/')
 def callback():
     getUserToken(request.args['code'])
-    return redirect('localhost:3000')
+    return redirect('http://localhost:3000')
 
 def authenticate_user(request):
 
@@ -127,10 +127,6 @@ def custom_404(error):
     return std_error_handler(error)
 
 def std_error_handler(error):
-    response = jsonify()
-
-    response.status_code = error.code
-
     return response({
         'message':f'{get_error_msg(error)}',
         'code':f'{error.code}',
