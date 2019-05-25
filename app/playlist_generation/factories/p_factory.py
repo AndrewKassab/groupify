@@ -9,12 +9,13 @@ sys.path.append("../")
 
 class PlaylistFactory(ABC):
 
-    def __init__(self, users, desired_length):
+    def __init__(self, users, playlists, desired_length):
         self.users = users
         self.desired_length = desired_length
         self.common_tracks = {}
         self.union_tracks = {}
         self.tracks = {}
+        self.playlists = playlists
         super().__init__()
 
     # Creates the playlist by running appropriate methods to filter songs
@@ -31,22 +32,18 @@ class PlaylistFactory(ABC):
 
     # Create a union of all user's saved tracks
     def __union_tracks(self):
-        for user in self.users:
+        for playlist in self.playlists:
             # avoid duplicates , but make sure to add user to track object
-            for track in user.saved_tracks.values():
+            for track in playlist.tracks:
                 if track.song_id in self.union_tracks:
-                    self.union_tracks[track.song_id].add_user(user)
+                    self.union_tracks[track.song_id].add_user(playlist.user)
                 else: 
                     self.union_tracks[track.song_id] = track
 
     # Create the group of common tracks, remove them from union group
     def __filter_common_tracks(self):
-        if len(self.users) == 2 or len(self.users) == 3:
-            min_required = 2
-        else: 
-            min_required = len(self.users)/2 
         for track in self.union_tracks.values():
-            if track.amt_saved >= min_required:
+            if track.amt_saved >= 2:
                 self.common_tracks[track.song_id] = track
                 del self.union_tracks[track.song_id]
 
