@@ -5,9 +5,9 @@
 
 class Track:
 
-    def __init__(self, track_obj, user): 
-        self.song_id = None 
-        self.name = None 
+    def __init__(self, track_obj, user):
+        self.song_id = None
+        self.name = None
         self.artists = [] # Type Artist
         self.users = [user] # Users who have this track saved
         self.amt_saved = 1
@@ -30,7 +30,7 @@ class Track:
     # Check if this track is a most played track by any of its users
     def is_users_most_played(self):
         for user in self.users:
-            if user.is_most_listened(self)
+            if user.is_most_listened(self):
                 self.priority += 1
         if priority >= 1:
             return True
@@ -39,7 +39,7 @@ class Track:
 
     # TODO: Checks if 2 tracks have some similarity or relation
     def is_similar(self, track):
-        # Check if the artist that track 2 is by falls under related 
+        # Check if the artist that track 2 is by falls under related
         if self.artist.is_related_artist(track.artist):
             return True
         # Check if the genres are related (??) depending on factory settings

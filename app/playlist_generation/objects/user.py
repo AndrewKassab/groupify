@@ -33,13 +33,15 @@ class User:
         except:
             os.remove(f".cache-{self.username}")
             token = util.prompt_for_user_token(self.username)
+
         sp = spotipy.Spotify(auth=token)
 
         playlists = sp.user_playlists(self.username)
         for current_playlist in playlists['items']:
-                self.playlists.append(Playlist(i['id'],current_playlist)
+            self.playlists.append(Playlist(current_playlist['id'],current_playlist,self.username))
 
-    # TODO: 
+    # TODO:
+
     def __retrieve_most_listened(self):
         pass
         # Retrieve info from api
