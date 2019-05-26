@@ -10,8 +10,13 @@ RESPONSE_TYPE = 'code'
 HEADER = 'application/x-www-form-urlencoded'
 REFRESH_TOKEN = ''
 
+SPOTIFY_API_BASE_URL = "https://api.spotify.com"
+API_VERSION = "v1"
+SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
+
+
 def getAuth(client_id, redirect_uri, scope):
-    data = "{}client_id={}&response_type=code&redirect_uri={}&scope={}".format(SPOTIFY_URL_AUTH, client_id, redirect_uri, scope)
+    data = "{}client_id={}&response_type=code&redirect_uri={}&scope={}&show_dialog=true".format(SPOTIFY_URL_AUTH, client_id, redirect_uri, scope)
     return data
 
 def getToken(code, client_id, client_secret, redirect_uri):
@@ -36,13 +41,12 @@ def getToken(code, client_id, client_secret, redirect_uri):
 
 def handleToken(response):
 
-    print("This is the response: !!!!!!!! ")
-
     auth_head = {"Authorization": "Bearer {}".format(response["access_token"])}
     REFRESH_TOKEN = response["refresh_token"]
     return [response["access_token"], auth_head, response["scope"], response["expires_in"]]
 
 def refreshAuth():
+
     body = {
         "grant_type" : "refresh_token",
         "refresh_token" : REFRESH_TOKEN
@@ -52,3 +56,12 @@ def refreshAuth():
     p_back = json.dumps(post_refresh.text)
 
     return handleToken(p_back)
+
+def userInfo(access_token):
+
+    authorization_header = {"Authorization": "Bearer {}".format(access_token)}
+
+    user_profile_api_endpoint = "{}/me".format(SPOTIFY_API_URL)
+    profile_response = requests.get(user_profile_api_endpoint, headers=authorization_header)
+    profile_data = json.loads(profile_response.text)
+    return profile_data

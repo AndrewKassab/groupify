@@ -96,14 +96,26 @@ def logout():
 
     user = authenticate_user(request)
 
+
+    return None
+
+
 @app.route('/api/login')
 def get_user_auth():
+
     return None
+
 
 @app.route('/callback/')
 def callback():
+
     getUserToken(request.args['code'])
+    userInfo = getUserInfo()
+    print(userInfo)
+    if userInfo is None:
+        abort(404)
     return redirect('http://localhost:3000')
+
 
 def authenticate_user(request):
 
@@ -118,13 +130,16 @@ def authenticate_user(request):
 
     return user
 
+
 @app.errorhandler(401)
 def custom_401(error):
     return std_error_handler(error)
 
+
 @app.errorhandler(404)
 def custom_404(error):
     return std_error_handler(error)
+
 
 def std_error_handler(error):
     response = jsonify()
@@ -136,6 +151,7 @@ def std_error_handler(error):
         'code':f'{error.code}',
         'status':'error'
     },error.code)
+
 
 def get_error_msg(error):
     if(error.code==404):
