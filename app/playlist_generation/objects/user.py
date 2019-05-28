@@ -16,7 +16,6 @@ class User:
         self.username = username
         self.playlists = [] # List of Type Playlist
         self.most_listened = None # Dictionary of Type Track
-        self.most_listened_artists = None # Dictionary of Type Artist
 
         try:
             self.token = util.prompt_for_user_token(self.username)

@@ -5,13 +5,16 @@
 from abc import ABC, abstractmethod
 import random
 import sys
+import copy
 sys.path.append("../")
 
 class PlaylistFactory(ABC):
 
     def __init__(self, users, playlists, desired_length):
+        # TODO: Construct users?
         self.users = users
         self.desired_length = desired_length
+        self.most_played_tracks = {}
         self.common_tracks = {}
         self.union_tracks = {}
         self.tracks = {}
@@ -20,10 +23,9 @@ class PlaylistFactory(ABC):
 
     # Creates the playlist by running appropriate methods to filter songs
     def create(self):
-        self.__union_tracks()
-        self.__filter_common_tracks()
-        self.__filter_most_played(self.common_tracks)
-        self.__filter_most_played(self.__union_tracks)
+        self.__group_union_tracks()
+        self.__group_common_tracks()
+        self.__group_most_played()
         self.__filter_similarities(self.common_tracks)
         self.__filter_similarities(self.union_tracks)
         self.__filter_by_length()
@@ -31,7 +33,7 @@ class PlaylistFactory(ABC):
         self.__create_playlist()
 
     # Create a union of all tracks present in the playlists presented
-    def __union_tracks(self):
+    def __group_union_tracks(self):
         for playlist in self.playlists:
             # avoid duplicates , but make sure to add user to track object
             for track in playlist.tracks:
@@ -39,54 +41,31 @@ class PlaylistFactory(ABC):
                     self.union_tracks[track.song_id].add_user(playlist.user)
                 else: 
                     self.union_tracks[track.song_id] = track
+        # TODO: Check to make sure the track pool is >= desired length?
 
     # Create the group of common tracks, remove them from union group
-    def __filter_common_tracks(self):
+    def __group_common_tracks(self):
         for track in self.union_tracks.values():
             if track.amt_saved >= 2:
                 self.common_tracks[track.song_id] = track
                 del self.union_tracks[track.song_id]
 
-
-    # Filter each track group by most played
-    def __filter_most_played(self, track_group): 
-        most_played = {}    
-        time_length = 0
-        for track in track_group:
-            if track.is_users_most_played():
-                most_played[track.song_id] = track
-                del track_group[track.song_id]
-                time_length = time_length + track.time_length
-        # arbitrarily add a few more songs if the group is too short
-        while time_length < ( 2 * self.desired_length ):
-            random_track = random.choice(list(track_group.values()))
-            most_played[random_track.song_id] = random_track
-            time_length = time_length + random_track.time_length
+    # Groups all user's most played tracks and 
+    def __group_most_played(self):
+        for user in self.users:
+            for track in user.most_listened:
+                if track.song_id in self.most_played_tracks:
+                    self.most_played_tracks[track.song_id].add_user(user)
+                else: 
+                    self.most_played_tracks[track.song_id] = track
+    
 
     # Filters by similarities defined by the extending class
-    def __filter_similarities(self, track_group): 
-        similar_group = {}
-        time_length = 0
-        # TODO: Change values to be less precise
-        # While the new group is too long and track_group still has songs to check
-        while time_length > ( self.desired_length * 1.5 ) and track_group:
-            # Randomly select a song
-            random_track = random.choice(list(track_group.values()))
-            for track in track_group:
-                if random_track.is_similar(track):
-                    similar_group[track.song_id] = track
-                    time_length += track.time_length
-                    if similar_group[random_track.song_id] != random_track:
-                        similar_group[random_track.song_id] = random_track
-                        time_length += random_track.time_length
-                    del track_group[track.song_id]
-            del track_group[random_track]
-            
-    # Lvl 4 filter
-    # TODO:
-    @abstractmethod
-    def __filter_by_length(self): 
-        pass
+    def __filter_group(self, track_group, percentage):
+        group_as_list = []
+        for key, value in .iteritems():
+            temp = [key,value]
+            group_as_list.append(temp)
 
     # Combine union list and intersect list
     def __combine(self):
