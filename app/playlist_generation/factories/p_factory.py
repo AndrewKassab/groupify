@@ -30,7 +30,7 @@ class PlaylistFactory(ABC):
         self.__combine()
         self.__create_playlist()
 
-    # Create a union of all user's saved tracks
+    # Create a union of all tracks present in the playlists presented
     def __union_tracks(self):
         for playlist in self.playlists:
             # avoid duplicates , but make sure to add user to track object
