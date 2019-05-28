@@ -14,8 +14,8 @@ class PlaylistFactory(ABC):
         # TODO: Construct users?
         self.users = users
         self.desired_length = desired_length
+        self.current_length = 0
         self.most_played_tracks = {}
-        self.common_tracks = {}
         self.union_tracks = {}
         self.tracks = {}
         self.playlists = playlists
@@ -24,10 +24,9 @@ class PlaylistFactory(ABC):
     # Creates the playlist by running appropriate methods to filter songs
     def create(self):
         self.__group_union_tracks()
-        self.__group_common_tracks()
         self.__group_most_played()
-        self.__filter_similarities(self.common_tracks)
-        self.__filter_similarities(self.union_tracks)
+        self.__filter_group(self.most_played_tracks)
+        self.__filter_group(self.union_tracks)
         self.__filter_by_length()
         self.__combine()
         self.__create_playlist()
@@ -43,13 +42,6 @@ class PlaylistFactory(ABC):
                     self.union_tracks[track.song_id] = track
         # TODO: Check to make sure the track pool is >= desired length?
 
-    # Create the group of common tracks, remove them from union group
-    def __group_common_tracks(self):
-        for track in self.union_tracks.values():
-            if track.amt_saved >= 2:
-                self.common_tracks[track.song_id] = track
-                del self.union_tracks[track.song_id]
-
     # Groups all user's most played tracks and 
     def __group_most_played(self):
         for user in self.users:
@@ -58,14 +50,22 @@ class PlaylistFactory(ABC):
                     self.most_played_tracks[track.song_id].add_user(user)
                 else: 
                     self.most_played_tracks[track.song_id] = track
-    
+
+    # Makes sure we have no duplicate track objects
+    # TODO:
+    def __squish_groups(self):
+        for track in 
 
     # Filters by similarities defined by the extending class
-    def __filter_group(self, track_group, percentage):
+    def __filter_group(self, ) 
+        length_cap = ( self.desired_length * percentage ) 
         group_as_list = []
+        # Create copy of the group as a list instead of dictionary
         for key, value in .iteritems():
             temp = [key,value]
             group_as_list.append(temp)
+        while group_as_list != [] and not (duration > length_cap):
+            random_track = random.choice(group_as_list)
 
     # Combine union list and intersect list
     def __combine(self):
