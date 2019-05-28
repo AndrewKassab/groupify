@@ -1,4 +1,7 @@
-#import objects.settings
+import sys
+sys.path.append('../')
+from objects.user import *
+from objects.artist import Artist
 
 #from app.playlist_generation.objects.settings import *
 #from app.playlist_generation.objects.primary_artist import *

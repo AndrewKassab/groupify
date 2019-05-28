@@ -3,40 +3,37 @@ import sys
 sys.path.append('../')
 from objects.track import Track
 from objects.playlist import Playlist
-
+import spotipy
+import spotipy.util as util
+import os
 #from app.playlist_generation.objects.settings import *
 #from app.playlist_generation.objects.track import *
 #from app.playlist_generation.objects.playlist import *
-
 class User:
 
     #remove retrieve saved tracks
-
     def __init__(self, username):
         self.username = username
         self.playlists = [] # List of Type Playlist
         self.most_listened = None # Dictionary of Type Track
         self.most_listened_artists = None # Dictionary of Type Artist
+
+        try:
+            self.token = util.prompt_for_user_token(self.username)
+        except:
+            os.remove(f".cache-{self.username}")
+            self.token = util.prompt_for_user_token(self.username)
+
+        self.sp = spotipy.Spotify(auth=self.token)
+
         self.__retrieve_playlists()
         self.__retrieve_most_listened()
 
     # TODO: Retrieve info only for playlists of interest
     def __retrieve_playlists(self):
-
+        
         # TODO: Fix
-        import spotipy
-        import spotipy.util as util
-        import os
-
-        try:
-            token = util.prompt_for_user_token(self.username)
-        except:
-            os.remove(f".cache-{self.username}")
-            token = util.prompt_for_user_token(self.username)
-
-        sp = spotipy.Spotify(auth=token)
-
-        playlists = sp.user_playlists(self.username)
+        playlists = self.sp.user_playlists(self.username)
         for current_playlist in playlists['items']:
             self.playlists.append(Playlist(current_playlist['id'],current_playlist,self))
 

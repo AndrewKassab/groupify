@@ -8,7 +8,6 @@ from playlist_generation.objects.playlist import Playlist
 from playlist_generation.objects.user import User
 from playlist_generation.objects.track import Track
 from playlist_generation.objects.artist import Artist
-from playlist_generation.objects.primary_artist import PrimaryArtist
 from playlist_generation.factories.p_factory import PlaylistFactory
 
 
@@ -22,9 +21,9 @@ user1 = User(username)
 playlists = user1.playlists
 for i in playlists:
     print("-------------------------------------------------------------------------------------")
-    print("Id:"+ i.playlist_id + "   " + "Name:" + i.name + "  Time Length:" , i.time_length)
+    print("Id:"+ i.id + "   " + "Name:" + "  Time Length:" , i.duration)
     for j,k in i.tracks.items():
-        print("Id:" +j+ "\nTitle:" + k.name + "\nArtist name:" + k.artist + " Duration:" , k.time_length , "ms")
+        print("Id:" + k.song_id+ "\nTitle:" + k.name + "\nArtist name:" + " Duration:" , k.duration , "ms")
         print()
     print()
 

@@ -5,9 +5,8 @@ class Artist:
         self.related_artists = []
         self.__retrieve_info(artist_object)
 
-    # TODO: 
+    # TODO:
     def __retrieve_info(self, artist_object):
-        pass
         self.artist_id = artist_object['id']
         # TODO: Retrieve related artists
 
