@@ -28,10 +28,3 @@ class Track:
     def add_user(self, newuser):
         self.users = self.users + newuser
         self.amt_saved += 1
-
-    # Check if this track is a most played track by any of its users
-    def is_users_most_played(self):
-        for user in self.users:
-            if user.is_most_listened(self):
-                return True
-        return False
