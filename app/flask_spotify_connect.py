@@ -28,19 +28,11 @@ def getToken(code, client_id, client_secret, redirect_uri):
         "client_secret": client_secret
     }
 
-<<<<<<< HEAD:app/flask_spotify_auth.py
-    encoded = base64.urlsafe_b64encode("{}:{}".format(client_id, client_secret).encode()).decode()
-
-    headers = {"Content-Type" : HEADER, "Authorization" : "Basic {}".format(encoded)}
-
-    post = requests.post(SPOTIFY_URL_TOKEN, data=body, headers=headers)
-=======
     encoded = base64.urlsafe_b64encode("{}:{}".format(client_id, client_secret).encode())#.decode()
 
     headers = {"Content-Type" : HEADER, "Authorization" : "Basic {}".format(encoded)}
 
     post = requests.post(SPOTIFY_URL_TOKEN, data=body)
->>>>>>> flask_setup:app/flask_spotify_connect.py
 
     if post is None:
         return False
@@ -49,11 +41,6 @@ def getToken(code, client_id, client_secret, redirect_uri):
 
 def handleToken(response):
 
-<<<<<<< HEAD:app/flask_spotify_auth.py
-    print("This is the response: !!!!!!!! ")
-
-=======
->>>>>>> flask_setup:app/flask_spotify_connect.py
     auth_head = {"Authorization": "Bearer {}".format(response["access_token"])}
     REFRESH_TOKEN = response["refresh_token"]
     return [response["access_token"], auth_head, response["scope"], response["expires_in"]]

@@ -110,16 +110,12 @@ def get_user_auth():
 def callback():
 
     getUserToken(request.args['code'])
-<<<<<<< HEAD
-    return redirect('http://localhost:3000')
-=======
     userInfo = getUserInfo()
     print(userInfo)
     if userInfo is None:
         abort(404)
     return redirect('http://localhost:3000')
 
->>>>>>> flask_setup
 
 def authenticate_user(request):
 
