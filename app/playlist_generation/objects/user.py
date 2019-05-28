@@ -1,36 +1,44 @@
-import settings
-from track import Track
-from playlist import Playlist
-
+#import objects.settings
+import sys
+sys.path.append('../')
+from objects.track import Track
+from objects.playlist import Playlist
+import spotipy
+import spotipy.util as util
+import os
+#from app.playlist_generation.objects.settings import *
+#from app.playlist_generation.objects.track import *
+#from app.playlist_generation.objects.playlist import *
 class User:
 
+    #remove retrieve saved tracks
     def __init__(self, username):
         self.username = username
-        self.saved_tracks = None # Dictionary of Type Track
-        self.playlists = None # List of Type Playlist
+        self.playlists = [] # List of Type Playlist
         self.most_listened = None # Dictionary of Type Track
-        self.__retrieve_saved_tracks()
+
+        try:
+            self.token = util.prompt_for_user_token(self.username)
+        except:
+            os.remove(f".cache-{self.username}")
+            self.token = util.prompt_for_user_token(self.username)
+
+        self.sp = spotipy.Spotify(auth=self.token)
+
         self.__retrieve_playlists()
         self.__retrieve_most_listened()
 
-    # TODO:
-    def __retrieve_saved_tracks(self): 
-        pass
-        # Retrieve info from api
-        # For each songid create a track object(songid, self)
-        # add each track to self.tracks
+    # TODO: Retrieve info only for playlists of interest
+    def __retrieve_playlists(self):
+        
+        # TODO: Fix
+        playlists = self.sp.user_playlists(self.username)
+        for current_playlist in playlists['items']:
+            self.playlists.append(Playlist(current_playlist['id'],current_playlist,self))
 
-    # TODO: 
-    def __retrieve_playlists(self): 
-        pass
-        # Retrieve info from api
-        # For each playlist create a playlist object(playlist_id)
-        # *** for every songId in the playlist, retrieve its value pair 
-        # from self.saved_tracks instead of creating a new object
-        # add each playlist to self.playlists
-    
     # TODO:
-    def __retrieve_most_listened(self): 
+
+    def __retrieve_most_listened(self):
         pass
         # Retrieve info from api
         # For each song_id key, find its corresponding value object in self.saved_tracks
@@ -41,4 +49,3 @@ class User:
         if track.song_id in self.most_listened.values():
             return True
         return False
-    

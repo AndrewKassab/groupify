@@ -4,70 +4,68 @@
 
 from abc import ABC, abstractmethod
 import random
-from ..object.playlist import Playlist
+import sys
+import copy
+sys.path.append("../")
 
 class PlaylistFactory(ABC):
 
-    def __init__(self, users, desired_length):
+    def __init__(self, users, playlists, desired_length):
+        # TODO: Construct users?
         self.users = users
         self.desired_length = desired_length
+        self.most_played_tracks = {}
         self.common_tracks = {}
         self.union_tracks = {}
         self.tracks = {}
+        self.playlists = playlists
         super().__init__()
 
     # Creates the playlist by running appropriate methods to filter songs
-    @abstractmethod
-    def create(self): 
-        pass 
+    def create(self):
+        self.__group_union_tracks()
+        self.__group_common_tracks()
+        self.__group_most_played()
+        self.__filter_similarities(self.common_tracks)
+        self.__filter_similarities(self.union_tracks)
+        self.__filter_by_length()
+        self.__combine()
+        self.__create_playlist()
 
-    # Create a union of all user's saved tracks
-    def __union_tracks(self):
-        for user in self.users:
+    # Create a union of all tracks present in the playlists presented
+    def __group_union_tracks(self):
+        for playlist in self.playlists:
             # avoid duplicates , but make sure to add user to track object
-            for track in user.saved_tracks.values():
+            for track in playlist.tracks:
                 if track.song_id in self.union_tracks:
-                    self.union_tracks[track.song_id].add_user(user)
+                    self.union_tracks[track.song_id].add_user(playlist.user)
                 else: 
                     self.union_tracks[track.song_id] = track
+        # TODO: Check to make sure the track pool is >= desired length?
 
     # Create the group of common tracks, remove them from union group
-    def __filter_common_tracks(self):
-        # TODO: handle 2 people edge case
-        min_required = len(self.users)/2 
+    def __group_common_tracks(self):
         for track in self.union_tracks.values():
-            if track.amt_saved >= min_required:
+            if track.amt_saved >= 2:
                 self.common_tracks[track.song_id] = track
                 del self.union_tracks[track.song_id]
 
+    # Groups all user's most played tracks and 
+    def __group_most_played(self):
+        for user in self.users:
+            for track in user.most_listened:
+                if track.song_id in self.most_played_tracks:
+                    self.most_played_tracks[track.song_id].add_user(user)
+                else: 
+                    self.most_played_tracks[track.song_id] = track
+    
 
-    # Filter each track group by most played
-    def __filter_most_played(self, track_group): 
-        most_played = {}    
-        time_length = 0
-        for track in track_group:
-            if track.is_users_most_played():
-                most_played[track.song_id] = track
-                del track_group[track.song_id]
-                time_length = time_length + track.time_length
-        # arbitrarily add a few more songs if the group is too short
-        while time_length < ( 2 * self.desired_length ):
-            random_track = random.choice(list(track_group.values()))
-            most_played[random_track.song_id] = random_track
-            time_length = time_length + random_track.time_length
-
-
-    # Lvl 3 filter
-    # TODO:
-    @abstractmethod
-    def __filter_union_similarities(self): 
-        pass
-
-    # Lvl 4 filter
-    # TODO:
-    @abstractmethod
-    def __filter_by_length(self): 
-        pass
+    # Filters by similarities defined by the extending class
+    def __filter_group(self, track_group, percentage):
+        group_as_list = []
+        for key, value in .iteritems():
+            temp = [key,value]
+            group_as_list.append(temp)
 
     # Combine union list and intersect list
     def __combine(self):
@@ -82,11 +80,11 @@ class PlaylistFactory(ABC):
         # Finally convert to list
         self.tracks = list(union_set)
 
+    # TODO: Create SPOTIFY playlist object or JSON for spotify
     def __create_playlist(self):
-
-        # TODO:
+        pass
         # playlist_name = Groupify-DATE
         # playlist_image = groupify album art by default (?)
 
-        playlist = Playlist( self.tracks , "", "")
-        return playlist
+        # playlist = Playlist( self.tracks , "", "")
+        # return playlist

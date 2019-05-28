@@ -1,23 +1,17 @@
-import settings
-
 class Artist:
 
-    def __init__(self, artist_id):
+    def __init__(self, artist_object):
         self.artist_id = id
-        self.genres = None # List of genre ids
-        self.top_songs = None # List of songids 
-        self.__retrieve_top_songs()
+        self.related_artists = []
+        self.__retrieve_info(artist_object)
 
-    def __retrieve_top_songs(self):
-        # Retrieve info from api
-        # add each songid to self.top_songs
-        # Gets the top 10 tracks from the artist
+    # TODO:
+    def __retrieve_info(self, artist_object):
+        self.artist_id = artist_object['id']
+        # TODO: Retrieve related artists
 
-        top_songs_list = spotify.artist_top_tracks(self.artist_id)
-        self.top_songs = [item['id'] for item in top_songs_list['items']]
-
-    def __retrieve_genres(self):
-        # Retrieve info from api 
-        # set self.genres
-
-        self.genres = spotify.artist(self.artist_id)['genres']
+    def is_related_artist(self, artist):
+        for current_artist in self.related_artists:
+          if current_artist.artist_id == artist.artist_id:
+              return True
+        return False

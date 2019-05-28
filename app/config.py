@@ -10,3 +10,6 @@ class Config(object):
 
     SQLALCHEMY_DATABASE_URI = f'postgres+psycopg2://{user}:{password}@{host}:{port}/{database}'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+ERR_401 = 'No such user found'
+ERR_404 = 'Playlist not found'
