@@ -17,6 +17,7 @@ services:
       - DB_USER=groupifyuser
       - DB_PASS=groupifypass
       - FLASK_ENV=development
+      - CALLBACK_URL=http://localhost
     ports:
       - 5000:5000
     stop_signal: SIGINT
