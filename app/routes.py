@@ -111,9 +111,13 @@ def callback():
 
     getUserToken(request.args['code'])
     userInfo = getUserInfo()
+
+    user = User(username=userInfo)
+
     print(userInfo)
     if userInfo is None:
         abort(404)
+
     return redirect('http://localhost:3000')
 
 
