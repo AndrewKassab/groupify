@@ -104,7 +104,7 @@ def logout():
 def callback():
 
     if request.args['code'] is None:
-        #return redirect('http://localhost:3000')
+        print ('http://localhost:3000')
 
     token_data = getUserToken(request.args['code'])
     userInfo = getUserInfo()

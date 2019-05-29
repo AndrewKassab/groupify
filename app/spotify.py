@@ -2,7 +2,8 @@ import os
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo
 
 # Client Keys
-
+CLIENT_ID = os.environ['CLIENT_ID']
+CLIENT_SECRET = os.environ['CLIENT_SECRET']
 
 #Port and callback url can be changed or ledt to localhost:5000
 PORT = os.environ['PORT']
@@ -24,7 +25,8 @@ def getUserToken(code):
 
 def refreshToken(time):
     time.sleep(time)
-    return TOKEN_DATA = refreshAuth()
+    TOKEN_DATA = refreshAuth()
+    return TOKEN_DATA
 
 def getAccessToken():
     return TOKEN_DATA
