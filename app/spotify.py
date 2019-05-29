@@ -2,8 +2,7 @@ import os
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo
 
 # Client Keys
-CLIENT_ID = "539ee5becac647e78e797f9bbe6bd062"
-CLIENT_SECRET = "6fc5f4f40b0d4acbbfe01d3ac538a607"
+
 
 #Port and callback url can be changed or ledt to localhost:5000
 PORT = os.environ['PORT']
