@@ -100,19 +100,19 @@ def logout():
     return None
 
 
-@app.route('/api/login')
-def get_user_auth():
-
-    return None
-
-
 @app.route('/callback/')
 def callback():
 
-    getUserToken(request.args['code'])
+    if request.args['code'] is None:
+        #return redirect('http://localhost:3000')
+
+    token_data = getUserToken(request.args['code'])
     userInfo = getUserInfo()
 
-    user = User(username=userInfo)
+    print(token_data)
+
+    # Add the Auth token and refresh token to the database
+    user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[1],token_expiration=token_data[3])
 
     print(userInfo)
     if userInfo is None:
@@ -128,11 +128,17 @@ def authenticate_user(request):
 
     token = AuthToken.query.filter_by(token=request.form['token']).first()
     user = token.user
-    # get the username / user
-    user = User.query.filter_by(token=request.form['token']).first()
 
     if user is None:
         abort(401)
+
+    # refresh token if needed
+    if user.token_expiration >= now:
+        token_data = refreshToken(3600)
+        user.access_token=token_data[0]
+        user.refresh_token=token_data[1]
+        user.token_expiration=token_data[3]
+        deb.commit()
 
     return user
 

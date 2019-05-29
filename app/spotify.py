@@ -7,7 +7,7 @@ CLIENT_ID = "539ee5becac647e78e797f9bbe6bd062"
 CLIENT_SECRET = "6fc5f4f40b0d4acbbfe01d3ac538a607"
 
 #Port and callback url can be changed or ledt to localhost:5000
-PORT = "5000"
+PORT = "3000"
 CALLBACK_URL = "http://localhost"
 
 #Add needed scope from spotify user
@@ -22,10 +22,11 @@ def getUser():
 def getUserToken(code):
     global TOKEN_DATA
     TOKEN_DATA = getToken(code, CLIENT_ID, CLIENT_SECRET, "{}:{}/callback/".format(CALLBACK_URL, PORT))
+    return TOKEN_DATA
 
 def refreshToken(time):
     time.sleep(time)
-    TOKEN_DATA = refreshAuth()
+    return TOKEN_DATA = refreshAuth()
 
 def getAccessToken():
     return TOKEN_DATA
