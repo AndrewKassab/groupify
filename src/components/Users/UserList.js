@@ -7,8 +7,8 @@ const keys = [
   {title: 'Length', key: 'duration'},
 ];
 
-function TrackList({ tracks }) {
-  return <GenericTable items={tracks} keys={keys} name="Tracks" />;
+function UserList({ users }) {
+  return <GenericTable items={users} keys={keys} name="Tracks" />;
 }
 
 export default TrackList;

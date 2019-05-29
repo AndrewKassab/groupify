@@ -46,6 +46,7 @@ class User(Base):
 
     id = Column(BigInteger, primary_key=True)
     name = Column(String, nullable=False)
+    username = Column(String)
     spotify_id = Column(String)
     access_token = Column(String)
     refresh_token = Column(String)
