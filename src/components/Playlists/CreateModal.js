@@ -1,24 +1,36 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-import UserSelect from './UserSelect';
-import PlaylistCreate from './PlaylistCreate';
+import UserSelector from './create/UserSelector';
+import PlaylistSelector from './create/PlaylistSelector';
+import { userOptions, playlistOptions } from '../../containers/mockdata';
+
+
+const defaultState = {
+  show: false,
+  users: [],
+  playlists: [],
+  page: 'users',
+  next: 'Next',
+};
 
 class CreateModal extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleNext = this.handleNext.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
 
-    this.state = {
-      show: false,
+    this.updateUsers = this.updateUsers.bind(this);
+    this.updatePlaylists = this.updatePlaylists.bind(this);
+
+    this.state = defaultState;
+    this.data = {
       users: [],
-      page: 'users',
-      next: 'Next',
-    };
+      playlists: []
+    }
   }
 
   handleClose() {
@@ -36,12 +48,8 @@ class CreateModal extends Component {
   }
 
   resetState() {
-    this.setState({
-      show: false,
-      users: [],
-      page: 'users',
-      next: 'Next',
-    });
+    this.setState(defaultState);
+    this.data = {users: [], playlists: []};
   }
 
   handleNext() {
@@ -64,6 +72,14 @@ class CreateModal extends Component {
     this.resetState();
   }
 
+  updateUsers(users) {
+    this.data.users = users;
+    this.setState({users: users})
+  }
+
+  updatePlaylists(playlists) {
+    this.data.playlists = playlists;
+  }
 
   render() {
     return (
@@ -76,12 +92,9 @@ class CreateModal extends Component {
           <Modal.Header closeButton>
             <Modal.Title>Create Playlist</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-            {
-              this.state.page == 'users' ?
-              <UserSelect /> :
-              <PlaylistCreate />
-            }
+          <Modal.Body style={{minHeight: '200px'}}>
+            <UserSelector update={this.updateUsers} options={userOptions} values={this.state.users} />
+            <PlaylistSelector update={this.updatePlaylists} options={playlistOptions} values={this.state.playlists} users={this.state.users} />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleCancel}>

@@ -13,3 +13,6 @@ class Config(object):
 
 ERR_401 = 'No such user found'
 ERR_404 = 'Playlist not found'
+
+SPOTIFY_CLIENT_ID = os.environ['SPOTIFY_CLIENT_ID'] or '<CLIENT_ID>'
+SPOTIFY_CLIENT_SECRET = os.environ['SPOTIFY_CLIENT_SECRET'] or '<CLIENT_SECRET>'
