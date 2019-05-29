@@ -122,6 +122,8 @@ def authenticate_user(request):
     if 'token' not in request.form:
         abort(401)
 
+    token = AuthToken.query.filter_by(token=request.form['token']).first()
+    user = token.user
     # get the username / user
     user = User.query.filter_by(token=request.form['token']).first()
 

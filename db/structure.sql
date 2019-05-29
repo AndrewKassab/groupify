@@ -199,7 +199,8 @@ CREATE TABLE public.users (
     spotify_id character varying,
     access_token character varying,
     refresh_token character varying,
-    token_expiration timestamp without time zone
+    token_expiration timestamp without time zone,
+    username character varying
 );
 
 
@@ -451,6 +452,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190504085846'),
 ('20190506201347'),
 ('20190509235700'),
-('20190510001300');
+('20190510001300'),
+('20190517010956');
 
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Container } from 'react-bootstrap';
-import logo from '../images/logo.svg';
+import { Row, Col, Container, ButtonToolbar, Button, Image } from 'react-bootstrap';
+import Background from '../images/logo.svg';
 
 
 export default class LoginPage extends Component {
@@ -8,14 +8,18 @@ export default class LoginPage extends Component {
     return (
       <Container>
         <Row>
-          <Col>
-            <h1>Groupify</h1>
-            <img
-              alt="TeamLogo"
-              className=""
-              src={logo}
-            />
-            <p>Combine playlists at will.</p>
+          <Col style={{height: '100vh'}} className="d-flex flex-column align-items-center py-3">
+            <h1 className="text-center mb-2" > Generate playlists with Groupify.</h1>
+            <div className="flex-fill">
+              <div className="mb-2 d-flex justify-content-center flex-fill">
+                <img src={Background} className="h-100 flex-shrink-1" />
+              </div>
+            </div>
+            <ButtonToolbar>
+              <Button variant="outline-info" size="lg" block href="/api/signup">
+                Sign in using Spotify.
+              </Button>
+            </ButtonToolbar>
           </Col>
         </Row>
       </Container>

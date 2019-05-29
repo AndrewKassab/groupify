@@ -13,3 +13,5 @@ class Config(object):
 
 ERR_401 = 'No such user found'
 ERR_404 = 'Playlist not found'
+
+SPOTIFY_

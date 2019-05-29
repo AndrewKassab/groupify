@@ -1,22 +1,24 @@
 import React from 'react';
 import Select from 'react-select';
 
-class UserSelector extends React.Component {
-  state = {
-    selectedOption: null,
-  }
-  handleChange = (selectedOption) => {
-    this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
-  }
+function UserSelector({ update, values, options }) {
+  const handleChange = (values) => {
+    update(values);
+  };
 
-  render() {
-    return (
+  return (
+    <>
+      <h3>Add users:</h3>
       <Select
+        placeholder='Users for playlist...'
+        closeMenuOnSelect={false}
         isMulti
+        options={options}
+        value={values}
+        onChange={handleChange}
       />
-    );
-  }
+    </>
+  );
 }
 
 export default UserSelector;
