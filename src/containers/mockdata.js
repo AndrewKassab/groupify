@@ -1,9 +1,9 @@
 const users = [
-  {id: 1, name: "Winston"},
-  {id: 2, name: "Sowrya"},
-  {id: 3, name: "Steven"},
-  {id: 4, name: "Alex"},
-  {id: 5, name: "Joyce"}
+  {id: 1, name: "Winston", username: "r167"},
+  {id: 2, name: "Sowrya", username: "sowrya-da-man"},
+  {id: 3, name: "Steven", username: "ya-boi-steven"},
+  {id: 4, name: "Alex", username: "Its-justalex"},
+  {id: 5, name: "Joyce", username: "hello"}
 ];
 
 const spotifyPlaylists = {
@@ -56,7 +56,7 @@ module.exports = {
   playlists: playlists,
 
   users: users,
-  userOptions: users.map((u) => {return {value: u.id, label: u.name}}),
+  userOptions: users.map((u) => {return {value: u.id, label: `${u.name} - ${u.username}`}}),
 
   spotifyPlaylists: spotifyPlaylists,
 };
