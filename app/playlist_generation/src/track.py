@@ -8,14 +8,10 @@ from objects.artist import Artist
 
 class Track:
 
-    def __init__(self, track_obj, user):
-        self.song_id = None
-        self.name = None
-        self.artists = [] # Type Artist
-        self.users = [user] # Users who have this track saved
+    def __init__(self, id, duration):
+        self.id = id 
         self.amt_saved = 1
-        self.duration = 0
-        self.__retrieve_info(track_obj)
+        self.duration = duration
 
     def __retrieve_info(self, track_obj):
         self.song_id = track_obj['id']
