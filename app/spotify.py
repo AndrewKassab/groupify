@@ -16,11 +16,11 @@ TOKEN_DATA = []
 
 
 def getUser():
-    return getAuth(CLIENT_ID, f'{CALLBACK_URL}:{PORT}/callback/', SCOPE)
+    return getAuth(CLIENT_ID, f'{CALLBACK_URL}:{PORT}/api/callback/', SCOPE)
 
 def getUserToken(code):
     global TOKEN_DATA
-    TOKEN_DATA = getToken(code, CLIENT_ID, CLIENT_SECRET, "{}:{}/callback/".format(CALLBACK_URL, PORT))
+    TOKEN_DATA = getToken(code, CLIENT_ID, CLIENT_SECRET, "{}:{}/api/callback/".format(CALLBACK_URL, PORT))
     return TOKEN_DATA
 
 def refreshToken(time):

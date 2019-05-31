@@ -4,14 +4,7 @@ from app.spotify import *
 
 from flask import jsonify, request, abort, Response, redirect
 
-@app.route('/')
-def root():
-    u = User(name="Winston")
-    # db.session.add(u)
-    # db.session.commit()
-
-    return jsonify(u.to_dict())
-
+#DONE
 @app.route('/api/signup')
 def signup():
     response = getUser()
@@ -19,6 +12,7 @@ def signup():
     return redirect(response)
 
 # List playlists
+# DONE
 @app.route('/api/playlists', methods=['GET'])
 def list_playlists():
 
@@ -32,13 +26,11 @@ def list_playlists():
 
         playlists.append({'id': group.id, 'name': group.title, 'state':'done'})
 
-    response = jsonify()
-    response.status_code = 200
-
     return response({'playlists': playlists, 'status':'success'},200)
 
 
 # Edit playlist
+# DONE
 @app.route('/api/playlists/<int:group_id>',methods=['POST'])
 def edit_playlist(group_id):
 
@@ -69,9 +61,28 @@ def get_playlist_details(group_id):
     user = authenticate_user(request)
 
     # TODO
+    group = Group.query.filter_by(id=group_id).first()
 
+    tracks = []
 
-    return None
+    for track in group.tracks:
+        tracks.append({'id':track.id,'name'=track.name,'artists'=track.artists})
+
+    users = []
+
+    for user in group.users
+        users.append({'id':user.id,'name':user.username})
+
+    return response({"playlist": {
+        "id": group_id,
+        "name": group.title,
+        "tracks": tracks,
+        "users": users,
+        "state": "done"
+        },
+        "status": "success"
+    }, 200)
+
 
 # Create playlist
 @app.route('/api/playlists/create',methods=['POST'])
@@ -88,7 +99,7 @@ def delete_playlist(group_id):
 
     user = authenticate_user(request)
 
-    # TODO
+    return response({'playlists': playlists, 'status':'success'},200)
     return None
 
 @app.route('/api/logout',methods=['DELETE'])
@@ -100,7 +111,7 @@ def logout():
     return None
 
 
-@app.route('/callback/')
+@app.route('/api/callback/')
 def callback():
 
     if request.args['code'] is None:
@@ -138,7 +149,7 @@ def authenticate_user(request):
         user.access_token=token_data[0]
         user.refresh_token=token_data[1]
         user.token_expiration=token_data[3]
-        deb.commit()
+        db.commit()
 
     return user
 
