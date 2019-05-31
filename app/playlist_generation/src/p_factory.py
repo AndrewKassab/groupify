@@ -1,26 +1,54 @@
 import random
-import sys
-import copy
 from user import User
-sys.path.append("../")
 
 class PlaylistFactory():
 
     def __init__(self, users, desired_length):
         self.users = users
-        self.desired_length = desired_length * 1.25
+        self.desired_length = desired_length * 1.50
         self.current_length = 0
         self.tracks = {}
 
-    # Creates the playlist by running appropriate methods to filter songs
-    def __create(self):
+    # creates our playlist
+    def create(self, user):
         self.__determine_track_list()
-        self.__filter_length()
-        return self.tracks
+
+        # TODO: 
+        # playlist_name = GROUPIFY-CURR_DATE
+        # playlist_description = username1, username2,for each user in self.users
+        # call API to create playlist on passed in user's account
+        # (remember that sp is present under user as a variable)
+        # add each track.id in self.tracks to the playlist
         
-    # filters tracks into the final group based on percentage 
+    # determines track list
     def __determine_track_list(self):
-        all_tracks = {}
-    
-    def __filter_length(self):
-        pass
+        for user in self.users: 
+            self.__grab_users_tracks(user)
+
+    # Takes tracks from this user's pool for the final track list
+    # TODO: Explore edge cases!
+    def __grab_users_tracks(self, user):
+
+        max_duration = self.desired_length / len(self.users)
+        current_duration = 0
+        random.shuffle(user.tracks)
+
+        for track in user.tracks:
+            for other_user in self.users:
+                if other_user == user:
+                    continue
+                if other_user.has_track_saved(track.id):
+                    if track.id not in self.tracks:
+                        self.tracks[track.id] = track
+                        user.remove_from_pool(track) 
+                        current_duration += track.duration
+            if current_duration >= max_duration:
+                return 
+        
+        random.shuffle(user.tracks)
+
+        while current_duration < max_duration:
+            for track in user.tracks:
+                if track.id not in self.tracks:
+                    self.tracks[track.id] = track
+                    current_duration += track.duration
