@@ -6,10 +6,13 @@ from p_factory import PlaylistFactory
 # there is a list of desired playlist ids to pull from for each specific user at 
 # their key. 
 
-def create_playlist(usernames, user_playlist_ids, desired_length):
+def create_playlist(usernames, tokens, user_playlist_ids, desired_length):
+  if len(usernames) != len(tokens):
+    print("ERROR: Number of usernames does not match number of tokens")
+
   users = []
-  for username in usernames:
-    users.append(User(username, user_playlist_ids[username]))
+  for username, token in zip(usernames, tokens):
+    users.append(User(username, token, user_playlist_ids[username]))
 
   my_factory = PlaylistFactory(users, desired_length)
 
