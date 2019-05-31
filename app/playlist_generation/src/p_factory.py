@@ -1,52 +1,54 @@
-from abc import ABC, abstractmethod
 import random
-import sys
-import copy
 from user import User
-sys.path.append("../")
 
-class PlaylistFactory(ABC):
+class PlaylistFactory():
 
     def __init__(self, users, desired_length):
         self.users = users
-        self.desired_length = desired_length * 1.25
+        self.desired_length = desired_length * 1.50
         self.current_length = 0
-        self.most_played_tracks = {}
         self.tracks = {}
-        super().__init__()
 
-    # Creates the playlist by running appropriate methods to filter songs
-    def __create(self):
-        self.__group_most_played()
-        self.__filter_group(self.most_played_tracks, 1)
-        self.__create_playlist()
+    # creates our playlist
+    def create(self, user):
+        self.__determine_track_list()
 
-    # Groups all user's most played tracks and 
-    def __group_most_played(self):
-        for user in self.users:
-            for track in user.most_listened:
-                if track.song_id in self.most_played_tracks:
-                    self.most_played_tracks[track.song_id].add_user(user)
-                    track = self.most_played_tracks[track.song_id]
-                else: 
-                    self.most_played_tracks[track.song_id] = track
+        # TODO: 
+        # playlist_name = GROUPIFY-CURR_DATE
+        # playlist_description = username1, username2,for each user in self.users
+        # call API to create playlist on passed in user's account
+        # (remember that sp is present under user as a variable)
+        # add each track.id in self.tracks to the playlist
+        
+    # determines track list
+    def __determine_track_list(self):
+        for user in self.users: 
+            self.__grab_users_tracks(user)
 
-    # Filters by similarities defined by the extending class
-    def __filter_group(self, track_group , percentage):
-        length_cap = ( self.desired_length * percentage ) 
-        group_as_list = []
-        # Create copy of the group as a list instead of dictionary
-        for key, value in track_group.iteritems():
-            temp = [key,value]
-            group_as_list.append(temp)
-        while group_as_list != [] and not (duration > length_cap):
-            random_track = random.choice(group_as_list)
+    # Takes tracks from this user's pool for the final track list
+    # TODO: Explore edge cases!
+    def __grab_users_tracks(self, user):
 
-    # TODO: Create SPOTIFY playlist object or JSON for spotify
-    def __create_playlist(self):
-        pass
-        # playlist_name = Groupify-DATE
-        # playlist_image = groupify album art by default (?)
+        max_duration = self.desired_length / len(self.users)
+        current_duration = 0
+        random.shuffle(user.tracks)
 
-        # playlist = Playlist( self.tracks , "", "")
-        # return playlist or make api calls to create it 
+        for track in user.tracks:
+            for other_user in self.users:
+                if other_user == user:
+                    continue
+                if other_user.has_track_saved(track.id):
+                    if track.id not in self.tracks:
+                        self.tracks[track.id] = track
+                        user.remove_from_pool(track) 
+                        current_duration += track.duration
+            if current_duration >= max_duration:
+                return 
+        
+        random.shuffle(user.tracks)
+
+        while current_duration < max_duration:
+            for track in user.tracks:
+                if track.id not in self.tracks:
+                    self.tracks[track.id] = track
+                    current_duration += track.duration

@@ -1,22 +1,15 @@
-#import objects.settings
 import sys
 sys.path.append('../')
-from objects.track import Track
-from objects.playlist import Playlist
+from track import Track
 import spotipy
 import spotipy.util as util
 import os
-#from app.playlist_generation.objects.settings import *
-#from app.playlist_generation.objects.track import *
-#from app.playlist_generation.objects.playlist import *
 
 class User:
 
-    #remove retrieve saved tracks
-    def __init__(self, username):
+    def __init__(self, username, playlist_ids = None):
         self.username = username
-        self.playlists = [] # List of Type Playlist
-        self.most_listened = None # Dictionary of Type Track
+        self.tracks = []
 
         try:
             self.token = util.prompt_for_user_token(self.username)
@@ -26,20 +19,35 @@ class User:
 
         self.sp = spotipy.Spotify(auth=self.token)
 
-        self.__retrieve_playlists()
-        self.__retrieve_most_listened()
+        if playlist_ids is not None:
+            self.__retrieve_playlist_tracks(playlist_ids)
+        self.__retrieve_most_listened_tracks()
 
-    # TODO: Retrieve info only for playlists of interest
-    def __retrieve_playlists(self):
+    def __retrieve_playlist_tracks(self, playlist_ids):
         
-        # TODO: Fix
+        # TODO: Change to only retrieve the playlist_ids instead of all
         playlists = self.sp.user_playlists(self.username)
         for current_playlist in playlists['items']:
-            self.playlists.append(Playlist(current_playlist['id'],current_playlist,self))
+            tracks = self.sp.user_playlist(self.username, current_playlist['id'], fields="tracks,next")
+            for j, item in enumerate(tracks['items']):
+                track = Track(item['track']['id'], item['track']['duration_ms'])
+                self.tracks.append(track)
 
     # TODO:
-    def __retrieve_most_listened(self):
+    def __retrieve_most_listened_tracks(self):
         pass
         # Retrieve info from api
         # For each song_id key, find its corresponding value object in self.saved_tracks
         # and add it to self.most_listened
+
+    # Removes a track from the track pool (after it is already added)
+    def remove_from_pool(self, track):
+        self.tracks.remove(track)
+
+    # TODO:
+    def has_track_saved(self, track_id):
+        pass
+        # TODO: Do API call to check if this user has this track saved
+        # If so, just return True
+        # otherwise, return False
+    
