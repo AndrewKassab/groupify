@@ -110,6 +110,9 @@ def logout():
 
     return None
 
+@app.route.('/api/getgibby')
+def get_gibby ():
+
 
 @app.route('/api/callback/')
 def callback():
@@ -120,7 +123,16 @@ def callback():
     token_data = getUserToken(request.args['code'])
     userInfo = getUserInfo()
 
-    print(token_data)
+
+    # Check if it already exists in table
+    user = User.query.filter_by(id=userInfo['id']).first()
+
+    if not user is None:
+        print(f'{userInfo['id']} is already in table')
+    else:
+        print(f'{userInfo['id']} is NEW in table') 
+
+    if userInfo['id']
 
     # Add the Auth token and refresh token to the database
     user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[1],token_expiration=token_data[3])
@@ -128,6 +140,9 @@ def callback():
     print(userInfo)
     if userInfo is None:
         abort(404)
+
+    db.session.add(user)
+    db.session.commit()
 
     return redirect('http://localhost:3000')
 
