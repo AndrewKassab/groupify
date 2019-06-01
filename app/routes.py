@@ -68,7 +68,7 @@ def get_playlist_details(group_id):
     tracks = []
 
     for track in group.tracks:
-        tracks.append({'id':track.id,'name'=track.name,'artists'=track.artists})
+        tracks.append({'id':track.id,'name':track.name,'artists':track.artists})
 
     users = []
 
