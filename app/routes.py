@@ -72,7 +72,7 @@ def get_playlist_details(group_id):
 
     users = []
 
-    for user in group.users
+    for user in group.users:
         users.append({'id':user.id,'name':user.username})
 
     return response({"playlist": {
