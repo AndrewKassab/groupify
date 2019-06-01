@@ -1,12 +1,23 @@
 from app import app, db
-from app.models import User
+from app.models import *
 from app.spotify import *
+
+import sys
 
 import datetime
 
 from flask import jsonify, request, abort, Response, redirect
 
 HOMEPAGE = 'http://localhost:3000'
+LOGIN_PAGE = 'http://localhost:3000'
+
+
+@app.route('/api/db/User/clear')
+def clear_db():
+    db.session.query(User).delete()
+    db.session.commit()
+    return redirect('/api/signup')
+
 
 #DONE
 @app.route('/api/signup')
@@ -122,33 +133,33 @@ def get_gibby ():
 @app.route('/api/callback/')
 def callback():
 
-    if request.args['code'] is None:
-        print ('http://localhost:3000')
+    # verify that the callback got a code from the user
+    if not 'code' in request.args.keys():
+        return redirect(LOGIN_PAGE)
 
     token_data = getUserToken(request.args['code'])
     userInfo = getUserInfo()
 
-
     # Check if it already exists in table
     user = User.query.filter_by(username=userInfo['id']).first()
 
-    if not user is None:
-        print(f'{userInfo["id"]} is already in table')
-        return redirect(HOMEPAGE)
-    else:
+    if user is None:
         print(f'{userInfo["id"]} is NEW in table')
+    else:
+        print(f'{userInfo["id"]} is already in table')
+        return redirect(HOME_PAGE)
 
     # Add the Auth token and refresh token to the database
-    user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[1],token_expiration=str(datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
+    user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=str(token_data[1]),token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
 
     print(userInfo)
     if userInfo is None:
         abort(404)
 
     db.session.add(user)
-    db.session.flush()
+    db.session.commit()
 
-    return redirect(HOMEPAGE)
+    return redirect(HOME_PAGE)
 
 
 def authenticate_user(request):
