@@ -112,9 +112,10 @@ def logout():
 
     return None
 
-@app.route.('/api/getgibby')
+@app.route('/api/getgibby')
 def get_gibby ():
 
+    return None
 
 @app.route('/api/callback/')
 def callback():
@@ -127,13 +128,13 @@ def callback():
 
 
     # Check if it already exists in table
-    user = User.query.filter_by(id=userInfo['id']).first()
+    user = User.query.filter_by(username=userInfo['id']).first()
 
     if not user is None:
-        print(f'{userInfo['id']} is already in table')
+        print(f'{userInfo["id"]} is already in table')
         return redirect(HOMEPAGE)
     else:
-        print(f'{userInfo['id']} is NEW in table')
+        print(f'{userInfo["id"]} is NEW in table')
 
     # Add the Auth token and refresh token to the database
     user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[1],token_expiration=token_data[3])
