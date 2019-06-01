@@ -16,8 +16,7 @@ import createplaylist
 
 #username1 = "groupiftytest1@googlemail.com"
 username1 = "iyv4pmv1nry9uztvq60z46i7f"
-#fatalis workout id 1lzlp5PJ81Wjy80nCjp0aN
-playlistid1 = "37i9dQZF1DXdfhOsjRMISB"
+playlistid1 = "37i9dQZF1DXdfhOsjRMISB" #Country
 
 #username2 = "groupiftytest1@gmail.com"
 username2 = "62xvmx1yt7f57jxa0jgjs6qg0"
@@ -54,4 +53,4 @@ users[username2] = playlistid2
 users[username3] = playlistid3
 users[username4] = playlistid4
 test = createplaylist
-test.create_playlist([username1,username2,username3,username4],[token1,token2,token3,token4],users, 10000000)
+test.create_playlist([username1,username4],[token1,token4],users, 500000)
