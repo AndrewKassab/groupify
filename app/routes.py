@@ -139,7 +139,7 @@ def callback():
         print(f'{userInfo["id"]} is NEW in table')
 
     # Add the Auth token and refresh token to the database
-    user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[1],token_expiration=str(datetime.datetime.now()+token_data[3]))
+    user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[1],token_expiration=str(datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
 
     print(userInfo)
     if userInfo is None:
