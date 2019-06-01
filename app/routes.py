@@ -137,7 +137,7 @@ def callback():
         print(f'{userInfo["id"]} is NEW in table')
 
     # Add the Auth token and refresh token to the database
-    user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[1],token_expiration=token_data[3])
+    user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[1],token_expiration=str(now()+token_data[3]))
 
     print(userInfo)
     if userInfo is None:
@@ -161,7 +161,7 @@ def authenticate_user(request):
         abort(401)
 
     # refresh token if needed
-    if user.token_expiration >= now:
+    if user.token_expiration >= now():
         token_data = refreshToken(3600)
         user.access_token=token_data[0]
         user.refresh_token=token_data[1]
