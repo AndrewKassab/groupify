@@ -8,9 +8,15 @@ import datetime
 
 from flask import jsonify, request, abort, Response, redirect
 
-HOMEPAGE = 'http://localhost:3000'
+HOME_PAGE = 'http://localhost:3000'
 LOGIN_PAGE = 'http://localhost:3000'
 
+# TODO
+@app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
+def get_playlists():
+    user = authenticate_user(request)
+
+    getUserPlaylists(user.auth_tokens,user.username)
 
 @app.route('/api/db/User/clear')
 def clear_db():
@@ -100,6 +106,8 @@ def get_playlist_details(group_id):
 
 
 # Create playlist
+# BIG TODO need to work with some of the backend p factory
+# people to do this one
 @app.route('/api/playlists/create',methods=['POST'])
 def create_playlist():
 
@@ -115,20 +123,17 @@ def delete_playlist(group_id):
     user = authenticate_user(request)
 
     return response({'playlists': playlists, 'status':'success'},200)
-    return None
 
 @app.route('/api/logout',methods=['DELETE'])
 def logout():
 
     user = authenticate_user(request)
 
+    token = AuthToken.query.filter_by(token=request.form[token]).first()
+    db.session.delete(token)
 
-    return None
+    return response(None,200)
 
-@app.route('/api/getgibby')
-def get_gibby ():
-
-    return None
 
 @app.route('/api/callback/')
 def callback():
@@ -144,18 +149,14 @@ def callback():
     user = User.query.filter_by(username=userInfo['id']).first()
 
     if user is None:
-        print(f'{userInfo["id"]} is NEW in table')
-    else:
-        print(f'{userInfo["id"]} is already in table')
-        return redirect(HOME_PAGE)
+        # Make a new user if user is not in table
+        user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=str(token_data[1]),token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
 
-    # Add the Auth token and refresh token to the database
-    user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=str(token_data[1]),token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
 
-    print(userInfo)
     if userInfo is None:
         abort(404)
 
+    # Add the Auth token and refresh token to the database
     db.session.add(user)
     db.session.commit()
 

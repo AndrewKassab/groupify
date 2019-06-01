@@ -1,4 +1,4 @@
-import os
+import os, spotipy
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo
 
 # Client Keys
@@ -10,7 +10,7 @@ PORT = os.environ['PORT']
 CALLBACK_URL = os.environ['CALLBACK_URL']
 
 #Add needed scope from spotify user
-SCOPE = "streaming user-read-birthdate user-read-email user-read-private user-library-modify user-library-read playlist-read-private playlist-modify-public playlist-modify-private playlist-read-collaborative"
+SCOPE = "streaming user-read-birthdate user-read-email user-library-modify user-library-read playlist-modify-public playlist-read-collaborative"
 #token_data will hold authentication header with access code, the allowed scopes, and the refresh countdown
 TOKEN_DATA = []
 
@@ -33,3 +33,7 @@ def getAccessToken():
 
 def getUserInfo():
     return userInfo(getAccessToken())
+
+def getUserPlaylists(token,username):
+    sp = spotipy.Spotify(auth=token)
+    return sp.user_playlists(username)
