@@ -7,12 +7,11 @@ import os
 
 class User:
 
-    def __init__(self, username, token, playlist_ids):
+    def __init__(self, username, token, playlist_ids = None):
         self.username = username
         self.token = token;
         self.tracks = []
         self.sp = spotipy.Spotify(auth=self.token)
-
 
         if playlist_ids is not None:
             self.__retrieve_playlist_tracks(playlist_ids)
@@ -21,8 +20,7 @@ class User:
     def __retrieve_playlist_tracks(self, playlist_ids):
         playlists = self.sp.user_playlists(self.username)
         for id in playlist_ids:
-            results = self.sp.user_playlist(self.username, id, fields="tracks,next")
-            tracks = results['tracks']
+            tracks = self.sp.user_playlist(self.username, id, fields="tracks,next")
             for j, item in enumerate(tracks['items']):
                 track = Track(item['track']['id'], item['track']['duration_ms'])
                 self.tracks.append(track)
@@ -30,7 +28,7 @@ class User:
     def __retrieve_most_listened_tracks(self, range):
         tracks_obj = self.sp.current_user_top_tracks(limit=50, time_range=range)
         for track in tracks_obj['items']:
-            self.tracks.append(Track(track, self.username))
+            self.tracks.append(Track(track['id'], track['duration_ms']))
 
     # Removes a track from the track pool (after it is already added)
     def remove_from_pool(self, track):
