@@ -143,7 +143,7 @@ def callback():
         abort(404)
 
     db.session.add(user)
-    db.session.flush()
+    db.session.commit()
 
     return redirect(HOMEPAGE)
 
