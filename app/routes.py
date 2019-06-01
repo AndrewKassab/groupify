@@ -4,6 +4,8 @@ from app.spotify import *
 
 from flask import jsonify, request, abort, Response, redirect
 
+HOMEPAGE = 'http://localhost:3000'
+
 #DONE
 @app.route('/api/signup')
 def signup():
@@ -129,10 +131,9 @@ def callback():
 
     if not user is None:
         print(f'{userInfo['id']} is already in table')
+        return redirect(HOMEPAGE)
     else:
-        print(f'{userInfo['id']} is NEW in table') 
-
-    if userInfo['id']
+        print(f'{userInfo['id']} is NEW in table')
 
     # Add the Auth token and refresh token to the database
     user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[1],token_expiration=token_data[3])
@@ -144,7 +145,7 @@ def callback():
     db.session.add(user)
     db.session.commit()
 
-    return redirect('http://localhost:3000')
+    return redirect(HOMEPAGE)
 
 
 def authenticate_user(request):
