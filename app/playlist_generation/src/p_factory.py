@@ -13,7 +13,7 @@ class PlaylistFactory():
     def create(self, user):
         self.__determine_track_list()
 
-        # TODO: 
+        # TODO:
         # playlist_name = GROUPIFY-CURR_DATE
         # playlist_description = username1, username2,for each user in self.users
         # call API to create playlist on passed in user's account
@@ -21,13 +21,16 @@ class PlaylistFactory():
         # add each track.id in self.tracks to the playlist
         usernames = [u.username for u in self.users]
         # For some reason, "description" is bugged out sometimes
+        print(user.username)
+        print(user.sp.current_user())
         playlist = user.sp.user_playlist_create(user.username, name='GROUPIFY', public=True)#, description=",".join(usernames))
+        print(user.username)
         track_ids = [t for t in self.tracks]
         user.sp.user_playlist_add_tracks(user.username, playlist['id'], track_ids)
 
     # determines track list
     def __determine_track_list(self):
-        for user in self.users: 
+        for user in self.users:
             self.__grab_users_tracks(user)
 
     # Takes tracks from this user's pool for the final track list
@@ -45,11 +48,11 @@ class PlaylistFactory():
                 if other_user.has_track_saved(track.id):
                     if track.id not in self.tracks:
                         self.tracks[track.id] = track
-                        user.remove_from_pool(track) 
+                        user.remove_from_pool(track)
                         current_duration += track.duration
             if current_duration >= max_duration:
-                return 
-        
+                return
+
         random.shuffle(user.tracks)
 
         while current_duration < max_duration:

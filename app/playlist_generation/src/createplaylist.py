@@ -12,7 +12,7 @@ def create_playlist(usernames, tokens, user_playlist_ids, desired_length):
     print("ERROR: Number of usernames does not match number of tokens")
   users = []
   for username, token in zip(usernames, tokens):
-    users.append(User(username, token, user_playlist_ids[username]))
+    users.append(User(username, token, [user_playlist_ids[username]]))
 
   my_factory = PlaylistFactory(users, desired_length)
 
