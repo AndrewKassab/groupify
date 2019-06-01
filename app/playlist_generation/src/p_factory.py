@@ -20,9 +20,10 @@ class PlaylistFactory():
         # (remember that sp is present under user as a variable)
         # add each track.id in self.tracks to the playlist
         usernames = [u.username for u in self.users]
-        playlist_id = user.sp.user_playlist_create(user.username, name='GROUPIFY', public=True, description=",".join(usernames))
-        track_ids = [t.id for t in self.tracks]
-        user.sp.user_playlist_add_tracks(user.username, playlist_id, track_ids)
+        # For some reason, "description" is bugged out sometimes
+        playlist = user.sp.user_playlist_create(user.username, name='GROUPIFY', public=True)#, description=",".join(usernames))
+        track_ids = [t for t in self.tracks]
+        user.sp.user_playlist_add_tracks(user.username, playlist['id'], track_ids)
 
     # determines track list
     def __determine_track_list(self):
