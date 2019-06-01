@@ -7,11 +7,12 @@ import os
 
 class User:
 
-    def __init__(self, username, token, playlist_ids = None):
+    def __init__(self, username, token, playlist_ids):
         self.username = username
         self.token = token;
         self.tracks = []
         self.sp = spotipy.Spotify(auth=self.token)
+
 
         if playlist_ids is not None:
             self.__retrieve_playlist_tracks(playlist_ids)
@@ -20,7 +21,8 @@ class User:
     def __retrieve_playlist_tracks(self, playlist_ids):
         playlists = self.sp.user_playlists(self.username)
         for id in playlist_ids:
-            tracks = self.sp.user_playlist(self.username, id, fields="tracks,next")
+            results = self.sp.user_playlist(self.username, id, fields="tracks,next")
+            tracks = results['tracks']
             for j, item in enumerate(tracks['items']):
                 track = Track(item['track']['id'], item['track']['duration_ms'])
                 self.tracks.append(track)
