@@ -30,7 +30,7 @@ class User:
                 self.tracks.append(track)
 
     def __retrieve_most_listened_tracks(self):
-        tracks_obj = self.sp.current_user_top_tracks(limit=50, time_range='medium_term')
+        tracks_obj = self.sp.current_user_top_tracks(limit=50, time_range='short_term')
         for track in tracks_obj['items']:
             self.tracks.append(Track(track['id'], track['duration_ms']))
 
