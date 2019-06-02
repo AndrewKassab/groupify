@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import queryString from 'query-string';
 
 function tokenURL(path, params = {}) {
   return buildUrl(path, Object.assign(params, {token: getToken()}));
@@ -33,9 +34,9 @@ function authReq(path, params = {}) {
   return api(tokenURL(path, params));
 }
 
-function postData(url = '', data = {}) {
+function postData(url = '', data = {}, auth = true) {
   // Default options are marked with *
-  const body = Object.assign({token: getToken()}, data);
+  const body = auth ? Object.assign({token: getToken()}, data) : data;
   return fetch(url, {
     method: 'POST',
     body: JSON.stringify(body),
@@ -70,8 +71,15 @@ function setToken(token) {
   Cookies.set('token', token);
 }
 
-function login(token) {
-  setToken(token);
+function login(query, history) {
+  const spotifyArgs = queryString.parse(query);
+  console.log(spotifyArgs);
+
+  postData('/api/callback', spotifyArgs, false)
+  .then(res => {
+    setToken(res.token);
+    history.push("/playlists");
+  });
 }
 
 function logout() {
@@ -79,7 +87,7 @@ function logout() {
 }
 
 // Playlist methods
-function createPlaylist(name, users, playlists, durantion) {
+function createPlaylist(name, users, playlists, duration) {
   return postData('/api/playlists/create', {
     name: name,
     duration: duration,
