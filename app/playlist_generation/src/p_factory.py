@@ -44,8 +44,6 @@ class PlaylistFactory():
             if current_duration >= max_duration:
                 return
 
-        random.shuffle(user.tracks)
-
         while current_duration < max_duration:
             for track in user.tracks:
                 if track.id not in self.tracks:
