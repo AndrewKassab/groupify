@@ -27,11 +27,8 @@ def refreshToken(refresh):
     TOKEN_DATA = refreshAuth(refresh)
     return TOKEN_DATA
 
-def getAccessToken():
-    return TOKEN_DATA
-
-def getUserInfo():
-    return userInfo(getAccessToken())
+def getUserInfo(token):
+    return userInfo(token)
 
 def getUserPlaylists(token,username):
     sp = spotipy.Spotify(auth=token)
