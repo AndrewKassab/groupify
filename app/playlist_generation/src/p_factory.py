@@ -5,9 +5,7 @@ class PlaylistFactory():
 
     def __init__(self, users, desired_length):
         self.users = users
-        if desired_length > 3600000:
-            self.desired_length = desired_length * 1.15
-        self.desired_length = desired_length * 1.25
+        self.desired_length = desired_length * 1.15
         self.current_length = 0
         self.tracks = {}
 
