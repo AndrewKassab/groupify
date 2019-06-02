@@ -5,12 +5,13 @@ import UserSelector from './create/UserSelector';
 import PlaylistSelector from './create/PlaylistSelector';
 import { userOptions, playlistOptions } from '../../containers/mockdata';
 
+import Client from '../../Client';
 
 const defaultState = {
   show: false,
   users: [],
   playlists: [],
-  page: 'users',
+  page: 'playlists',
   next: 'Next',
 };
 
@@ -22,6 +23,7 @@ class CreateModal extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.handleNext = this.handleNext.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+    this.goBack = this.goBack.bind(this);
 
     this.updateUsers = this.updateUsers.bind(this);
     this.updatePlaylists = this.updatePlaylists.bind(this);
@@ -49,22 +51,28 @@ class CreateModal extends Component {
 
   resetState() {
     this.setState(defaultState);
-    this.data = {users: [], playlists: []};
+    this.data = {users: [], playlists: [], duration: 120};
   }
 
   handleNext() {
+    console.log(this.data);
+
     switch (this.state.page) {
-      case 'users':
-        this.setState({ page: 'playlists', next: 'Save' });
+      case 'playlists':
+        this.setState({ page: 'config', next: 'Save' });
         break;
 
-      case 'playlists':
+      case 'config':
         this.createPlaylist();
         break;
 
       default:
         this.resetState();
     }
+  }
+
+  goBack() {
+    this.setState({ page: 'playlists', next: 'Next' });
   }
 
   handleCancel() {
@@ -97,9 +105,15 @@ class CreateModal extends Component {
             <PlaylistSelector update={this.updatePlaylists} options={playlistOptions} values={this.state.playlists} users={this.state.users} />
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleCancel}>
-              Cancel
-            </Button>
+            {
+              this.state.page === 'playlists' &&
+              <Button variant="secondary" onClick={this.handleCancel}>
+                Cancel
+              </Button> ||
+              <Button variant="secondary" onClick={this.goBack}>
+                Go Back
+              </Button>
+            }
             <Button variant="primary" onClick={this.handleNext}>
               { this.state.next }
             </Button>
