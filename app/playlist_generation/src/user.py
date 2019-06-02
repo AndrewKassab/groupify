@@ -20,7 +20,8 @@ class User:
     def __retrieve_playlist_tracks(self, playlist_ids):
         playlists = self.sp.user_playlists(self.username)
         for id in playlist_ids:
-            tracks = self.sp.user_playlist(self.username, id, fields="tracks,next")
+            results = self.sp.user_playlist(self.username, id, fields="tracks,next")
+            tracks = results['tracks']
             for j, item in enumerate(tracks['items']):
                 track = Track(item['track']['id'], item['track']['duration_ms'])
                 self.tracks.append(track)
@@ -35,4 +36,4 @@ class User:
         self.tracks.remove(track)
 
     def has_track_saved(self, track_id):
-        return self.sp.current_user_saved_tracks_contains(track_id)
+        return self.sp.current_user_saved_tracks_contains([track_id])
