@@ -7,13 +7,13 @@ import os
 
 class User:
 
-    def __init__(self, username, token, playlist_ids = None):
+    def __init__(self, username, token, playlist_ids):
         self.username = username
         self.token = token
         self.tracks = []
         self.sp = spotipy.Spotify(auth=self.token)
 
-        if playlist_ids is not None:
+        if len(playlist_ids) > 0:
             self.__retrieve_playlist_tracks(playlist_ids)
         self.__retrieve_most_listened_tracks()
 
