@@ -15,7 +15,9 @@ class User:
 
         if len(playlist_ids) > 0:
             self.__retrieve_playlist_tracks(playlist_ids)
-        self.__retrieve_most_listened_tracks()
+
+        if len(self.tracks) < 50:
+            self.__retrieve_most_listened_tracks()
 
     # Adds tracks from a specified list of playlists into the track pool
     def __retrieve_playlist_tracks(self, playlist_ids):
