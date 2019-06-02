@@ -33,6 +33,8 @@ def getToken(code, client_id, client_secret, redirect_uri):
 
     post = requests.post(SPOTIFY_URL_TOKEN, data=body)
 
+    app.logger.info('Value of post request: {}')
+
     if post is None:
         return False
 

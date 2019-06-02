@@ -205,6 +205,8 @@ def logout():
 @app.route('/api/callback',methods=['POST'])
 def callback():
 
+    app.logger.info(f'Value of Winston post request: {request.text}')
+
     token_data = getUserToken(request.form['code'])
     userInfo = getUserInfo(token_data[0])
 
