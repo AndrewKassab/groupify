@@ -6,7 +6,7 @@ CLIENT_ID = os.environ['CLIENT_ID']
 CLIENT_SECRET = os.environ['CLIENT_SECRET']
 
 #Port and callback url can be changed or ledt to localhost:5000
-PORT = os.environ['PORT']
+PORT = 3000#os.environ['PORT']
 CALLBACK_URL = os.environ['CALLBACK_URL']
 
 #Add needed scope from spotify user
@@ -16,11 +16,11 @@ TOKEN_DATA = []
 
 
 def getUser():
-    return getAuth(CLIENT_ID, f'{CALLBACK_URL}:{PORT}/api/callback/', SCOPE)
+    return getAuth(CLIENT_ID, f'{CALLBACK_URL}:{PORT}/callback/', SCOPE)
 
 def getUserToken(code):
     global TOKEN_DATA
-    TOKEN_DATA = getToken(code, CLIENT_ID, CLIENT_SECRET, "{}:{}/api/callback/".format(CALLBACK_URL, PORT))
+    TOKEN_DATA = getToken(code, CLIENT_ID, CLIENT_SECRET, "{}:{}/callback/".format(CALLBACK_URL, PORT))
     return TOKEN_DATA
 
 def refreshToken(refresh):
