@@ -23,9 +23,8 @@ def getUserToken(code):
     TOKEN_DATA = getToken(code, CLIENT_ID, CLIENT_SECRET, "{}:{}/api/callback/".format(CALLBACK_URL, PORT))
     return TOKEN_DATA
 
-def refreshToken(time):
-    time.sleep(time)
-    TOKEN_DATA = refreshAuth()
+def refreshToken(refresh):
+    TOKEN_DATA = refreshAuth(refresh)
     return TOKEN_DATA
 
 def getAccessToken():

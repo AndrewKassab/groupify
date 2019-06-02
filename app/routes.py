@@ -2,21 +2,24 @@ from app import app, db
 from app.models import *
 from app.spotify import *
 
-import sys
+import sys, datetime, requests
 
-import datetime
+from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
 
 from flask import jsonify, request, abort, Response, redirect
 
 HOME_PAGE = 'http://localhost:3000'
 LOGIN_PAGE = 'http://localhost:3000'
 
+@app.route('/get/gibbydoo/')
+
 # TODO
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
 def get_playlists():
     user = authenticate_user(request)
+    getUserPlaylists(user.access_token,user.username)
 
-    getUserPlaylists(user.auth_tokens,user.username)
+    # Currently
 
 @app.route('/api/db/User/clear')
 def clear_db():
@@ -111,10 +114,38 @@ def get_playlist_details(group_id):
 @app.route('/api/playlists/create',methods=['POST'])
 def create_playlist():
 
-    user = authenticate_user(request)
+    POST /api/playlists/create
 
-    # TODO
-    return None
+
+  #"token": AUTH_TOKEN,
+  #"name": NAME,
+  #"playlists": ["<LIST OF PLAYLIST IDS>"],
+  #"users": [1, 5, 6]
+
+
+
+    main_user = authenticate_user(request)
+
+    user_ids = request.form['users']
+
+    usernames = []
+    tokens = []
+    playlists = request.form['playlists']
+
+    # Need to get auth tokens from users
+    # will refresh
+    for user_id in user_ids:
+        user = User.query.filter_by(id=user_id).first()
+        if user.token_expiration > datetime.datetime.now():
+             # need to refresh the token
+            refresh_token(user)
+
+        usernames.append(user.username)
+        tokens.append(user.access_token
+
+
+
+
 
 # Delete playlist
 @app.route('/api/playlists/<int:group_id>',methods=['DELETE'])
@@ -131,6 +162,7 @@ def logout():
 
     token = AuthToken.query.filter_by(token=request.form[token]).first()
     db.session.delete(token)
+    db.session.commit()
 
     return response(None,200)
 
@@ -150,7 +182,7 @@ def callback():
 
     if user is None:
         # Make a new user if user is not in table
-        user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=str(token_data[1]),token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
+        user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[4],token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
 
 
     if userInfo is None:
@@ -176,11 +208,7 @@ def authenticate_user(request):
 
     # refresh token if needed
     if user.token_expiration >= datetime.datetime.now():
-        token_data = refreshToken(3600)
-        user.access_token=token_data[0]
-        user.refresh_token=token_data[1]
-        user.token_expiration=token_data[3]
-        db.commit()
+        refresh_token(user)
 
     return user
 
@@ -215,3 +243,10 @@ def response(json,code):
     response = jsonify(json)
     response.status_code = code
     return response
+
+def refresh_token(user):
+    token_data = refreshToken(user.refresh_token)
+    user.access_token=token_data[0]
+    user.refresh_token=token_data[4]
+    user.token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3])
+    db.commit()
