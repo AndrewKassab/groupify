@@ -120,14 +120,14 @@ def create():
 
     main_user = authenticate_user(request)
 
-    user_ids = request.form['users']
-    name = request.form['name']
+    user_ids = content.form['users']
+    name = content.form['name']
+    playlists = content.form['playlists']
+    duration = content.form['duration']
 
     usernames = []
     users = []
     tokens = []
-    playlists = request.form['playlists']
-    duration = request.form['duration']
 
     # Need to get auth tokens from users
     # will refresh
@@ -205,7 +205,9 @@ def logout():
 @app.route('/api/callback',methods=['POST'])
 def callback():
 
-    token_data = getUserToken(request.form['code'])
+    content = request.json
+
+    token_data = getUserToken(content.form['code'])
     userInfo = getUserInfo(token_data[0])
 
     # Check if it already exists in table
@@ -233,7 +235,7 @@ def callback():
 
 def authenticate_user(request):
 
-    if 'token' not in request.form:
+    if 'token' not in request.json.values:
         abort(401)
 
     token = AuthToken.query.filter_by(token=request.form['token']).first()
