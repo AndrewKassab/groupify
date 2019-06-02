@@ -5,7 +5,9 @@ class PlaylistFactory():
 
     def __init__(self, users, desired_length):
         self.users = users
-        self.desired_length = desired_length * 1.50
+        if desired_length > 3600000:
+            self.desired_length = desired_length * 1.15
+        self.desired_length = desired_length * 1.25
         self.current_length = 0
         self.tracks = {}
 
@@ -20,6 +22,9 @@ class PlaylistFactory():
     def __determine_track_list(self):
         for user in self.users:
             self.__grab_users_tracks(user)
+    
+    def get_tracks(self):
+        return self.tracks
 
     # Takes tracks from this user's pool for the final track list
     # TODO: Explore edge cases!
