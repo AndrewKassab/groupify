@@ -24,6 +24,13 @@ class PlaylistFactory():
     def get_tracks(self):
         return self.tracks
 
+    def get_track_objects(self):
+        tracks = []
+        for id, track in self.tracks.items():
+            tracks.append(track)
+        return tracks
+
+
     # Takes tracks from this user's pool for the final track list
     # TODO: Explore edge cases!
     def __grab_users_tracks(self, user):
