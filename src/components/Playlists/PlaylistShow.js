@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import TrackList from '../Tracks/TrackList';
-import { Button, ButtonToolbar, InputGroup, FormControl } from 'react-bootstrap';
+import UserList from '../Users/UserList';
+import { Button, ButtonToolbar, InputGroup, FormControl, Dropdown, Tabs, Tab } from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -23,23 +24,34 @@ function PlaylistShow({ playlist }) {
         onChange={e => setEditName(e.target.value)}
       />
       <InputGroup.Append>
-        <Button variant="outline-secondary" onClick={saveName}>Save</Button>
+        <Button variant="outline-primary" onClick={saveName}>Save</Button>
         <Button variant="outline-secondary" onClick={() => setEditMode(false)}>Cancel</Button>
       </InputGroup.Append>
     </InputGroup>
   );
 
+  const handleToggle = () => {
+    console.log("TOGGLE");
+  };
+
   const display = (
     <ButtonToolbar className="d-flex justify-content-between">
       <h2>{ name }</h2>
-      <div>
-        <Button className="mr-1" variant="outline-secondary" onClick={() => setEditMode(true)}>Change Name</Button>
+      <Dropdown alignRight>
+        <Dropdown.Toggle variant="link" id="dropdown-basic">
+          <span className="fa-layers fa-fw">
+            <FontAwesomeIcon icon="circle" size="2x" />
+            <FontAwesomeIcon icon="ellipsis-v" size="2x" inverse transform="shrink-6 right-3" />
+          </span>
+        </Dropdown.Toggle>
 
-        <Button className="mr-1" variant="outline-primary">Add to Spotify</Button>
-        <Button variant="outline-danger">DELETE</Button>
-
-        {/* <FontAwesomeIcon icon="ellipsis-v" /> */}
-      </div>
+        <Dropdown.Menu>
+          <Dropdown.Item onClick={() => setEditMode(true)}>Change Name</Dropdown.Item>
+          <Dropdown.Item>Add to Spotify</Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item onClick={handleToggle}>Hide Playlist</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
     </ButtonToolbar>
   );
 
@@ -47,7 +59,14 @@ function PlaylistShow({ playlist }) {
     <div>
       { editMode ? editor : display }
 
-      <TrackList tracks={playlist.tracks} />
+      <Tabs defaultActiveKey="tracks" id="uncontrolled-tab-example">
+        <Tab eventKey="tracks" title="Tracks">
+          <TrackList tracks={playlist.tracks} />
+        </Tab>
+        <Tab eventKey="users" title="Users">
+          <UserList users={playlist.users} />
+        </Tab>
+      </Tabs>
     </div>
   );
 }

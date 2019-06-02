@@ -19,9 +19,7 @@ const spotifyPlaylists = {
   ],
 };
 
-const usersById = (ids) => {
-  users.filter(({ id }) => ids.includes(id))
-};
+const usersById = (ids) => users.filter(({ id }) => ids.includes(id));
 
 const playlists = [
   {
@@ -35,7 +33,7 @@ const playlists = [
         id: 2, name: 'blah2', artists: 'artist', duration: 255,
       },
     ],
-    users: [1, 3, 5],
+    users: usersById([1, 3, 5]),
   },
   {
     id: 2,
@@ -48,7 +46,7 @@ const playlists = [
         id: 4, name: 'other song', artists: 'artist1 & artist2', duration: 78,
       },
     ],
-    users: [2, 4, 5],
+    users: usersById([2, 4, 5]),
   },
 ];
 

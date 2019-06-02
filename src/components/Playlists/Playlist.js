@@ -4,15 +4,9 @@ import {
   Link, Switch, Route, Redirect,
 } from 'react-router-dom';
 import PlaylistShow from './PlaylistShow';
-import PlaylistCreate from './PlaylistCreate';
-import PlaylistEdit from './PlaylistEdit';
 
 function Playlist({ match, playlists }) {
   const playlist = playlists.find(plist => plist.id == match.params.id);
-
-  if (match.params.id == 'create') {
-    return <PlaylistCreate />;
-  }
 
   if (!playlist) {
     return (

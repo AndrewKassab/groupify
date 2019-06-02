@@ -13,13 +13,11 @@ const UserCard = ({value, label, onChange}) => {
   }
 
   return (
-    <Card key={key}>
-      <Card.Header>
-        <Accordion.Toggle eventKey={key} as={Button} variant="link" className="p-0 border-0">
-          { label }
-        </Accordion.Toggle>
+    <Card>
+      <Accordion.Toggle eventKey={key} as={Card.Header} >
+        { label }
         <span className="float-right">{ count } selected</span>
-      </Card.Header>
+      </Accordion.Toggle>
       <Accordion.Collapse eventKey={key}>
         <Card.Body>
           <SelectPlaylists userId={value} onChange={handleChange} />

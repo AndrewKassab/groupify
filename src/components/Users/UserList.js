@@ -3,12 +3,11 @@ import GenericTable from '../common/GenericTable';
 
 const keys = [
   {title: 'Name', key: 'name'},
-  {title: 'Artists', key: 'artists'},
-  {title: 'Length', key: 'duration'},
+  {title: 'Username', key: 'username'},
 ];
 
 function UserList({ users }) {
   return <GenericTable items={users} keys={keys} name="Tracks" />;
 }
 
-export default TrackList;
+export default UserList;
