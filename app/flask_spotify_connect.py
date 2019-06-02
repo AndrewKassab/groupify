@@ -1,6 +1,7 @@
 import base64, json
 from flask import jsonify, request, abort, Response, redirect
 import requests
+from app import app
 
 from urllib.parse import quote
 
@@ -32,8 +33,6 @@ def getToken(code, client_id, client_secret, redirect_uri):
     headers = {"Content-Type" : HEADER, "Authorization" : "Basic {}".format(encoded)}
 
     post = requests.post(SPOTIFY_URL_TOKEN, data=body)
-
-    app.logger.info('Value of post request: {}')
 
     if post is None:
         return False

@@ -71,7 +71,7 @@ def edit_playlist(group_id):
     # Get the group from the database
     # and get the name from the request
     group = Group.query.filter_by(id=group_id).first()
-    name = request.form['name']
+    name = request.json['name']
 
     if group is None or name is None:
         abort(404)
@@ -120,14 +120,14 @@ def create():
 
     main_user = authenticate_user(request)
 
-    user_ids = request.form['users']
-    name = request.form['name']
+    user_ids = request.json['users']
+    name = request.json['name']
 
     usernames = []
     users = []
     tokens = []
-    playlists = request.form['playlists']
-    duration = request.form['duration']
+    playlists = request.json['playlists']
+    duration = request.json['duration']
 
     # Need to get auth tokens from users
     # will refresh
@@ -195,7 +195,7 @@ def logout():
 
     user = authenticate_user(request)
 
-    token = AuthToken.query.filter_by(token=request.form[token]).first()
+    token = AuthToken.query.filter_by(token=request.json[token]).first()
     db.session.delete(token)
     db.session.commit()
 
@@ -205,9 +205,9 @@ def logout():
 @app.route('/api/callback',methods=['POST'])
 def callback():
 
-    app.logger.info(f'Value of Winston post request: {request.text}')
+    app.logger.info(f'Value of Winston post request: {request.json}')
 
-    token_data = getUserToken(request.form['code'])
+    token_data = getUserToken(request.json['code'])
     userInfo = getUserInfo(token_data[0])
 
     # Check if it already exists in table
@@ -235,10 +235,10 @@ def callback():
 
 def authenticate_user(request):
 
-    if 'token' not in request.form:
+    if 'token' not in request.json.keys():
         abort(401)
 
-    token = AuthToken.query.filter_by(token=request.form['token']).first()
+    token = AuthToken.query.filter_by(token=request.json['token']).first()
     user = token.user
 
     if user is None:
