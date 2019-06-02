@@ -208,7 +208,7 @@ def logout():
     return response(None,200)
 
 
-@app.route('/api/callback/',methods=['POST'])
+@app.route('/api/callback',methods=['POST'])
 def callback():
 
     # verify that the callback got a code from the user
@@ -240,7 +240,7 @@ def callback():
         abort(404)
 
     # Add the Auth token and refresh token to the database
-    return response()
+    return response({'token':userAuthToken},200)
 
 
 def authenticate_user(request):
