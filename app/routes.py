@@ -173,12 +173,6 @@ def create():
         'status': 'success'
     },200)
 
-@app.route('/api/showgibbytoken')
-def test1():
-
-    return response({'gibby':User.query.filter_by(username='gibby_doo').auth},200)
-
-
 # Delete playlist
 @app.route('/api/playlists/<int:group_id>',methods=['DELETE'])
 def delete_playlist(group_id):
@@ -212,15 +206,13 @@ def logout():
 def callback():
 
     token_data = getUserToken(request.form['code'])
-    userInfo = getUserInfo()
+    userInfo = getUserInfo(token_data[0])
 
     # Check if it already exists in table
     user = User.query.filter_by(username=userInfo['id']).first()
 
     # Create a new uuid token
     userAuthToken = uuid.uuid4()
-
-    print(f'auth: {userAuthToken}')
 
     auth = None
 
