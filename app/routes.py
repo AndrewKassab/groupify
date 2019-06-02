@@ -114,9 +114,6 @@ def get_playlist_details(group_id):
 @app.route('/api/playlists/create',methods=['POST'])
 def create_playlist():
 
-    POST /api/playlists/create
-
-
   #"token": AUTH_TOKEN,
   #"name": NAME,
   #"playlists": ["<LIST OF PLAYLIST IDS>"],
@@ -141,7 +138,7 @@ def create_playlist():
             refresh_token(user)
 
         usernames.append(user.username)
-        tokens.append(user.access_token
+        tokens.append(user.access_token)
 
 
 
