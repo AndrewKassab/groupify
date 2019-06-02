@@ -1,32 +1,40 @@
 from app import app, db
 from app.models import *
 from app.spotify import *
-
-import sys, datetime, requests
-
+import uuid, sys, datetime, requests
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
-
 from flask import jsonify, request, abort, Response, redirect
+from app.playlist_generation.src import Track
 
 HOME_PAGE = 'http://localhost:3000'
 LOGIN_PAGE = 'http://localhost:3000'
-
-@app.route('/get/gibbydoo/')
 
 # TODO
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
 def get_playlists():
     user = authenticate_user(request)
-    getUserPlaylists(user.access_token,user.username)
+    p_info_dict = getUserPlaylists(user.access_token,user.username)
 
-    # Currently
+    playlists = []
+
+    for playlist in p_info_dict['items']:
+        playlists.append({'name':playlist['name'],'spotify_id':playlist['id']})
+
+    return response({
+        'playlists': playlists,
+        'status':'success'
+    },200)
+
+@app.route('/api/search/users',methods=['GET'])
+def search_users():
+    return None
+
 
 @app.route('/api/db/User/clear')
 def clear_db():
     db.session.query(User).delete()
     db.session.commit()
     return redirect('/api/signup')
-
 
 #DONE
 @app.route('/api/signup')
@@ -112,25 +120,23 @@ def get_playlist_details(group_id):
 # BIG TODO need to work with some of the backend p factory
 # people to do this one
 @app.route('/api/playlists/create',methods=['POST'])
-def create_playlist():
-
-    POST /api/playlists/create
-
+def create():
 
   #"token": AUTH_TOKEN,
   #"name": NAME,
   #"playlists": ["<LIST OF PLAYLIST IDS>"],
   #"users": [1, 5, 6]
 
-
-
     main_user = authenticate_user(request)
 
     user_ids = request.form['users']
+    name = request.form['name']
 
     usernames = []
+    users = []
     tokens = []
     playlists = request.form['playlists']
+    duration = request.form['duration']
 
     # Need to get auth tokens from users
     # will refresh
@@ -140,12 +146,22 @@ def create_playlist():
              # need to refresh the token
             refresh_token(user)
 
+        # Make users array
+        users.append(user)
         usernames.append(user.username)
-        tokens.append(user.access_token
+        tokens.append(user.access_token)
 
+    # duration comes in minutes
+    # this is going to pass back a lot of info in for of track objects I believe
+    tracks = create_playlist(name,usernames,tokens,playlists,duration)
 
+    # Create new group
+    group = Group(title=name,owner=main_user)
 
-
+    group.users = users
+    group.tracks = tracks
+    db.session.add(group)
+    db.session.commit()
 
 # Delete playlist
 @app.route('/api/playlists/<int:group_id>',methods=['DELETE'])
@@ -153,7 +169,15 @@ def delete_playlist(group_id):
 
     user = authenticate_user(request)
 
-    return response({'playlists': playlists, 'status':'success'},200)
+    group = Group.query.filter_by(id=group_id).first()
+
+    for track in group.tracks:
+        db.session.delete(track)
+
+    db.session.delete(group)
+    db.session.commit()
+
+    return response({'status':'success'},200)
 
 @app.route('/api/logout',methods=['DELETE'])
 def logout():
@@ -180,18 +204,23 @@ def callback():
     # Check if it already exists in table
     user = User.query.filter_by(username=userInfo['id']).first()
 
+    # Create a new uuid token
+    userAuthToken = uuid.uuid4()
+
+    auth = None
+
     if user is None:
         # Make a new user if user is not in table
         user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[4],token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
-
+        auth = AuthToken(User=user,token=userAuthToken,user_id=user.id)
+        db.session.add(auth)
+        db.session.add(user)
+        db.session.commit()
 
     if userInfo is None:
         abort(404)
 
     # Add the Auth token and refresh token to the database
-    db.session.add(user)
-    db.session.commit()
-
     return redirect(HOME_PAGE)
 
 
