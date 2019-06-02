@@ -12,19 +12,7 @@ class PlaylistFactory():
     # creates our playlist
     def create(self, user):
         self.__determine_track_list()
-
-        # TODO:
-        # playlist_name = GROUPIFY-CURR_DATE
-        # playlist_description = username1, username2,for each user in self.users
-        # call API to create playlist on passed in user's account
-        # (remember that sp is present under user as a variable)
-        # add each track.id in self.tracks to the playlist
-        usernames = [u.username for u in self.users]
-        # For some reason, "description" is bugged out sometimes
-        print(user.username)
-        print(user.sp.current_user())
         playlist = user.sp.user_playlist_create(user.username, name='GROUPIFY', public=True)#, description=",".join(usernames))
-        print(user.username)
         track_ids = [t for t in self.tracks]
         user.sp.user_playlist_add_tracks(user.username, playlist['id'], track_ids)
 
