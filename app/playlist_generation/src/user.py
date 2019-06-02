@@ -7,31 +7,36 @@ import os
 
 class User:
 
-    def __init__(self, username, token, playlist_ids = None):
+    def __init__(self, username, token, playlist_ids):
         self.username = username
-        self.token = token;
+        self.token = token
         self.tracks = []
         self.sp = spotipy.Spotify(auth=self.token)
 
-        if playlist_ids is not None:
+        if len(playlist_ids) > 0:
             self.__retrieve_playlist_tracks(playlist_ids)
-        self.__retrieve_most_listened_tracks('medium_term')
 
+        if len(self.tracks) < 50:
+            self.__retrieve_most_listened_tracks()
+
+    # Adds tracks from a specified list of playlists into the track pool
     def __retrieve_playlist_tracks(self, playlist_ids):
         playlists = self.sp.user_playlists(self.username)
         for id in playlist_ids:
             results = self.sp.user_playlist(self.username, id, fields="tracks,next")
             tracks = results['tracks']
             for j, item in enumerate(tracks['items']):
-                track = Track(item['track']['id'], item['track']['duration_ms'])
+                artist_list = [artist['name'] for artist in item['track']['artists']]
+                track = Track(item['track']['id'], item['track']['name'], artist_list, item['track']['duration_ms'])
                 self.tracks.append(track)
 
-    def __retrieve_most_listened_tracks(self, range):
-        tracks_obj = self.sp.current_user_top_tracks(limit=50, time_range=range)
-        for track in tracks_obj['items']:
-            self.tracks.append(Track(track['id'], track['duration_ms']))
+    def __retrieve_most_listened_tracks(self):
+        tracks = self.sp.current_user_top_tracks(limit=50, time_range='short_term')
+        for track in tracks['items']:
+            print(track['name'])
+            artist_list = [artist['name'] for artist in track['artists']]
+            self.tracks.append(Track(track['id'], track['name'], artist_list, track['duration_ms']))
 
-    # Removes a track from the track pool (after it is already added)
     def remove_from_pool(self, track):
         self.tracks.remove(track)
 
