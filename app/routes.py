@@ -211,10 +211,6 @@ def logout():
 @app.route('/api/callback',methods=['POST'])
 def callback():
 
-    # verify that the callback got a code from the user
-    if not 'code' in request.form.keys():
-        return redirect(LOGIN_PAGE)
-
     token_data = getUserToken(request.form['code'])
     userInfo = getUserInfo()
 
