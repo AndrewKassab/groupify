@@ -1,17 +1,42 @@
 from app import app, db
-from app.models import User
+from app.models import *
 from app.spotify import *
-
+import uuid, sys, datetime, requests
+from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
 from flask import jsonify, request, abort, Response, redirect
+from app.playlist_generation.src import Track
 
-@app.route('/')
-def root():
-    u = User(name="Winston")
-    # db.session.add(u)
-    # db.session.commit()
+HOME_PAGE = 'http://localhost:3000'
+LOGIN_PAGE = 'http://localhost:3000'
 
-    return jsonify(u.to_dict())
+# TODO
+@app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
+def get_playlists():
+    user = authenticate_user(request)
+    p_info_dict = getUserPlaylists(user.access_token,user.username)
 
+    playlists = []
+
+    for playlist in p_info_dict['items']:
+        playlists.append({'name':playlist['name'],'spotify_id':playlist['id']})
+
+    return response({
+        'playlists': playlists,
+        'status':'success'
+    },200)
+
+@app.route('/api/search/users',methods=['GET'])
+def search_users():
+    return None
+
+
+@app.route('/api/db/User/clear')
+def clear_db():
+    db.session.query(User).delete()
+    db.session.commit()
+    return redirect('/api/signup')
+
+#DONE
 @app.route('/api/signup')
 def signup():
     response = getUser()
@@ -19,6 +44,7 @@ def signup():
     return redirect(response)
 
 # List playlists
+# DONE
 @app.route('/api/playlists', methods=['GET'])
 def list_playlists():
 
@@ -32,13 +58,11 @@ def list_playlists():
 
         playlists.append({'id': group.id, 'name': group.title, 'state':'done'})
 
-    response = jsonify()
-    response.status_code = 200
-
     return response({'playlists': playlists, 'status':'success'},200)
 
 
 # Edit playlist
+# DONE
 @app.route('/api/playlists/<int:group_id>',methods=['POST'])
 def edit_playlist(group_id):
 
@@ -69,18 +93,75 @@ def get_playlist_details(group_id):
     user = authenticate_user(request)
 
     # TODO
+    group = Group.query.filter_by(id=group_id).first()
 
+    tracks = []
 
-    return None
+    for track in group.tracks:
+        tracks.append({'id':track.id,'name':track.name,'artists':track.artists})
+
+    users = []
+
+    for user in group.users:
+        users.append({'id':user.id,'name':user.username})
+
+    return response({"playlist": {
+        "id": group_id,
+        "name": group.title,
+        "tracks": tracks,
+        "users": users,
+        "state": "done"
+        },
+        "status": "success"
+    }, 200)
+
 
 # Create playlist
+# BIG TODO need to work with some of the backend p factory
+# people to do this one
 @app.route('/api/playlists/create',methods=['POST'])
-def create_playlist():
+def create():
 
-    user = authenticate_user(request)
+  #"token": AUTH_TOKEN,
+  #"name": NAME,
+  #"playlists": ["<LIST OF PLAYLIST IDS>"],
+  #"users": [1, 5, 6]
 
-    # TODO
-    return None
+    main_user = authenticate_user(request)
+
+    user_ids = request.form['users']
+    name = request.form['name']
+
+    usernames = []
+    users = []
+    tokens = []
+    playlists = request.form['playlists']
+    duration = request.form['duration']
+
+    # Need to get auth tokens from users
+    # will refresh
+    for user_id in user_ids:
+        user = User.query.filter_by(id=user_id).first()
+        if user.token_expiration > datetime.datetime.now():
+             # need to refresh the token
+            refresh_token(user)
+
+        # Make users array
+        users.append(user)
+        usernames.append(user.username)
+        tokens.append(user.access_token)
+
+    # duration comes in minutes
+    # this is going to pass back a lot of info in for of track objects I believe
+    tracks = create_playlist(name,usernames,tokens,playlists,duration)
+
+    # Create new group
+    group = Group(title=name,owner=main_user)
+
+    group.users = users
+    group.tracks = tracks
+    db.session.add(group)
+    db.session.commit()
 
 # Delete playlist
 @app.route('/api/playlists/<int:group_id>',methods=['DELETE'])
@@ -88,33 +169,59 @@ def delete_playlist(group_id):
 
     user = authenticate_user(request)
 
-    # TODO
-    return None
+    group = Group.query.filter_by(id=group_id).first()
+
+    for track in group.tracks:
+        db.session.delete(track)
+
+    db.session.delete(group)
+    db.session.commit()
+
+    return response({'status':'success'},200)
 
 @app.route('/api/logout',methods=['DELETE'])
 def logout():
 
     user = authenticate_user(request)
 
+    token = AuthToken.query.filter_by(token=request.form[token]).first()
+    db.session.delete(token)
+    db.session.commit()
 
-    return None
-
-
-@app.route('/api/login')
-def get_user_auth():
-
-    return None
+    return response(None,200)
 
 
-@app.route('/callback/')
+@app.route('/api/callback/')
 def callback():
 
-    getUserToken(request.args['code'])
+    # verify that the callback got a code from the user
+    if not 'code' in request.args.keys():
+        return redirect(LOGIN_PAGE)
+
+    token_data = getUserToken(request.args['code'])
     userInfo = getUserInfo()
-    print(userInfo)
+
+    # Check if it already exists in table
+    user = User.query.filter_by(username=userInfo['id']).first()
+
+    # Create a new uuid token
+    userAuthToken = uuid.uuid4()
+
+    auth = None
+
+    if user is None:
+        # Make a new user if user is not in table
+        user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[4],token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
+        auth = AuthToken(User=user,token=userAuthToken,user_id=user.id)
+        db.session.add(auth)
+        db.session.add(user)
+        db.session.commit()
+
     if userInfo is None:
         abort(404)
-    return redirect('http://localhost:3000')
+
+    # Add the Auth token and refresh token to the database
+    return redirect(HOME_PAGE)
 
 
 def authenticate_user(request):
@@ -124,11 +231,13 @@ def authenticate_user(request):
 
     token = AuthToken.query.filter_by(token=request.form['token']).first()
     user = token.user
-    # get the username / user
-    user = User.query.filter_by(token=request.form['token']).first()
 
     if user is None:
         abort(401)
+
+    # refresh token if needed
+    if user.token_expiration >= datetime.datetime.now():
+        refresh_token(user)
 
     return user
 
@@ -163,3 +272,10 @@ def response(json,code):
     response = jsonify(json)
     response.status_code = code
     return response
+
+def refresh_token(user):
+    token_data = refreshToken(user.refresh_token)
+    user.access_token=token_data[0]
+    user.refresh_token=token_data[4]
+    user.token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3])
+    db.commit()

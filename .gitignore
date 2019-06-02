@@ -34,7 +34,6 @@ bower_components
 
 # node-waf configuration
 .lock-wscript
-
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
 
@@ -327,3 +326,7 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+
+# API file dumps 
+.cache*
+__pycache__*
