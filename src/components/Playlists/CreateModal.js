@@ -24,6 +24,7 @@ const generateData = (state) =>
   state.users.map(user => ({
     uid: user.id,
     label: user.label,
+    username: user.username,
     playlists: state[pKey(user.id)] || []
   }));
 
@@ -47,6 +48,7 @@ class CreateModal extends Component {
 
     this.updateUsers = this.updateUsers.bind(this);
     this.updatePlaylists = this.updatePlaylists.bind(this);
+    this.createPlaylist = this.createPlaylist.bind(this);
 
     this.updateDuration = this.updateDuration.bind(this);
     this.updateName = this.updateName.bind(this);
@@ -75,9 +77,13 @@ class CreateModal extends Component {
     const userList = users.map(u => u.id);
     const playlists = generateData(this.state).map(
       ({playlists}) => playlists.map(p => p.value)
-    ).flat()
+    ).flat();
+    let userPlaylists = {};
+    generateData(this.state).map(({username, playlists}) => {
+      userPlaylists[username] = playlists.map(p => p.value);
+    });
 
-    Client.createPlaylist(name, userList, playlists, duration).then(res => {
+    Client.createPlaylist(name, userList, playlists, duration, userPlaylists).then(res => {
       console.log(res);
       this.props.store.get('reloadPlaylists')();
     });
@@ -139,6 +145,7 @@ class CreateModal extends Component {
       let options = res.users.map(({id, name, username}) => ({
         label: `${name} - ${username}`,
         value: id,
+        username: username,
         id: id,
         isFixed: (id === uid),
       }));

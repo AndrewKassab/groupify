@@ -129,6 +129,11 @@ def create():
     playlists = request.json['playlists']
     duration = request.json['duration']
 
+    app.logger.debug(request.json)
+
+    # {"<username>": ["<id1>", "<id2>"]}
+    user_playlists = request.json['userPlaylists']
+
     usernames = []
     users = []
     tokens = []
@@ -146,11 +151,6 @@ def create():
 
     # duration comes in minutes
     # this is going to pass back a lot of info in for of track objects I believe
-
-    app.logger.debug(name)
-    app.logger.debug(usernames)
-    app.logger.debug(tokens)
-    app.logger.debug(playlists)
 
     track_objects = create_playlist(name,usernames,tokens,playlists,duration*60000)
 

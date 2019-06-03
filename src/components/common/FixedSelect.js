@@ -24,7 +24,7 @@ export default class FixedSelect extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.state = {
-      value: this.fixedOptions()
+      value: this.props.value
     }
   }
 
@@ -62,8 +62,6 @@ export default class FixedSelect extends Component {
         styles={styles}
         isClearable={this.state.value.some(v => !v.isFixed)}
         name="colors"
-        // className="basic-multi-select"
-        // classNamePrefix="select"
         onChange={this.onChange}
         options={this.props.options}
       />
