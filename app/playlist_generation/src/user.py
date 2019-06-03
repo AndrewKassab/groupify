@@ -21,8 +21,8 @@ class User:
 
     # Adds tracks from a specified list of playlists into the track pool
     def __retrieve_playlist_tracks(self, playlist_ids):
-        playlists = self.sp.user_playlists(self.username)
         for id in playlist_ids:
+            # TODO: Retrieve all tracks instead of just 100, or retrieve the 100 randomly
             results = self.sp.user_playlist(self.username, id, fields="tracks,next")
             tracks = results['tracks']
             for j, item in enumerate(tracks['items']):
@@ -36,9 +36,9 @@ class User:
             artist_list = [artist['name'] for artist in track['artists']]
             self.tracks.append(Track(track['id'], track['name'], artist_list, track['duration_ms']))
 
-    def remove_from_pool(self, track):
-        self.tracks.remove(track)
+    def remove_from_pool(self, tracks):
+        for track in tracks:
+            self.tracks.remove(track)
 
-    def has_track_saved(self, track_id):
-        result = self.sp.current_user_saved_tracks_contains([track_id])
-        return result[0]
+    def has_track_saved(self, track_ids):
+        return self.sp.current_user_saved_tracks_contains(track_ids)

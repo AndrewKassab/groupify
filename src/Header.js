@@ -5,6 +5,7 @@ import {
 // import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router-dom';
 import CreateModal from './components/Playlists/CreateModal';
+import Client from './Client';
 
 export default function Header() {
   return (
@@ -15,14 +16,10 @@ export default function Header() {
         <Navbar.Collapse>
           <Nav className="mr-auto">
             <Nav.Link as={Link} to="/playlists">All Playlists</Nav.Link>
-            {/* <NavDropdown id="collasible-nav-dropdown" title="Playlists">
-              <NavDropdown.Item as={Link} to="/playlists">List Playlists</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/playlists/1">View Playlist (id: 1)</NavDropdown.Item>
-            </NavDropdown> */}
           </Nav>
           <Nav>
             <CreateModal />
-            <Nav.Link as={Link} to="/logout">Logout</Nav.Link>
+            <Nav.Link onClick={Client.logout}>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
