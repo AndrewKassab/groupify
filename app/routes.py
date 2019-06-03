@@ -24,8 +24,14 @@ def get_playlists():
 
 @app.route('/api/search/users',methods=['GET'])
 def search_users():
-    return None
 
+    users = []
+
+    users_db = User.query.all()
+    for user in users:
+        users.append({'name':user.name,'username':user.username,'id':user.id})
+
+    return users
 
 @app.route('/api/db/User/clear')
 def clear_db():
