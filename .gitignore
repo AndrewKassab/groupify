@@ -330,3 +330,6 @@ fabric.properties
 # API file dumps 
 .cache*
 __pycache__*
+
+# user data / credentials
+app/tests/credentials.txt

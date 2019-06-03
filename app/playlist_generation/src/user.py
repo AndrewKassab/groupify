@@ -40,4 +40,5 @@ class User:
         self.tracks.remove(track)
 
     def has_track_saved(self, track_id):
-        return self.sp.current_user_saved_tracks_contains([track_id])
+        result = self.sp.current_user_saved_tracks_contains([track_id])
+        return result[0]
