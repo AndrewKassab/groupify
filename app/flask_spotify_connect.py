@@ -54,7 +54,9 @@ def refreshAuth(refresh,client_secret,client_id):
         "refresh_token" : refresh
     }
 
-    headers = {'Content-Type': HEADER}
+    encoded = base64.urlsafe_b64encode(f'{client_id}:{client_secret}'.encode())
+
+    headers = {'Content-Type': HEADER,"Authorization" : "Basic {}".format(encoded)}
 
     res = requests.post(
         SPOTIFY_URL_TOKEN, auth=(client_id, client_secret), data=body, headers=headers
