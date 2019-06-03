@@ -8,9 +8,11 @@ from app.playlist_generation.src.track import Track
 
 
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
-def get_playlists():
-    user = authenticate_user(request)
-    p_info_dict = getUserPlaylists(user.access_token,user.username)
+def get_playlists(user_id):
+    main_user = authenticate_user(request)
+
+    user = User.query.filter_by(id=user_id).first()
+    p_info_dict = getUserPlaylists(main_user.access_token,user.username)
 
     playlists = []
 
@@ -28,10 +30,10 @@ def search_users():
     users = []
 
     users_db = User.query.all()
-    for user in users:
+    for user in users_db:
         users.append({'name':user.name,'username':user.username,'id':user.id})
 
-    return users
+    return response({'users':users},200)
 
 @app.route('/api/db/User/clear')
 def clear_db():
@@ -208,8 +210,6 @@ def logout():
 @app.route('/api/callback',methods=['POST'])
 def callback():
 
-    app.logger.info(f'Value of Winston post request: {request.json}')
-
     token_data = getUserToken(request.json['code'])
     userInfo = getUserInfo(token_data[0])
 
@@ -230,6 +230,8 @@ def callback():
     auth = AuthToken(user=user,token=userAuthToken,user_id=user.id)
     db.session.add(auth)
     db.session.commit()
+
+    app.logger.info(f'{user.id}')
 
     if userInfo is None:
         abort(404)
