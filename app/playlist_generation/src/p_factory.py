@@ -1,5 +1,5 @@
 import random
-from user import user
+from app.playlist_generation.src.user import user
 
 class PlaylistFactory():
 
