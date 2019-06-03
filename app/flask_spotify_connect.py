@@ -41,7 +41,8 @@ def getToken(code, client_id, client_secret, redirect_uri):
 
 def handleToken(response):
     auth_head = {"Authorization": f'Bearer {response["access_token"]}'}
-    refresh_token = response["refresh_token"][8:]
+    refresh_token = response["refresh_token"]
+    app.logger.info(f'refresh token {refresh_token}')
     return [response["access_token"], auth_head, response["scope"], response["expires_in"],refresh_token]
 
 def refreshAuth(refresh,client_secret,client_id):
@@ -54,13 +55,14 @@ def refreshAuth(refresh,client_secret,client_id):
         "refresh_token" : refresh
     }
 
-    encoded = base64.urlsafe_b64encode("{}:{}".format(client_id, client_secret).encode('utf-8'))
+    encoded = base64.urlsafe_b64encode(f'{client_id}:{client_secret}'.encode())
 
-    headers = {"Authorization" : "Basic {}".format(encoded)}
+    headers = {'Content-Type': HEADER}
 
-    post_refresh = requests.post(SPOTIFY_URL_TOKEN, data=body, headers=headers)
-    app.logger.info(post_refresh.text)
-    p_back = json.dumps(post_refresh.text)
+    res = requests.post(
+        SPOTIFY_URL_TOKEN, auth=(client_id, client_secret), data=body, headers=headers
+    )
+    p_back = res.json()
 
     return handleToken(p_back)
 
