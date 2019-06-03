@@ -7,7 +7,7 @@ def create_playlist(name, usernames, tokens, user_playlist_ids, desired_length):
 
   users = []
   for username, token in zip(usernames, tokens):
-    users.append(User(username, token, user_playlist_ids[username]))
+    users.append(user(username, token, user_playlist_ids[username]))
 
   my_factory = PlaylistFactory(name, users, desired_length)
 

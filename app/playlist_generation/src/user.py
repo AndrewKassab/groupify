@@ -5,7 +5,7 @@ import spotipy
 import spotipy.util as util
 import os
 
-class User:
+class user:
 
     def __init__(self, username, token, playlist_ids):
         self.username = username
