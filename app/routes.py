@@ -5,7 +5,7 @@ import uuid, sys, requests, datetime
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
 from flask import jsonify, request, abort, Response, redirect
 from app.playlist_generation.src.track import Track
-#from app.playlist_generation.src.createplaylist import create_playlist
+from app.playlist_generation.src.createplaylist import create_playlist
 
 
 # This is for finding a user's playlists
@@ -147,7 +147,7 @@ def create():
     # will refresh
     for user_id in user_ids:
         auser = User.query.filter_by(id=user_id).first()
-        if user.token_expiration < datetime.datetime.now():
+        if auser.token_expiration < datetime.datetime.now():
              # need to refresh the token
             refresh_token(auser)
 
@@ -257,7 +257,7 @@ def authenticate_user(req):
 
     auser = token.user
 
-    if user is None:
+    if auser is None:
         abort(401)
 
 

@@ -21,7 +21,7 @@ class PlaylistFactory():
     def __determine_track_list(self):
         for user in self.users:
             self.__grab_users_tracks(user)
-    
+
     def get_tracks(self):
         return self.tracks
 
@@ -42,7 +42,7 @@ class PlaylistFactory():
 
         if len(self.users) > 3:
             amt_must_saved = len(self.users)/2
-        else: 
+        else:
             amt_must_saved = 2
 
         to_remove_from_pool = []
@@ -65,7 +65,7 @@ class PlaylistFactory():
                         self.tracks[track.id] = track
                         current_duration += track.duration
                     to_remove_from_pool.append(track)
-                if current_duration >= max_duration: 
+                if current_duration >= max_duration:
                     return
             user.remove_from_pool(to_remove_from_pool)
             amt_must_saved -= 1

@@ -49,7 +49,6 @@ def refreshAuth(refresh,client_secret,client_id):
 
     app.logger.info(refresh)
 
-
     body = {
         "grant_type" : "refresh_token",
         "refresh_token" : refresh
@@ -62,7 +61,10 @@ def refreshAuth(refresh,client_secret,client_id):
     res = requests.post(
         SPOTIFY_URL_TOKEN, auth=(client_id, client_secret), data=body, headers=headers
     )
-    p_back = res.json()
+
+    app.logger.info(res.text)
+
+    p_back = json.loads(res.text)
 
     return handleToken(p_back)
 
