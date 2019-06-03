@@ -4,7 +4,8 @@ import { Switch, Route } from 'react-router';
 import PlaylistList from '../components/Playlists/PlaylistList';
 import Playlist from '../components/Playlists/Playlist';
 import mockdata from './mockdata';
-
+import Client from '../Client';
+import Header from '../Header';
 
 export default class Main extends Component {
   constructor(props) {
@@ -17,19 +18,22 @@ export default class Main extends Component {
 
   render() {
     return (
-      <Container className="mt-3">
-        <Row>
-          <Col lg={3} md={4}>
-            <PlaylistList playlists={this.state.playlists} />
-          </Col>
-          <Col className="ml-sm-auto">
-            <Switch>
-              <Route path="/playlists/:id" render={props => <Playlist {...props} playlists={this.state.playlists} />} />
-              <Route component={NoPlaylist} />
-            </Switch>
-          </Col>
-        </Row>
-      </Container>
+      <div>
+        <Header />
+        <Container className="mt-3">
+          <Row>
+            <Col lg={3} md={4}>
+              <PlaylistList playlists={this.state.playlists} />
+            </Col>
+            <Col className="ml-sm-auto">
+              <Switch>
+                <Route path="/playlists/:id" render={props => <Playlist {...props} playlists={this.state.playlists} />} />
+                <Route component={NoPlaylist} />
+              </Switch>
+            </Col>
+          </Row>
+        </Container>
+      </div>
     );
   }
 }

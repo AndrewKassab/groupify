@@ -3,7 +3,7 @@ import Select from 'react-select';
 
 function UserSelector({ update, values, options }) {
   const handleChange = (values) => {
-    update(values);
+    update(values.map(({value, label}) => ({id: value, label: label})));
   };
 
   return (
@@ -14,7 +14,7 @@ function UserSelector({ update, values, options }) {
         closeMenuOnSelect={false}
         isMulti
         options={options}
-        value={values}
+        value={values.map(({id, label}) => ({value: id, label: label}))}
         onChange={handleChange}
       />
     </>

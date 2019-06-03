@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { Accordion, Card, Button, Spinner } from 'react-bootstrap';
-import { spotifyPlaylists } from '../../../containers/mockdata';
+import Client from '../../../Client';
 
-const UserCard = ({value, label, onChange}) => {
-  const key = `create|u=${value}`;
-  const [count, setCount] = useState(0);
+const UserCard = ({uid, label, playlists, onChange}) => {
+  const key = `create|u=${uid}`;
+  const [count, setCount] = useState(playlists.length);
 
   const handleChange = (playlists) => {
     setCount(playlists.length);
-    onChange(value, playlists);
+    onChange(uid, playlists);
   }
 
   return (
@@ -20,7 +20,7 @@ const UserCard = ({value, label, onChange}) => {
       </Accordion.Toggle>
       <Accordion.Collapse eventKey={key}>
         <Card.Body>
-          <SelectPlaylists userId={value} onChange={handleChange} />
+          <SelectPlaylists userId={uid} onChange={handleChange} selected={playlists} />
         </Card.Body>
       </Accordion.Collapse>
     </Card>
@@ -32,32 +32,23 @@ class SelectPlaylists extends React.Component {
     super(props);
 
     this.state = {
-      playlists: null,
+      loading: true
     };
-
-    this.async = [];
   }
 
   componentDidMount() {
-    const handleResponse = (data) => {
-      this.setState({playlists: data})
-    };
+    Client.spotifyPlaylists(uid).then(plists => {
+      const options = plists.map(({name, spotify_id}) => ({label: name, value: spotify_id}));
 
-    const d = spotifyPlaylists[this.props.userId] || [];
-    const id = setTimeout(() => {
-      console.log(d);
-      handleResponse(d);
-    }, 3000);
-
-    this.async.push(id);
-  }
-
-  componentWillUnmount() {
-    this.async.forEach((id) => clearTimeout(id));
+      this.setState({
+        loading: false,
+        options: options
+      });
+    });
   }
 
   render() {
-    if (this.state.playlists === null) {
+    if (this.state.loading) {
       return (
         <div className="d-flex justify-content-center">
           <Button variant="primary" disabled>
@@ -73,15 +64,15 @@ class SelectPlaylists extends React.Component {
         </div>
       );
     } else {
-      const options = this.state.playlists.map(({name, id}) => {return {label: name, value: id}})
       return (
         <div style={{minHeight: "200px"}}>
           <Select
             placeholder='Playlists for user...'
             closeMenuOnSelect={false}
             isMulti
-            options={options}
+            options={this.state.options}
             onChange={this.props.onChange}
+            defaultValue={this.props.selected}
           />
         </div>
       );

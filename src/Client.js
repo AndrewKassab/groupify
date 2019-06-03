@@ -116,6 +116,10 @@ function listUsers() {
   return authReq('/api/search/users').users;
 }
 
+function loggedIn() {
+  return !!getToken();
+}
+
 const Client = {
   login,
   logout,
@@ -127,5 +131,6 @@ const Client = {
   spotifyPlaylists,
   listUsers,
 
+  loggedIn,
 };
 export default Client;
