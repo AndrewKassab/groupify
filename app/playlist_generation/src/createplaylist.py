@@ -1,7 +1,7 @@
 from user import User
 from p_factory import PlaylistFactory
 
-def create_playlist(usernames, tokens, user_playlist_ids, desired_length):
+def create_playlist(name, usernames, tokens, user_playlist_ids, desired_length):
   if len(usernames) != len(tokens):
     return None
 
@@ -9,7 +9,7 @@ def create_playlist(usernames, tokens, user_playlist_ids, desired_length):
   for username, token in zip(usernames, tokens):
     users.append(User(username, token, user_playlist_ids[username]))
 
-  my_factory = PlaylistFactory(users, desired_length)
+  my_factory = PlaylistFactory(name, users, desired_length)
 
   # NOTE:
   # ths means that usernames[0] needs to have the main groupify user

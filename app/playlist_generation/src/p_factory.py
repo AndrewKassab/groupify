@@ -3,7 +3,8 @@ from user import User
 
 class PlaylistFactory():
 
-    def __init__(self, users, desired_length):
+    def __init__(self, name, users, desired_length):
+        self.name = name
         self.users = users
         self.desired_length = desired_length * 1.05
         self.current_length = 0
@@ -12,7 +13,7 @@ class PlaylistFactory():
     # creates our playlist
     def create(self, user):
         self.__determine_track_list()
-        playlist = user.sp.user_playlist_create(user.username, name='GROUPIFY', public=True)#, description=",".join(usernames))
+        playlist = user.sp.user_playlist_create(user.username, name=self.name, public=True)#, description=",".join(usernames))
         track_ids = [t for t in self.tracks]
         user.sp.user_playlist_add_tracks(user.username, playlist['id'], track_ids)
 
