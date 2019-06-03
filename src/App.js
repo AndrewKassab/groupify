@@ -4,12 +4,20 @@ import { BrowserRouter } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
+import Client from './Client';
+
 import Routes from './Routes';
-import Header from './Header';
+import { createStore } from '@spyna/react-store';
 
 library.add(fas);
 
-export default class App extends Component {
+const defaultValues = {
+  uid: null,
+  users: [],
+  playlists: [],
+}
+
+class App extends Component {
   render() {
     return (
       <BrowserRouter>
@@ -18,3 +26,5 @@ export default class App extends Component {
     );
   }
 }
+
+export default createStore(App, defaultValues);

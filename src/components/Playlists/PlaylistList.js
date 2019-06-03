@@ -1,7 +1,8 @@
-// import { Playlist } from './Playlist';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { ListGroup, Form, FormControl } from 'react-bootstrap';
+
+import { withStore } from '@spyna/react-store';
 
 function PlaylistList({ playlists }) {
   return (
@@ -25,4 +26,4 @@ function PlaylistList({ playlists }) {
   );
 }
 
-export default PlaylistList;
+export default withStore(PlaylistList, ['playlists']);
