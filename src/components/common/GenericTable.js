@@ -21,7 +21,11 @@ function GenericTable({ items, keys, name }) {
           items.map((item, index) => (
             <tr key={`${name}-${item.id}`}>
               <td>{ index + 1 }</td>
-              { keys.map(key => <td key={`${name}-${item.id}-${key.key}`}>{ item[key.key] }</td>) }
+              { keys.map(key =>
+                <td key={`${name}-${item.id}-${key.key}`}>
+                  { key.fn ? key.fn(item[key.key]) : item[key.key] }
+                </td>
+              )}
             </tr>
           ))
         }

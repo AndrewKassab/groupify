@@ -4,7 +4,6 @@ from app.spotify import *
 import uuid, sys, requests
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
 from flask import jsonify, request, abort, Response, redirect
-from app.playlist_generation.src.track import Track
 from app.playlist_generation.src.createplaylist import create_playlist
 from datetime import datetime, timedelta
 
@@ -147,7 +146,13 @@ def create():
 
     # duration comes in minutes
     # this is going to pass back a lot of info in for of track objects I believe
-    tracks_objects = create_playlist(name,usernames,tokens,playlists,duration*60000)
+
+    app.logger.debug(name)
+    app.logger.debug(usernames)
+    app.logger.debug(tokens)
+    app.logger.debug(playlists)
+
+    track_objects = create_playlist(name,usernames,tokens,playlists,duration*60000)
 
     if track_objects is None:
         abort(404)
@@ -158,7 +163,13 @@ def create():
 
     # Make the tracks array and add all tracks to db
     for track_object in track_objects:
-        track = Track(name=track_object.name,duration=track_object.duration/60000,spotify_id=track_object.id,artists=track_object.artists,group_id=group.id)
+        track = Track(
+            name=track_object.name,
+            duration=track_object.duration / 1000,
+            spotify_id=track_object.id,
+            artists=" | ".join(track_object.artists),
+            group_id=group.id
+        )
         tracks.append(track)
         db.session.add(track)
 
@@ -170,7 +181,7 @@ def create():
     return response({
         'playlist':{
             'id': group.id,
-            'name': group.name,
+            'name': group.title,
             'state': 'complete'
         },
         'status': 'success'

@@ -16,7 +16,7 @@ function PlaylistList({ playlists }) {
       <ListGroup variant="flush">
         {
           playlists.map(playlist => (
-            <ListGroup.Item action activeClassName="active" as={NavLink} key={`plist-${playlist.id}`} to={`/playlists/${playlist.id}`}>
+            <ListGroup.Item action as={NavLink} key={`plist-${playlist.id}`} to={`/playlists/${playlist.id}`}>
               { playlist.name }
             </ListGroup.Item>
           ))

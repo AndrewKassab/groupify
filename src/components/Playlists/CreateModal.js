@@ -73,7 +73,9 @@ class CreateModal extends Component {
   createPlaylist() {
     const { name, duration, users } = this.state;
     const userList = users.map(u => u.id);
-    const playlists = generateData(this.state).map(({playlists}) => playlists.value).flat()
+    const playlists = generateData(this.state).map(
+      ({playlists}) => playlists.map(p => p.value)
+    ).flat()
 
     Client.createPlaylist(name, userList, playlists, duration).then(res => {
       console.log(res);
