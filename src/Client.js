@@ -34,12 +34,12 @@ function authReq(path, params = {}) {
   return api(tokenURL(path, params));
 }
 
-function postData(url = '', data = {}, auth = true) {
+function postData(url = '', data = {}, auth = true, method = 'POST') {
   // Default options are marked with *
-  const body = auth ? Object.assign({token: getToken()}, data) : data;
-  return fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(body),
+
+  return fetch(auth ? tokenURL(url) : url, {
+    method: method,
+    body: JSON.stringify(data),
     headers:{
       'Content-Type': 'application/json'
     }
@@ -83,7 +83,10 @@ function login(query, history) {
 }
 
 function logout() {
-  Cookies.remove('token');
+  postData('/api/logout', {}, true, 'DELETE').then(() => {
+    Cookies.remove('token');
+    window.location.reload(false);
+  });
 }
 
 // Playlist methods
@@ -93,24 +96,24 @@ function createPlaylist(name, users, playlists, duration) {
     duration: duration,
     users: users,
     playlists: playlists
-  });
+  }).playlist;
 }
 
 function editPlaylist(id, name) {
-  return postData(`/api/playlists/${id}`, {name: name});
+  return postData(`/api/playlists/${id}`, {name: name}).playlist;
 }
 
 function getPlaylist(id) {
-  return authReq(`/api/playlists/${id}`)
+  return authReq(`/api/playlists/${id}`).playlist;
 }
 
 // Search methods
 function spotifyPlaylists(userId) {
-  return authReq(`/api/search/playlists/${userId}`);
+  return authReq(`/api/search/playlists/${userId}`).playlists;
 }
 
 function listUsers() {
-  return authReq('/api/search/users');
+  return authReq('/api/search/users').users;
 }
 
 const Client = {

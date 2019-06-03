@@ -197,15 +197,12 @@ def delete_playlist(group_id):
 
 @app.route('/api/logout',methods=['DELETE'])
 def logout():
-
-    user = authenticate_user(request)
-
-    token = AuthToken.query.filter_by(token=request.json['token']).first()
+    token = AuthToken.query.filter_by(token=request.args['token']).first()
 
     db.session.delete(token)
     db.session.commit()
 
-    return response(None,200)
+    return response('', 200)
 
 
 @app.route('/api/callback',methods=['POST'])
