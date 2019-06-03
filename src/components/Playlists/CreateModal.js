@@ -4,12 +4,16 @@ import { Modal, Button } from 'react-bootstrap';
 import UserSelector from './create/UserSelector';
 import PlaylistSelector from './create/PlaylistSelector';
 import PlaylistParams from './create/PlaylistParams';
-import { userOptions } from '../../containers/mockdata';
+
+import { withStore } from '@spyna/react-store';
 
 import Client from '../../Client';
 import moment from 'moment';
 
 const defaultState = {
+  loading: true,
+  name: null,
+  duration: 60,
   show: false,
   users: [],
   page: 'playlists',
@@ -20,10 +24,10 @@ const generateData = (state) =>
   state.users.map(user => ({
     uid: user.id,
     label: user.label,
-    playlists: state[pKey(user.id)]
+    playlists: state[pKey(user.id)] || []
   }));
 
-const pKey = uid => `plist.${user.id}`;
+const pKey = uid => `plist.${uid}`;
 
 const updateData = (uid, plist) => {
   return {
@@ -49,8 +53,7 @@ class CreateModal extends Component {
 
     this.state = defaultState;
 
-    this.state.name = moment().format('[Groupify -] MMM Do YYYY, h:mm a');
-    this.state.duration = 60;
+    this.loadUsers();
   }
 
   handleClose() {
@@ -58,10 +61,23 @@ class CreateModal extends Component {
   }
 
   handleShow() {
-    this.setState({ show: true });
+    let update = {show: true}
+
+    if (!this.state.name) {
+      update.name = moment().format('[Groupify -] MMM Do YYYY, h:mm a')
+    }
+
+    this.setState(update);
   }
 
   createPlaylist() {
+    const { name, duration, users } = this.state;
+    const userList = users.map(u => u.id);
+    const playlists = generateData(this.state).map(({playlists}) => playlists.value).flat()
+
+    Client.createPlaylist(name, userList, playlists, duration).then(res => {
+      console.log(res);
+    });
     // dispatch requests or something
     // TODO: Actually save
     this.resetState();
@@ -69,7 +85,7 @@ class CreateModal extends Component {
 
   resetState() {
     this.setState(defaultState);
-    this.data = {users: [], playlists: [], duration: 120};
+    this.loadUsers();
   }
 
   handleNext() {
@@ -114,7 +130,36 @@ class CreateModal extends Component {
     this.setState({duration: parseInt(duration)});
   }
 
+  loadUsers() {
+    Client.listUsers().then(res => {
+      const uid = Client.userId();
+      let options = res.users.map(({id, name, username}) => ({
+        label: `${name} - ${username}`,
+        value: id,
+        id: id,
+        isFixed: (id === uid),
+      }));
+
+      this.setState({
+        options: options,
+        loading: false,
+        users: options.filter(({isFixed}) => isFixed)
+      });
+    });
+  }
+
   render() {
+    const playlistShower = () => {
+      if (this.state.page === 'playlists') {
+        return (<>
+          <UserSelector update={this.updateUsers} options={this.state.options} values={this.state.users} />
+          <PlaylistSelector update={this.updatePlaylists} data={generateData(this.state)} />
+        </>);
+      } else {
+        return <PlaylistParams updateName={this.updateName} updateDuration={this.updateDuration} name={this.state.name} duration={this.state.duration} />;
+      }
+    };
+
     return (
       <>
         <Button variant="outline-primary" onClick={this.handleShow}>
@@ -126,13 +171,7 @@ class CreateModal extends Component {
             <Modal.Title>Create Playlist</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{minHeight: '200px'}}>
-            {
-              this.state.page === 'playlists' && (<>
-                <UserSelector update={this.updateUsers} options={userOptions} values={this.state.users} />
-                <PlaylistSelector update={this.updatePlaylists} values={generateData(this.state)} />
-              </>) ||
-              <PlaylistParams updateName={this.updateName} updateDuration={this.updateDuration} name={this.state.name} duration={this.state.duration} />
-            }
+            { !this.state.loading && playlistShower() }
           </Modal.Body>
           <Modal.Footer>
             {
@@ -154,4 +193,4 @@ class CreateModal extends Component {
   }
 }
 
-export default CreateModal;
+export default withStore(CreateModal, ['users']);

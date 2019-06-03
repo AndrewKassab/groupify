@@ -54,8 +54,6 @@ def refreshAuth(refresh,client_secret,client_id):
         "refresh_token" : refresh
     }
 
-    encoded = base64.urlsafe_b64encode(f'{client_id}:{client_secret}'.encode())
-
     headers = {'Content-Type': HEADER}
 
     res = requests.post(

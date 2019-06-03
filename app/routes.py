@@ -34,7 +34,11 @@ def search_users():
 
     users_db = User.query.all()
     for auser in users_db:
-        users.append({'name':auser.name,'username':auser.username,'id':auser.id,'auth_token':AuthToken.query.filter_by(user_id=user.id).first().token,'access_token':user.access_token,'refresh':user.refresh_token})
+        users.append({
+            'name': auser.name,
+            'username': auser.username,
+            'id': auser.id
+        })
 
     return response({'users':users},200)
 
@@ -145,9 +149,7 @@ def create():
     # will refresh
     for user_id in user_ids:
         auser = User.query.filter_by(id=user_id).first()
-        if user.token_expiration < datetime.datetime.now():
-             # need to refresh the token
-            refresh_token(auser)
+        refresh_if_needed(auser)
 
         # Make users array
         users.append(auser)
@@ -241,7 +243,7 @@ def callback():
             refresh_token=refresh,
             token_expiration=expiration
         )
-        db.session.add(user)
+        db.session.add(auser)
         db.session.commit()
     else:
         auser.access_token = token
@@ -275,11 +277,7 @@ def authenticate_user(req):
         abort(401)
 
     # refresh token if needed
-    if (auser.token_expiration + timedelta(minutes = 5)) < datetime.now():
-        app.logger.info(auser.token_expiration)
-        app.logger.info(datetime.now())
-
-        refresh_token(auser)
+    refresh_if_needed(auser)
 
     return auser
 
@@ -319,7 +317,13 @@ def response(json,code):
 
 def refresh_token(auser):
     token_data = refreshToken(auser.refresh_token)
-    auser.access_token=token_data[0]
-    auser.refresh_token=token_data[4]
-    auser.token_expiration=datetime.now()+timedelta(seconds=token_data[3])
+    auser.access_token = token_data[0]
+    auser.refresh_token = token_data[4]
+    auser.token_expiration = datetime.now() + timedelta(seconds=token_data[3])
+
     db.session.commit()
+
+def refresh_if_needed(user):
+    if (user.token_expiration + timedelta(minutes = 5)) < datetime.now():
+        # need to refresh the token
+        refresh_token(auser)

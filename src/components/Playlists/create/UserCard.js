@@ -20,7 +20,7 @@ const UserCard = ({uid, label, playlists, onChange}) => {
       </Accordion.Toggle>
       <Accordion.Collapse eventKey={key}>
         <Card.Body>
-          <SelectPlaylists userId={uid} onChange={handleChange} selected={playlists} />
+          <SelectPlaylists uid={uid} onChange={handleChange} selected={playlists} />
         </Card.Body>
       </Accordion.Collapse>
     </Card>
@@ -37,7 +37,8 @@ class SelectPlaylists extends React.Component {
   }
 
   componentDidMount() {
-    Client.spotifyPlaylists(uid).then(plists => {
+    Client.spotifyPlaylists(this.props.uid).then(res => {
+      const plists = res.playlists;
       const options = plists.map(({name, spotify_id}) => ({label: name, value: spotify_id}));
 
       this.setState({

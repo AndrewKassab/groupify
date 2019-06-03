@@ -18,14 +18,18 @@ const orderOptions = (values) => {
   return values.filter((v) => v.isFixed).concat(values.filter((v) => !v.isFixed));
 };
 
-export default class FixedOptions extends Component {
+export default class FixedSelect extends Component {
   constructor(props) {
     super(props);
 
     this.onChange = this.onChange.bind(this);
     this.state = {
-      value: [props.owner]
+      value: this.fixedOptions()
     }
+  }
+
+  fixedOptions() {
+    return this.props.options.filter((v) => v.isFixed);
   }
 
   onChange (value, { action, removedValue }) {
@@ -37,7 +41,7 @@ export default class FixedOptions extends Component {
         }
         break;
       case 'clear':
-        value = colourOptions.filter((v) => v.isFixed);
+        value = this.fixedOptions();
         break;
     }
 

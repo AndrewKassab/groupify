@@ -7,13 +7,21 @@ import mockdata from './mockdata';
 import Client from '../Client';
 import Header from '../Header';
 
-export default class Main extends Component {
+import { withStore } from '@spyna/react-store';
+
+class Main extends Component {
   constructor(props) {
     super(props);
+  }
 
-    this.state = {
-      playlists: mockdata.playlists,
-    };
+  componentDidMount() {
+    const { store } = this.props;
+
+    store.set('uid', Client.userId());
+
+    Client.listPlaylists().then(res => {
+      store.set('playlists', res.playlists);
+    });
   }
 
   render() {
@@ -23,11 +31,11 @@ export default class Main extends Component {
         <Container className="mt-3">
           <Row>
             <Col lg={3} md={4}>
-              <PlaylistList playlists={this.state.playlists} />
+              <PlaylistList />
             </Col>
             <Col className="ml-sm-auto">
               <Switch>
-                <Route path="/playlists/:id" render={props => <Playlist {...props} playlists={this.state.playlists} />} />
+                <Route path="/playlists/:id" render={props => <Playlist {...props} />} />
                 <Route component={NoPlaylist} />
               </Switch>
             </Col>
@@ -43,3 +51,5 @@ function NoPlaylist() {
     <h3 className="text-muted text-center mt-5">Please select a playlist</h3>
   );
 }
+
+export default withStore(Main);
