@@ -23,7 +23,7 @@ def getUserToken(code):
     return TOKEN_DATA
 
 def refreshToken(refresh):
-    TOKEN_DATA = refreshAuth(refresh)
+    TOKEN_DATA = refreshAuth(refresh,CLIENT_ID,CLIENT_SECRET)
     return TOKEN_DATA
 
 def getUserInfo(token):

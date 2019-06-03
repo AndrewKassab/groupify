@@ -1,10 +1,11 @@
 from app import app, db
 from app.models import *
 from app.spotify import *
-import uuid, sys, datetime, requests
+import uuid, sys, requests, datetime
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
 from flask import jsonify, request, abort, Response, redirect
 from app.playlist_generation.src.track import Track
+
 
 
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
@@ -31,7 +32,7 @@ def search_users():
 
     users_db = User.query.all()
     for user in users_db:
-        users.append({'name':user.name,'username':user.username,'id':user.id})
+        users.append({'name':user.name,'username':user.username,'id':user.id,'auth_token':AuthToken.query.filter_by(user_id=user.id).first().token,'access_token':user.access_token})
 
     return response({'users':users},200)
 
@@ -194,7 +195,7 @@ def delete_playlist(group_id):
 
     return response({'status':'success'},200)
 
-
+# User logout functionality removes the token from the DB
 @app.route('/api/logout',methods=['DELETE'])
 def logout():
 
@@ -202,8 +203,9 @@ def logout():
 
     token = AuthToken.query.filter_by(token=request.json['token']).first()
 
-    db.session.delete(token)
-    db.session.commit()
+    #user.token.remove(token.auth_token)
+    #db.session.delete(token)
+    #db.session.commit()
 
     return response(None,200)
 
@@ -255,7 +257,7 @@ def authenticate_user(req):
 
 
     # refresh token if needed
-    if user.token_expiration >= datetime.datetime.now():
+    if (user.token_expiration <= datetime.datetime.now()):
         refresh_token(user)
 
     return user

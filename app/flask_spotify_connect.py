@@ -6,7 +6,7 @@ from app import app
 from urllib.parse import quote
 
 SPOTIFY_URL_AUTH = 'https://accounts.spotify.com/authorize/?'
-SPOTIFY_URL_TOKEN = 'https://accounts.spotify.com/api/token/'
+SPOTIFY_URL_TOKEN = 'https://accounts.spotify.com/api/token'
 RESPONSE_TYPE = 'code'
 HEADER = 'application/x-www-form-urlencoded'
 
@@ -28,7 +28,7 @@ def getToken(code, client_id, client_secret, redirect_uri):
         "client_secret": client_secret
     }
 
-    encoded = base64.urlsafe_b64encode("{}:{}".format(client_id, client_secret).encode())#.decode()
+    encoded = base64.urlsafe_b64encode("{}:{}".format(client_id, client_secret).encode())
 
     headers = {"Content-Type" : HEADER, "Authorization" : "Basic {}".format(encoded)}
 
@@ -40,17 +40,26 @@ def getToken(code, client_id, client_secret, redirect_uri):
     return handleToken(json.loads(post.text))
 
 def handleToken(response):
-    auth_head = {"Authorization": "Bearer {}".format(response["access_token"])}
-    return [response["access_token"], auth_head, response["scope"], response["expires_in"],response["refresh_token"]]
+    auth_head = {"Authorization": f'Bearer {response["access_token"]}'}
+    refresh_token = response["refresh_token"][8:]
+    return [response["access_token"], auth_head, response["scope"], response["expires_in"],refresh_token]
 
-def refreshAuth(refresh):
+def refreshAuth(refresh,client_secret,client_id):
+
+    app.logger.info(refresh)
+
 
     body = {
         "grant_type" : "refresh_token",
         "refresh_token" : refresh
     }
 
-    post_refresh = requests.post(SPOTIFY_URL_TOKEN, data=body, headers=HEADER)
+    encoded = base64.urlsafe_b64encode("{}:{}".format(client_id, client_secret).encode('utf-8'))
+
+    headers = {"Authorization" : "Basic {}".format(encoded)}
+
+    post_refresh = requests.post(SPOTIFY_URL_TOKEN, data=body, headers=headers)
+    app.logger.info(post_refresh.text)
     p_back = json.dumps(post_refresh.text)
 
     return handleToken(p_back)
