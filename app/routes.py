@@ -7,7 +7,7 @@ from flask import jsonify, request, abort, Response, redirect
 from app.playlist_generation.src.track import Track
 
 
-
+# This is for finding a user's playlists
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
 def get_playlists(user_id):
     main_user = authenticate_user(request)
@@ -25,6 +25,7 @@ def get_playlists(user_id):
         'status':'success'
     },200)
 
+# Search for all users, thius prints too much info rn
 @app.route('/api/search/users',methods=['GET'])
 def search_users():
 
@@ -32,12 +33,18 @@ def search_users():
 
     users_db = User.query.all()
     for user in users_db:
-        users.append({'name':user.name,'username':user.username,'id':user.id,'auth_token':AuthToken.query.filter_by(user_id=user.id).first().token,'access_token':user.access_token})
+        users.append({'name':user.name,'username':user.username,'id':user.id,'auth_token':AuthToken.query.filter_by(user_id=user.id).first().token,'access_token':user.access_token,'refresh':user.refresh_token})
 
     return response({'users':users},200)
 
 @app.route('/api/db/User/clear')
 def clear_db():
+    users = User.query.all()
+
+    for user in users:
+        for auth_token in user.auth_tokens:
+            db.session.delete(auth_token)
+
     db.session.query(User).delete()
     db.session.commit()
     return redirect('/api/signup')
@@ -128,12 +135,12 @@ def create():
 
     user_ids = request.json['users']
     name = request.json['name']
+    playlists = request.json['playlists']
+    duration = request.json['duration']
 
     usernames = []
     users = []
     tokens = []
-    playlists = request.json['playlists']
-    duration = request.json['duration']
 
     # Need to get auth tokens from users
     # will refresh
@@ -237,7 +244,7 @@ def callback():
         abort(404)
 
     # Add the Auth token and refresh token to the database
-    return response({'token':userAuthToken},200)
+    return response({'token':userAuthToken,'user_id':user.id},200)
 
 
 def authenticate_user(req):
