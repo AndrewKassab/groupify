@@ -34,7 +34,6 @@ class PlaylistFactory():
 
     # Takes tracks from this user's pool for the final track list
     def __grab_users_tracks(self, user):
-
         max_duration = self.desired_length / len(self.users)
         current_duration = 0
 
@@ -49,7 +48,6 @@ class PlaylistFactory():
         track_ids = []
         for track in user.tracks:
             track_ids.append(track.id)
-
         for other_user in self.users:
             if other_user == user:
                 continue
@@ -57,14 +55,14 @@ class PlaylistFactory():
             for i in range(0, len(tracks_saved_list)):
                 if tracks_saved_list[i] is True:
                     user.tracks[i].increment_amt_saved()
-
+        
         while amt_must_saved > 0:
             for track in user.tracks:
-                if track.amt_saved > amt_must_saved:
-                    if track.id not in self.tracks:
-                        self.tracks[track.id] = track
-                        current_duration += track.duration
-                    to_remove_from_pool.append(track)
+                #if track.amt_saved > amt_must_saved:
+                if track.id not in self.tracks:
+                    self.tracks[track.id] = track
+                    current_duration += track.duration
+                to_remove_from_pool.append(track)
                 if current_duration >= max_duration:
                     return
             user.remove_from_pool(to_remove_from_pool)

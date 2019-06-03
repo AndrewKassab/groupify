@@ -6,7 +6,7 @@ import { Button, ButtonToolbar, InputGroup, FormControl, Dropdown, Tabs, Tab } f
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-function PlaylistShow({ playlist }) {
+function PlaylistShow({ playlist, rename }) {
 
   const [name, setName] = useState(playlist.name);
   const [editName, setEditName] = useState(name);
@@ -15,10 +15,11 @@ function PlaylistShow({ playlist }) {
   const saveName = () => {
     setName(editName);
     setEditMode(false);
+    rename(editName);
   };
 
   const editor = (
-    <InputGroup>
+    <InputGroup className="mb-2">
       <FormControl
         defaultValue={name}
         onChange={e => setEditName(e.target.value)}
@@ -48,8 +49,8 @@ function PlaylistShow({ playlist }) {
         <Dropdown.Menu>
           <Dropdown.Item onClick={() => setEditMode(true)}>Change Name</Dropdown.Item>
           <Dropdown.Item>Add to Spotify</Dropdown.Item>
-          <Dropdown.Divider />
-          <Dropdown.Item onClick={handleToggle}>Hide Playlist</Dropdown.Item>
+          {/* <Dropdown.Divider />
+          <Dropdown.Item onClick={handleToggle}>Hide Playlist</Dropdown.Item> */}
         </Dropdown.Menu>
       </Dropdown>
     </ButtonToolbar>

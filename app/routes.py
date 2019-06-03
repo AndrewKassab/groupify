@@ -1,12 +1,11 @@
 from app import app, db
 from app.models import *
 from app.spotify import *
-import uuid, sys, requests, datetime
+import uuid, sys, requests
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
 from flask import jsonify, request, abort, Response, redirect
-from app.playlist_generation.src.track import Track
 from app.playlist_generation.src.createplaylist import create_playlist
-
+from datetime import datetime, timedelta
 
 # This is for finding a user's playlists
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
@@ -61,16 +60,10 @@ def signup():
 # DONE
 @app.route('/api/playlists', methods=['GET'])
 def list_playlists():
-
     auser = authenticate_user(request)
 
     # The list of playlists to eventually be returned
-    playlists = []
-
-    # Iterate through all of the user's groups
-    for group in auser.groups:
-
-        playlists.append({'id': group.id, 'name': group.title, 'state':'done'})
+    playlists = [{'id': group.id, 'name': group.title, 'state':'done'} for group in auser.groups]
 
     return response({'playlists': playlists, 'status':'success'},200)
 
@@ -91,7 +84,7 @@ def edit_playlist(group_id):
         abort(404)
 
     group.title = name
-    db.commit()
+    db.session.commit()
 
     return response({'playlist': {
         'id': group_id,
@@ -107,15 +100,8 @@ def get_playlist_details(group_id):
     auser = authenticate_user(request)
     group = Group.query.filter_by(id=group_id).first()
 
-    tracks = []
-
-    for track in group.tracks:
-        tracks.append({'id':track.id,'name':track.name,'artists':track.artists})
-
-    users = []
-
-    for user in group.users:
-        users.append({'id':auser.id,'name':auser.username})
+    tracks = [track.to_dict() for track in group.tracks]
+    users = [user.to_dict() for user in group.users]
 
     return response({"playlist": {
         "id": group_id,
@@ -147,9 +133,7 @@ def create():
     # will refresh
     for user_id in user_ids:
         auser = User.query.filter_by(id=user_id).first()
-        if auser.token_expiration < datetime.datetime.now():
-             # need to refresh the token
-            refresh_token(auser)
+        refresh_if_needed(auser)
 
         # Make users array
         users.append(auser)
@@ -158,7 +142,13 @@ def create():
 
     # duration comes in minutes
     # this is going to pass back a lot of info in for of track objects I believe
-    tracks_objects = create_playlist(name,usernames,tokens,playlists,duration*60000)
+
+    app.logger.debug(name)
+    app.logger.debug(usernames)
+    app.logger.debug(tokens)
+    app.logger.debug(playlists)
+
+    track_objects = create_playlist(name,usernames,tokens,playlists,duration*60000)
 
     if track_objects is None:
         abort(404)
@@ -169,7 +159,13 @@ def create():
 
     # Make the tracks array and add all tracks to db
     for track_object in track_objects:
-        track = Track(name=track_object.name,duration=track_object.duration/60000,spotify_id=track_object.id,artists=track_object.artists,group_id=group.id)
+        track = Track(
+            name=track_object.name,
+            duration=track_object.duration / 1000,
+            spotify_id=track_object.id,
+            artists=" | ".join(track_object.artists),
+            group_id=group.id
+        )
         tracks.append(track)
         db.session.add(track)
 
@@ -181,7 +177,7 @@ def create():
     return response({
         'playlist':{
             'id': group.id,
-            'name': group.name,
+            'name': group.title,
             'state': 'complete'
         },
         'status': 'success'
@@ -229,10 +225,27 @@ def callback():
 
     auth = None
 
+    expiration = datetime.now() + timedelta(seconds=token_data[3])
+    token = token_data[0]
+    refresh = token_data[4]
+
     if auser is None:
         # Make a new user if user is not in table
-        auser = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[4],token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
+
+        auser = User(
+            name=userInfo['display_name'],
+            username=userInfo['id'],
+            access_token=token,
+            refresh_token=refresh,
+            token_expiration=expiration
+        )
         db.session.add(auser)
+        db.session.commit()
+    else:
+        auser.access_token = token
+        auser.refresh_token = refresh
+        auser.token_expiration = expiration
+
         db.session.commit()
 
     auth = AuthToken(user=auser,token=userAuthToken,user_id=auser.id)
@@ -249,7 +262,6 @@ def callback():
 
 
 def authenticate_user(req):
-
     token = AuthToken.query.filter_by(token=req.args['token']).first()
 
     if token is None:
@@ -260,10 +272,8 @@ def authenticate_user(req):
     if auser is None:
         abort(401)
 
-
     # refresh token if needed
-    if (auser.token_expiration <= datetime.datetime.now()):
-        refresh_token(auser)
+    refresh_if_needed(auser)
 
     return auser
 
@@ -303,7 +313,13 @@ def response(json,code):
 
 def refresh_token(auser):
     token_data = refreshToken(auser.refresh_token)
-    auser.access_token=token_data[0]
-    auser.refresh_token=token_data[4]
-    auser.token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3])
-    db.commit()
+    auser.access_token = token_data[0]
+    auser.refresh_token = token_data[4]
+    auser.token_expiration = datetime.now() + timedelta(seconds=token_data[3])
+
+    db.session.commit()
+
+def refresh_if_needed(user):
+    if (user.token_expiration + timedelta(minutes = 5)) < datetime.now():
+        # need to refresh the token
+        refresh_token(user)

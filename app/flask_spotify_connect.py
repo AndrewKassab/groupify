@@ -39,9 +39,9 @@ def getToken(code, client_id, client_secret, redirect_uri):
 
     return handleToken(json.loads(post.text))
 
-def handleToken(response):
+def handleToken(response, refresh=None):
     auth_head = {"Authorization": f'Bearer {response["access_token"]}'}
-    refresh_token = response["refresh_token"]
+    refresh_token = refresh or response["refresh_token"]
     app.logger.info(f'refresh token {refresh_token}')
     return [response["access_token"], auth_head, response["scope"], response["expires_in"],refresh_token]
 
@@ -66,7 +66,7 @@ def refreshAuth(refresh,client_secret,client_id):
 
     p_back = json.loads(res.text)
 
-    return handleToken(p_back)
+    return handleToken(p_back, refresh)
 
 def userInfo(access_token):
 

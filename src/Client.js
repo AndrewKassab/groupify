@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie';
 import queryString from 'query-string';
 
+const USER_ID = 'groupify-uid';
+
 function tokenURL(path, params = {}) {
   return buildUrl(path, Object.assign(params, {token: getToken()}));
 }
@@ -78,6 +80,7 @@ function login(query, history) {
   postData('/api/callback', spotifyArgs, false)
   .then(res => {
     setToken(res.token);
+    Cookies.set(USER_ID, res.user_id)
     history.push("/playlists");
   });
 }
@@ -91,39 +94,51 @@ function logout() {
 
 // Playlist methods
 function createPlaylist(name, users, playlists, duration) {
-  return postData('/api/playlists/create', {
+  const dat = {
     name: name,
     duration: duration,
     users: users,
     playlists: playlists
-  }).playlist;
+  };
+
+  console.log(dat);
+  return postData('/api/playlists/create', dat);
 }
 
 function editPlaylist(id, name) {
-  return postData(`/api/playlists/${id}`, {name: name}).playlist;
+  return postData(`/api/playlists/${id}`, {name: name});
 }
 
 function getPlaylist(id) {
-  return authReq(`/api/playlists/${id}`).playlist;
+  return authReq(`/api/playlists/${id}`);
+}
+
+function listPlaylists() {
+  return authReq(`/api/playlists`);
 }
 
 // Search methods
 function spotifyPlaylists(userId) {
-  return authReq(`/api/search/playlists/${userId}`).playlists;
+  return authReq(`/api/search/playlists/${userId}`);
 }
 
 function listUsers() {
-  return authReq('/api/search/users').users;
+  return authReq('/api/search/users');
 }
 
 function loggedIn() {
   return !!getToken();
 }
 
+function userId() {
+  return parseInt(Cookies.get(USER_ID));
+}
+
 const Client = {
   login,
   logout,
 
+  listPlaylists,
   createPlaylist,
   editPlaylist,
   getPlaylist,
@@ -132,5 +147,6 @@ const Client = {
   listUsers,
 
   loggedIn,
+  userId,
 };
 export default Client;

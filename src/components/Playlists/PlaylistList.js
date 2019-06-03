@@ -1,7 +1,8 @@
-// import { Playlist } from './Playlist';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { ListGroup, Form, FormControl } from 'react-bootstrap';
+
+import { withStore } from '@spyna/react-store';
 
 function PlaylistList({ playlists }) {
   return (
@@ -15,7 +16,7 @@ function PlaylistList({ playlists }) {
       <ListGroup variant="flush">
         {
           playlists.map(playlist => (
-            <ListGroup.Item action activeClassName="active" as={NavLink} key={`plist-${playlist.id}`} to={`/playlists/${playlist.id}`}>
+            <ListGroup.Item action as={NavLink} key={`plist-${playlist.id}`} to={`/playlists/${playlist.id}`}>
               { playlist.name }
             </ListGroup.Item>
           ))
@@ -25,4 +26,4 @@ function PlaylistList({ playlists }) {
   );
 }
 
-export default PlaylistList;
+export default withStore(PlaylistList, ['playlists']);
