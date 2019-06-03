@@ -16,22 +16,18 @@ TOKEN_DATA = []
 
 
 def getUser():
-    return getAuth(CLIENT_ID, f'{CALLBACK_URL}:{PORT}/callback/', SCOPE)
+    return getAuth(CLIENT_ID, CALLBACK_URL, SCOPE)
 
 def getUserToken(code):
-    global TOKEN_DATA
-    TOKEN_DATA = getToken(code, CLIENT_ID, CLIENT_SECRET, "{}:{}/callback/".format(CALLBACK_URL, PORT))
+    TOKEN_DATA = getToken(code, CLIENT_ID, CLIENT_SECRET, CALLBACK_URL)
     return TOKEN_DATA
 
 def refreshToken(refresh):
     TOKEN_DATA = refreshAuth(refresh)
     return TOKEN_DATA
 
-def getAccessToken():
-    return TOKEN_DATA
-
-def getUserInfo():
-    return userInfo(getAccessToken())
+def getUserInfo(token):
+    return userInfo(token)
 
 def getUserPlaylists(token,username):
     sp = spotipy.Spotify(auth=token)

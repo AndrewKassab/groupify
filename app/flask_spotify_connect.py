@@ -1,6 +1,7 @@
 import base64, json
 from flask import jsonify, request, abort, Response, redirect
 import requests
+from app import app
 
 from urllib.parse import quote
 

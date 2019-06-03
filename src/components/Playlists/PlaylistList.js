@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom';
 import { ListGroup, Form, FormControl } from 'react-bootstrap';
 
 function PlaylistList({ playlists }) {
-  console.log(playlists);
   return (
     <div>
       <h3>Playlists:</h3>

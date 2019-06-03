@@ -6,9 +6,6 @@ from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, 
 from flask import jsonify, request, abort, Response, redirect
 from app.playlist_generation.src.track import Track
 
-HOME_PAGE = 'http://localhost:3000'
-LOGIN_PAGE = 'http://localhost:3000'
-
 
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
 def get_playlists():
@@ -71,7 +68,7 @@ def edit_playlist(group_id):
     # Get the group from the database
     # and get the name from the request
     group = Group.query.filter_by(id=group_id).first()
-    name = request.form['name']
+    name = request.json['name']
 
     if group is None or name is None:
         abort(404)
@@ -120,14 +117,14 @@ def create():
 
     main_user = authenticate_user(request)
 
-    user_ids = request.form['users']
-    name = request.form['name']
+    user_ids = request.json['users']
+    name = request.json['name']
 
     usernames = []
     users = []
     tokens = []
-    playlists = request.form['playlists']
-    duration = request.form['duration']
+    playlists = request.json['playlists']
+    duration = request.json['duration']
 
     # Need to get auth tokens from users
     # will refresh
@@ -173,12 +170,6 @@ def create():
         'status': 'success'
     },200)
 
-@app.route('/api/showgibbytoken')
-def test1():
-
-    return response({'gibby':User.query.filter_by(username='gibby_doo').auth},200)
-
-
 # Delete playlist
 @app.route('/api/playlists/<int:group_id>',methods=['DELETE'])
 def delete_playlist(group_id):
@@ -201,7 +192,7 @@ def logout():
 
     user = authenticate_user(request)
 
-    token = AuthToken.query.filter_by(token=request.form[token]).first()
+    token = AuthToken.query.filter_by(token=request.json[token]).first()
     db.session.delete(token)
     db.session.commit()
 
@@ -211,8 +202,10 @@ def logout():
 @app.route('/api/callback',methods=['POST'])
 def callback():
 
-    token_data = getUserToken(request.form['code'])
-    userInfo = getUserInfo()
+    app.logger.info(f'Value of Winston post request: {request.json}')
+
+    token_data = getUserToken(request.json['code'])
+    userInfo = getUserInfo(token_data[0])
 
     # Check if it already exists in table
     user = User.query.filter_by(username=userInfo['id']).first()
@@ -220,17 +213,17 @@ def callback():
     # Create a new uuid token
     userAuthToken = uuid.uuid4()
 
-    print(f'auth: {userAuthToken}')
-
     auth = None
 
     if user is None:
         # Make a new user if user is not in table
         user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[4],token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
-        auth = AuthToken(User=user,token=userAuthToken,user_id=user.id)
-        db.session.add(auth)
         db.session.add(user)
         db.session.commit()
+
+    auth = AuthToken(user=user,token=userAuthToken,user_id=user.id)
+    db.session.add(auth)
+    db.session.commit()
 
     if userInfo is None:
         abort(404)
@@ -239,16 +232,18 @@ def callback():
     return response({'token':userAuthToken},200)
 
 
-def authenticate_user(request):
+def authenticate_user(req):
 
-    if 'token' not in request.form:
+    token = AuthToken.query.filter_by(token=req.args['token']).first()
+
+    if token is None:
         abort(401)
 
-    token = AuthToken.query.filter_by(token=request.form['token']).first()
     user = token.user
 
     if user is None:
         abort(401)
+
 
     # refresh token if needed
     if user.token_expiration >= datetime.datetime.now():
@@ -281,7 +276,7 @@ def get_error_msg(error):
     if(error.code==401):
         return '401 MESSAGE'
     else:
-        return f'{error}'
+        return f'{error.code}'
 
 
 def response(json,code):
