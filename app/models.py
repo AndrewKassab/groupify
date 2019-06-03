@@ -40,6 +40,14 @@ class Track(Base):
 
     group = relationship('Group', backref='tracks')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'artists': self.artists,
+            'duration': self.duration
+        }
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -56,7 +64,7 @@ class User(Base):
         data = {
             'id': self.id,
             'name': self.name,
-            'spotify_id': self.spotify_id
+            'username': self.username
         }
 
         return data

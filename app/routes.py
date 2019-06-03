@@ -68,11 +68,7 @@ def list_playlists():
     auser = authenticate_user(request)
 
     # The list of playlists to eventually be returned
-    playlists = []
-
-    # Iterate through all of the user's groups
-    for group in auser.groups:
-        playlists.append({'id': group.id, 'name': group.title, 'state':'done'})
+    playlists = [{'id': group.id, 'name': group.title, 'state':'done'} for group in auser.groups]
 
     return response({'playlists': playlists, 'status':'success'},200)
 
@@ -93,7 +89,7 @@ def edit_playlist(group_id):
         abort(404)
 
     group.title = name
-    db.commit()
+    db.session.commit()
 
     return response({'playlist': {
         'id': group_id,
@@ -109,15 +105,8 @@ def get_playlist_details(group_id):
     auser = authenticate_user(request)
     group = Group.query.filter_by(id=group_id).first()
 
-    tracks = []
-
-    for track in group.tracks:
-        tracks.append({'id':track.id,'name':track.name,'artists':track.artists})
-
-    users = []
-
-    for user in group.users:
-        users.append({'id':auser.id,'name':auser.username})
+    tracks = [track.to_dict() for track in group.tracks]
+    users = [user.to_dict() for user in group.users]
 
     return response({"playlist": {
         "id": group_id,
@@ -326,4 +315,4 @@ def refresh_token(auser):
 def refresh_if_needed(user):
     if (user.token_expiration + timedelta(minutes = 5)) < datetime.now():
         # need to refresh the token
-        refresh_token(auser)
+        refresh_token(user)

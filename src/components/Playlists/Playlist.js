@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row, Alert } from 'react-bootstrap';
+import { Col, Row, Alert, Spinner } from 'react-bootstrap';
 import {
   Link, Switch, Route, Redirect,
 } from 'react-router-dom';
@@ -10,8 +10,16 @@ import Client from '../../Client';
 
 const findPlaylist = (pid, playlists) => playlists.find(plist => plist.id === pid);
 
+const modifyPlaylist = (id, store, func) => {
+  let playlists = store.get('playlists');
+  let plist = findPlaylist(id, playlists);
+  func(plist);
+  store.set('playlists', playlists);
+}
+
 function Playlist({ match, playlists, store }) {
-  const playlist = findPlaylist(match.params.id, playlists);
+  const pid = parseInt(match.params.id);
+  const playlist = findPlaylist(pid, playlists);
 
   if (!playlist) {
     return (
@@ -24,15 +32,26 @@ function Playlist({ match, playlists, store }) {
 
   const rename = name => {
     const id = playlist.id;
-    Client.editPlaylist(id, name).then(() => {
-      let playlists = store.get('playlists');
-      let plist = findPlaylist(id, playlists);
-      plist.name = name;
-      store.set('playlists', playlists);
+    Client.editPlaylist(id, name).then(res => {
+      modifyPlaylist(id, store, p => {
+        p.name = name;
+        p.details.name = name;
+      })
     });
   }
 
-  const show = (props => <PlaylistShow {...props} playlist={playlist} key={playlist.id} onChange={rename} />);
+  let show;
+  if (playlist.cached) {
+    show = (props => <PlaylistShow {...props} playlist={playlist.details} key={playlist.id} rename={rename} />);
+  } else {
+    show = () => <Spinner animation="border" />;
+    Client.getPlaylist(pid).then(res => {
+      modifyPlaylist(pid, store, p => {
+        p.details = res.playlist;
+        p.cached = true;
+      });
+    });
+  }
 
   return (
     <Switch>

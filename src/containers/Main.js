@@ -12,15 +12,25 @@ import { withStore } from '@spyna/react-store';
 class Main extends Component {
   constructor(props) {
     super(props);
+
+    this.reloadPlaylists = this.reloadPlaylists.bind(this);
   }
 
   componentDidMount() {
     const { store } = this.props;
 
     store.set('uid', Client.userId());
+    store.set('reloadPlaylists', this.reloadPlaylists)
+
+    this.reloadPlaylists();
+  }
+
+  reloadPlaylists() {
+    const { store } = this.props;
 
     Client.listPlaylists().then(res => {
-      store.set('playlists', res.playlists);
+      const plists = res.playlists.sort((a, b) => b.id - a.id);
+      store.set('playlists', plists);
     });
   }
 

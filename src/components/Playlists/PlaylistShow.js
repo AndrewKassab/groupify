@@ -6,8 +6,6 @@ import { Button, ButtonToolbar, InputGroup, FormControl, Dropdown, Tabs, Tab } f
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { withStore } from '@spyna/react-store';
-
 function PlaylistShow({ playlist, rename }) {
 
   const [name, setName] = useState(playlist.name);
@@ -21,7 +19,7 @@ function PlaylistShow({ playlist, rename }) {
   };
 
   const editor = (
-    <InputGroup>
+    <InputGroup className="mb-2">
       <FormControl
         defaultValue={name}
         onChange={e => setEditName(e.target.value)}

@@ -77,6 +77,7 @@ class CreateModal extends Component {
 
     Client.createPlaylist(name, userList, playlists, duration).then(res => {
       console.log(res);
+      this.props.store.get('reloadPlaylists')();
     });
     // dispatch requests or something
     // TODO: Actually save
