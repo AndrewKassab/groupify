@@ -5,7 +5,7 @@ import uuid, sys, requests, datetime
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
 from flask import jsonify, request, abort, Response, redirect
 from app.playlist_generation.src.track import Track
-from app.playlist_generation.src.createplaylist import create_playlist
+#from app.playlist_generation.src.createplaylist import create_playlist
 
 
 # This is for finding a user's playlists
