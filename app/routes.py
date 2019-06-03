@@ -1,12 +1,12 @@
 from app import app, db
 from app.models import *
 from app.spotify import *
-import uuid, sys, requests, datetime
+import uuid, sys, requests
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
 from flask import jsonify, request, abort, Response, redirect
 from app.playlist_generation.src.track import Track
-#from app.playlist_generation.src.createplaylist import create_playlist
-
+from app.playlist_generation.src.createplaylist import create_playlist
+from datetime import datetime, timedelta
 
 # This is for finding a user's playlists
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
@@ -61,7 +61,6 @@ def signup():
 # DONE
 @app.route('/api/playlists', methods=['GET'])
 def list_playlists():
-
     auser = authenticate_user(request)
 
     # The list of playlists to eventually be returned
@@ -69,7 +68,6 @@ def list_playlists():
 
     # Iterate through all of the user's groups
     for group in auser.groups:
-
         playlists.append({'id': group.id, 'name': group.title, 'state':'done'})
 
     return response({'playlists': playlists, 'status':'success'},200)
@@ -229,10 +227,27 @@ def callback():
 
     auth = None
 
+    expiration = datetime.now() + timedelta(seconds=token_data[3])
+    token = token_data[0]
+    refresh = token_data[4]
+
     if auser is None:
         # Make a new user if user is not in table
-        auser = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[4],token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
+
+        auser = User(
+            name=userInfo['display_name'],
+            username=userInfo['id'],
+            access_token=token,
+            refresh_token=refresh,
+            token_expiration=expiration
+        )
         db.session.add(user)
+        db.session.commit()
+    else:
+        auser.access_token = token
+        auser.refresh_token = refresh
+        auser.token_expiration = expiration
+
         db.session.commit()
 
     auth = AuthToken(user=auser,token=userAuthToken,user_id=auser.id)
@@ -249,7 +264,6 @@ def callback():
 
 
 def authenticate_user(req):
-
     token = AuthToken.query.filter_by(token=req.args['token']).first()
 
     if token is None:
@@ -257,12 +271,14 @@ def authenticate_user(req):
 
     auser = token.user
 
-    if user is None:
+    if auser is None:
         abort(401)
 
-
     # refresh token if needed
-    if (auser.token_expiration <= datetime.datetime.now()):
+    if (auser.token_expiration + timedelta(minutes = 5)) < datetime.now():
+        app.logger.info(auser.token_expiration)
+        app.logger.info(datetime.now())
+
         refresh_token(auser)
 
     return auser
@@ -305,5 +321,5 @@ def refresh_token(auser):
     token_data = refreshToken(auser.refresh_token)
     auser.access_token=token_data[0]
     auser.refresh_token=token_data[4]
-    auser.token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3])
-    db.commit()
+    auser.token_expiration=datetime.now()+timedelta(seconds=token_data[3])
+    db.session.commit()

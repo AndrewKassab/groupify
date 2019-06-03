@@ -19,12 +19,10 @@ def getUser():
     return getAuth(CLIENT_ID, CALLBACK_URL, SCOPE)
 
 def getUserToken(code):
-    TOKEN_DATA = getToken(code, CLIENT_ID, CLIENT_SECRET, CALLBACK_URL)
-    return TOKEN_DATA
+    return getToken(code, CLIENT_ID, CLIENT_SECRET, CALLBACK_URL)
 
 def refreshToken(refresh):
-    TOKEN_DATA = refreshAuth(refresh,CLIENT_ID,CLIENT_SECRET)
-    return TOKEN_DATA
+    return refreshAuth(refresh, CLIENT_SECRET, CLIENT_ID)
 
 def getUserInfo(token):
     return userInfo(token)
