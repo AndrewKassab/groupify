@@ -32,27 +32,39 @@ class PlaylistFactory():
 
 
     # Takes tracks from this user's pool for the final track list
-    # TODO: Explore edge cases!
     def __grab_users_tracks(self, user):
 
         max_duration = self.desired_length / len(self.users)
         current_duration = 0
+
         random.shuffle(user.tracks)
 
+        if len(self.users) > 3:
+            amt_must_saved = len(self.users)/2
+        else: 
+            amt_must_saved = 2
+
+        to_remove_from_pool = []
+        track_ids = []
         for track in user.tracks:
-            for other_user in self.users:
-                if other_user == user:
-                    continue
-                if other_user.has_track_saved(track.id):
+            track_ids.append(track.id)
+
+        for other_user in self.users:
+            if other_user == user:
+                continue
+            tracks_saved_list = other_user.has_track_saved(track_ids)
+            for i in range(0, len(tracks_saved_list)):
+                if tracks_saved_list[i] is True:
+                    user.tracks[i].increment_amt_saved()
+
+        while amt_must_saved > 0:
+            for track in user.tracks:
+                if track.amt_saved > amt_must_saved:
                     if track.id not in self.tracks:
                         self.tracks[track.id] = track
-                        user.remove_from_pool(track)
                         current_duration += track.duration
-            if current_duration >= max_duration:
-                return
-
-        while current_duration < max_duration:
-            for track in user.tracks:
-                if track.id not in self.tracks:
-                    self.tracks[track.id] = track
-                    current_duration += track.duration
+                    to_remove_from_pool.append(track)
+                if current_duration >= max_duration: 
+                    return
+            user.remove_from_pool(to_remove_from_pool)
+            amt_must_saved -= 1
