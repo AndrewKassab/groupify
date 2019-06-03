@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { Row, Col, Container, ButtonToolbar, Button, Image } from 'react-bootstrap';
 import Background from '../images/logo.svg';
-
+import { Redirect } from 'react-router-dom';
+import Client from '../Client';
 
 export default class LoginPage extends Component {
   render() {
+    if (Client.loggedIn()) {
+      return <Redirect to="/playlists" />
+    }
+
     return (
       <Container>
         <Row>

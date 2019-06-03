@@ -3,17 +3,33 @@ import { Modal, Button } from 'react-bootstrap';
 
 import UserSelector from './create/UserSelector';
 import PlaylistSelector from './create/PlaylistSelector';
-import { userOptions, playlistOptions } from '../../containers/mockdata';
+import PlaylistParams from './create/PlaylistParams';
+import { userOptions } from '../../containers/mockdata';
 
 import Client from '../../Client';
+import moment from 'moment';
 
 const defaultState = {
   show: false,
   users: [],
-  playlists: [],
   page: 'playlists',
   next: 'Next',
 };
+
+const generateData = (state) =>
+  state.users.map(user => ({
+    uid: user.id,
+    label: user.label,
+    playlists: state[pKey(user.id)]
+  }));
+
+const pKey = uid => `plist.${user.id}`;
+
+const updateData = (uid, plist) => {
+  return {
+    [pKey(uid)]: plist
+  };
+}
 
 class CreateModal extends Component {
   constructor(props) {
@@ -28,11 +44,13 @@ class CreateModal extends Component {
     this.updateUsers = this.updateUsers.bind(this);
     this.updatePlaylists = this.updatePlaylists.bind(this);
 
+    this.updateDuration = this.updateDuration.bind(this);
+    this.updateName = this.updateName.bind(this);
+
     this.state = defaultState;
-    this.data = {
-      users: [],
-      playlists: []
-    }
+
+    this.state.name = moment().format('[Groupify -] MMM Do YYYY, h:mm a');
+    this.state.duration = 60;
   }
 
   handleClose() {
@@ -81,12 +99,19 @@ class CreateModal extends Component {
   }
 
   updateUsers(users) {
-    this.data.users = users;
-    this.setState({users: users})
+    this.setState({users: users});
   }
 
-  updatePlaylists(playlists) {
-    this.data.playlists = playlists;
+  updatePlaylists(uid, playlists) {
+    this.setState(updateData(uid, playlists));
+  }
+
+  updateName(name) {
+    this.setState({name: name});
+  }
+
+  updateDuration(duration) {
+    this.setState({duration: parseInt(duration)});
   }
 
   render() {
@@ -101,8 +126,13 @@ class CreateModal extends Component {
             <Modal.Title>Create Playlist</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{minHeight: '200px'}}>
-            <UserSelector update={this.updateUsers} options={userOptions} values={this.state.users} />
-            <PlaylistSelector update={this.updatePlaylists} options={playlistOptions} values={this.state.playlists} users={this.state.users} />
+            {
+              this.state.page === 'playlists' && (<>
+                <UserSelector update={this.updateUsers} options={userOptions} values={this.state.users} />
+                <PlaylistSelector update={this.updatePlaylists} values={generateData(this.state)} />
+              </>) ||
+              <PlaylistParams updateName={this.updateName} updateDuration={this.updateDuration} name={this.state.name} duration={this.state.duration} />
+            }
           </Modal.Body>
           <Modal.Footer>
             {
@@ -114,7 +144,7 @@ class CreateModal extends Component {
                 Go Back
               </Button>
             }
-            <Button variant="primary" onClick={this.handleNext}>
+            <Button variant="primary" onClick={this.handleNext} disabled={this.state.users.length < 2}>
               { this.state.next }
             </Button>
           </Modal.Footer>
