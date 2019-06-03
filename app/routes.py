@@ -6,9 +6,6 @@ from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, 
 from flask import jsonify, request, abort, Response, redirect
 from app.playlist_generation.src.track import Track
 
-HOME_PAGE = 'http://localhost:3000'
-LOGIN_PAGE = 'http://localhost:3000'
-
 
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
 def get_playlists():
@@ -221,10 +218,12 @@ def callback():
     if user is None:
         # Make a new user if user is not in table
         user = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[4],token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
-        auth = AuthToken(User=user,token=userAuthToken,user_id=user.id)
-        db.session.add(auth)
         db.session.add(user)
         db.session.commit()
+
+    auth = AuthToken(user=user,token=userAuthToken,user_id=user.id)
+    db.session.add(auth)
+    db.session.commit()
 
     if userInfo is None:
         abort(404)
@@ -233,16 +232,18 @@ def callback():
     return response({'token':userAuthToken},200)
 
 
-def authenticate_user(request):
+def authenticate_user(req):
 
-    if 'token' not in request.json.keys():
+    token = AuthToken.query.filter_by(token=req.args['token']).first()
+
+    if token is None:
         abort(401)
 
-    token = AuthToken.query.filter_by(token=request.json['token']).first()
     user = token.user
 
     if user is None:
         abort(401)
+
 
     # refresh token if needed
     if user.token_expiration >= datetime.datetime.now():
@@ -275,7 +276,7 @@ def get_error_msg(error):
     if(error.code==401):
         return '401 MESSAGE'
     else:
-        return f'{error}'
+        return f'{error.code}'
 
 
 def response(json,code):
