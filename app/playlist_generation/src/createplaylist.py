@@ -1,4 +1,4 @@
-from user import user
+from .user import user
 from p_factory import PlaylistFactory
 
 def create_playlist(name, usernames, tokens, user_playlist_ids, desired_length):
