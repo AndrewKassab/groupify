@@ -34,7 +34,7 @@ def search_users():
 
     users_db = User.query.all()
     for auser in users_db:
-        users.append({'name':auser.name,'username':auser.username,'id':auser.id,'auth_token':AuthToken.query.filter_by(user_id=user.id).first().token,'access_token':user.access_token,'refresh':user.refresh_token})
+        users.append({'name':auser.name,'username':auser.username,'id':auser.id,'auth_token':AuthToken.query.filter_by(user_id=auser.id).first().token,'access_token':auser.access_token,'refresh':auser.refresh_token})
 
     return response({'users':users},200)
 
@@ -232,7 +232,7 @@ def callback():
     if auser is None:
         # Make a new user if user is not in table
         auser = User(name=userInfo['display_name'],username=userInfo['id'],access_token=token_data[0],refresh_token=token_data[4],token_expiration=datetime.datetime.now()+datetime.timedelta(seconds=token_data[3]))
-        db.session.add(user)
+        db.session.add(auser)
         db.session.commit()
 
     auth = AuthToken(user=auser,token=userAuthToken,user_id=auser.id)
