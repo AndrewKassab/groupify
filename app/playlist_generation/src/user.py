@@ -1,6 +1,5 @@
 import sys
-sys.path.append('../')
-from track import Track
+from app.playlist_generation.src.track import Track
 import spotipy
 import spotipy.util as util
 import os
