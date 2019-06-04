@@ -58,11 +58,11 @@ class PlaylistFactory():
         
         while amt_must_saved > 0:
             for track in user.tracks:
-                #if track.amt_saved > amt_must_saved:
-                if track.id not in self.tracks:
-                    self.tracks[track.id] = track
-                    current_duration += track.duration
-                to_remove_from_pool.append(track)
+                if track.amt_saved >= amt_must_saved:
+                    if track.id not in self.tracks:
+                        self.tracks[track.id] = track
+                        current_duration += track.duration
+                    to_remove_from_pool.append(track)
                 if current_duration >= max_duration:
                     return
             user.remove_from_pool(to_remove_from_pool)

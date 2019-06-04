@@ -5,6 +5,7 @@ def create_playlist(name, usernames, tokens, user_playlist_ids, desired_length):
   if len(usernames) != len(tokens):
     return None
 
+  # TODO: Make API calls to find out which playlist_ids belong to which user
   users = []
   for username, token in zip(usernames, tokens):
     users.append(user(username, token, user_playlist_ids))#username]))

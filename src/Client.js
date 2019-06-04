@@ -93,12 +93,13 @@ function logout() {
 }
 
 // Playlist methods
-function createPlaylist(name, users, playlists, duration) {
+function createPlaylist(name, users, playlists, duration, userPlaylists) {
   const dat = {
     name: name,
     duration: duration,
     users: users,
-    playlists: playlists
+    playlists: playlists,
+    userPlaylists: userPlaylists
   };
 
   console.log(dat);
