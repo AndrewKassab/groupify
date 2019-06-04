@@ -21,7 +21,7 @@ class user:
     # Adds tracks from a specified list of playlists into the track pool
     def __retrieve_playlist_tracks(self, playlist_ids):
         for id in playlist_ids:
-            # TODO: Retrieve all tracks instead of just 100, or retrieve the 100 randomly
+            # TODO: Retrieve the 100 tracks randomly
             results = self.sp.user_playlist(self.username, id, fields="tracks,next")
             tracks = results['tracks']
             for j, item in enumerate(tracks['items']):

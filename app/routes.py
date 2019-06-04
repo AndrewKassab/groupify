@@ -23,9 +23,13 @@ def add_spotify(group_id):
     for track in playlist.tracks:
         tracks.append(track.spotify_id)
 
-    add_to_spotify(auser.username, auser.access_token, tracks, playlist.title)
+    playlist_id = add_to_spotify(auser.username, auser.access_token, tracks, playlist.title)
 
-    return response(None,200)
+    new_playlist = SpotifyPlaylist(group_id=playlist.id,user_id=auser.id,spotify_id=playlist_id,group=playlist,user=auser)
+    db.add(new_playlist)
+    db.commit()
+
+    return response({'status':'success'},200)
 
 # This is for finding a user's playlists
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
