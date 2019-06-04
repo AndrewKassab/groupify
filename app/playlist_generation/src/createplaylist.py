@@ -34,4 +34,5 @@ def add_to_spotify(username, token, tracks_ids, playlist_name):
     sp = spotipy.Spotify(auth = token)
     playlist = sp.user_playlist_create(username, playlist_name, public=True)
     sp.user_playlist_add_tracks(username, playlist['id'], tracks_ids)
+    return playlist['id']
 
