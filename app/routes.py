@@ -33,7 +33,7 @@ def search_users():
 
     users_db = User.query.all()
     for auser in users_db:
-        users.append({'name':auser.name,'username':auser.username,'id':auser.id,'auth_token':AuthToken.query.filter_by(user_id=auser.id).first().token,'access_token':auser.access_token,'refresh':auser.refresh_token})
+        users.append({'name':auser.name,'username':auser.username,'id':auser.id,'auth_token':AuthToken.query.filter_by(user_id=auser.id).first().token})
 
     return response({'users':users},200)
 
