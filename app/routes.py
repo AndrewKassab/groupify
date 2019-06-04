@@ -4,8 +4,28 @@ from app.spotify import *
 import uuid, sys, requests
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
 from flask import jsonify, request, abort, Response, redirect
-from app.playlist_generation.src.createplaylist import create_playlist
+from app.playlist_generation.src.createplaylist import create_playlist, add_to_spotify
 from datetime import datetime, timedelta
+
+@app.route('/api/playlists/<int:group_id>/spotify',methods=['POST'])
+def add_spotify(group_id):
+    auser = authenticate_user(request)
+
+    # Get the group playlist by id
+    playlist = Group.query.filter_by(id=group_id).first()
+
+    if playlist is None:
+        abort(404)
+
+    tracks = []
+
+    # Get all of the track id's for spotify
+    for track in playlist.tracks:
+        tracks.append(track.spotify_id)
+
+    add_to_spotify(auser.username, auser.access_token, tracks, playlist.title)
+
+    return response(None,200)
 
 # This is for finding a user's playlists
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
@@ -201,11 +221,14 @@ def delete_playlist(group_id):
 # User logout functionality removes the token from the DB
 @app.route('/api/logout',methods=['DELETE'])
 def logout():
+
+    user = authenticate_user(request)
+
     token = AuthToken.query.filter_by(token=request.args['token']).first()
 
-    #user.token.remove(token.auth_token)
-    #db.session.delete(token)
-    #db.session.commit()
+    user.auth_tokens.remove(token.token)
+    db.session.delete(token)
+    db.session.commit()
 
     return response('', 200)
 
