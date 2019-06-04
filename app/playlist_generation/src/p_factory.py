@@ -66,4 +66,5 @@ class PlaylistFactory():
                 if current_duration >= max_duration:
                     return
             user.remove_from_pool(to_remove_from_pool)
+            to_remove_from_pool.clear()
             amt_must_saved -= 1

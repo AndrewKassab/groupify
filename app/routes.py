@@ -122,7 +122,6 @@ def create():
 
     user_ids = request.json['users']
     name = request.json['name']
-    playlists = request.json['playlists']
     duration = request.json['duration']
 
     app.logger.debug(request.json)
@@ -148,7 +147,7 @@ def create():
     # duration comes in minutes
     # this is going to pass back a lot of info in for of track objects I believe
 
-    track_objects = create_playlist(name,usernames,tokens,playlists,duration*60000)
+    track_objects = create_playlist(name,usernames,tokens,user_playlists,duration*60000)
 
     if track_objects is None:
         abort(404)

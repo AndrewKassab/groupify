@@ -10,7 +10,8 @@ PORT = 3000#os.environ['PORT']
 CALLBACK_URL = os.environ['CALLBACK_URL']
 
 #Add needed scope from spotify user
-SCOPE = "streaming user-read-birthdate user-read-email user-library-modify user-library-read playlist-modify-public playlist-read-collaborative"
+SCOPE = 'user-read-recently-played user-top-read user-library-modify user-library-read playlist-read-private playlist-modify-public playlist-modify-private playlist-read-collaborative'
+
 #token_data will hold authentication header with access code, the allowed scopes, and the refresh countdown
 TOKEN_DATA = []
 
