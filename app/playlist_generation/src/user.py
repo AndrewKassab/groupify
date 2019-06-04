@@ -3,6 +3,7 @@ from app.playlist_generation.src.track import Track
 import spotipy
 import spotipy.util as util
 import os
+import random
 
 class user:
 
@@ -22,8 +23,7 @@ class user:
     def __retrieve_playlist_tracks(self, playlist_ids):
         for id in playlist_ids:
             # TODO: Retrieve the 100 tracks randomly
-            results = self.sp.user_playlist(self.username, id, fields="tracks,next")
-            tracks = results['tracks']
+            tracks = self.sp.user_playlist_tracks(self.username, id, fields=None, limit = 100, offset = 0, market = None) 
             for j, item in enumerate(tracks['items']):
                 artist_list = [artist['name'] for artist in item['track']['artists']]
                 track = Track(item['track']['id'], item['track']['name'], artist_list, item['track']['duration_ms'])
