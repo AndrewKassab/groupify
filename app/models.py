@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, Index, Integer, String, text, Table
+from sqlalchemy import BigInteger, Boolean, Column, DateTime, ForeignKey, Index, Integer, String, text, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -22,10 +22,21 @@ metadata = Base.metadata
 #     group = relationship('Group')
 #     user = relationship('User')
 
-group_users_table = Table('group_users', Base.metadata,
-    Column('group_id', Integer, ForeignKey('groups.id')),
-    Column('user_id', Integer, ForeignKey('users.id'))
-)
+# group_users_table = Table('group_users', Base.metadata,
+#     Column('group_id', Integer, ForeignKey('groups.id')),
+#     Column('user_id', Integer, ForeignKey('users.id')),
+#     Column('visible', Boolean)
+# )
+
+class GroupUsers(Base):
+    __tablename__ = 'group_users'
+
+    id = Column(BigInteger, primary_key=True)
+
+    user_id = Column(ForeignKey('users.id'), nullable=False, index=True)
+    group_id = Column(ForeignKey('groups.id'), nullable=False, index=True)
+    visible = Column(Boolean)
+
 
 class Track(Base):
     __tablename__ = 'tracks'
@@ -87,9 +98,37 @@ class Group(Base):
     user_id = Column(ForeignKey('users.id'), nullable=False, index=True)
     title = Column(String, nullable=False)
 
+    def spotify_id(self, user):
+        spotify_id = SpotifyPlaylist.query. \
+            filter_by(group_id=self.id, user_id=user.id).first()
+
+        return spotify_id and spotify_id.spotify_id
+
+    def visible(self, user):
+        return GroupUsers.query.filter_by(group_id=self.id, user_id=user.id).first().visible
+
+    def set_visible(self, user, visiblility):
+        GroupUsers.query.filter_by(group_id=self.id, user_id=user.id).first().visible = visiblility
+
+    def full_details(self, user):
+        tracks = [track.to_dict() for track in self.tracks]
+        users = [user.to_dict() for user in self.users]
+
+        data = {
+            "id": self.id,
+            "name": self.title,
+            "tracks": tracks,
+            "users": users,
+            "visible": self.visible(user),
+            "spotify_id": self.spotify_id(user),
+            "state": "done"
+        }
+
+        return data
+
     owner = relationship('User')
     users = relationship('User',
-        secondary=group_users_table,
+        secondary='group_users',
         backref='groups')
 
 

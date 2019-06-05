@@ -78,18 +78,26 @@ def edit_playlist(group_id):
     # Get the group from the database
     # and get the name from the request
     group = Group.query.filter_by(id=group_id).first()
-    name = request.json['name']
+    name = request.json.get('name', None)
+    visible = request.json.get('visible', None)
 
-    if group is None or name is None:
+    if group is None:
         abort(404)
 
-    group.title = name
+    updates = {'id': group_id}
+
+    if name is not None:
+        group.title = name
+        updates['name'] = name
+
+    if visible is not None:
+        group.set_visible(auser, visible)
+        updates['visible'] = visible
+
     db.session.commit()
 
-    return response({'playlist': {
-        'id': group_id,
-        'name': name,
-        },
+    return response({
+        'playlist': updates,
         'status': 'success'
     }, 200)
 
@@ -100,16 +108,7 @@ def get_playlist_details(group_id):
     auser = authenticate_user(request)
     group = Group.query.filter_by(id=group_id).first()
 
-    tracks = [track.to_dict() for track in group.tracks]
-    users = [user.to_dict() for user in group.users]
-
-    return response({"playlist": {
-        "id": group_id,
-        "name": group.title,
-        "tracks": tracks,
-        "users": users,
-        "state": "done"
-        },
+    return response({"playlist": group.full_details(auser),
         "status": "success"
     }, 200)
 
