@@ -1,0 +1,14 @@
+.app-help {
+  display: block;
+  max-width: 615.2px;
+  margin: 3em auto;
+  animation: mic-drop 0.75s; 
+}
+
+p {
+  flex-wrap: wrap;
+}
+
+body {
+  left: 50px;
+}
