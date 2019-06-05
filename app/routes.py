@@ -4,8 +4,32 @@ from app.spotify import *
 import uuid, sys, requests
 from app.flask_spotify_connect import getAuth, refreshAuth, getToken, userInfo, HEADER
 from flask import jsonify, request, abort, Response, redirect
-from app.playlist_generation.src.createplaylist import create_playlist
+from app.playlist_generation.src.createplaylist import create_playlist, add_to_spotify
 from datetime import datetime, timedelta
+
+@app.route('/api/playlists/<int:group_id>/spotify',methods=['POST'])
+def add_spotify(group_id):
+    auser = authenticate_user(request)
+
+    # Get the group playlist by id
+    playlist = Group.query.filter_by(id=group_id).first()
+
+    if playlist is None:
+        abort(404)
+
+    tracks = []
+
+    # Get all of the track id's for spotify
+    for track in playlist.tracks:
+        tracks.append(track.spotify_id)
+
+    playlist_id = add_to_spotify(auser.username, auser.access_token, tracks, playlist.title)
+
+    new_playlist = SpotifyPlaylist(group_id=playlist.id,user_id=auser.id,spotify_id=playlist_id,group=playlist,user=auser)
+    db.add(new_playlist)
+    db.commit()
+
+    return response({'status':'success'},200)
 
 # This is for finding a user's playlists
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
@@ -33,7 +57,7 @@ def search_users():
 
     users_db = User.query.all()
     for auser in users_db:
-        users.append({'name':auser.name,'username':auser.username,'id':auser.id,'auth_token':AuthToken.query.filter_by(user_id=auser.id).first().token,'access_token':auser.access_token,'refresh':auser.refresh_token})
+        users.append({'name':auser.name,'username':auser.username,'id':auser.id,'auth_token':AuthToken.query.filter_by(user_id=auser.id).first().token})
 
     return response({'users':users},200)
 
@@ -201,11 +225,14 @@ def delete_playlist(group_id):
 # User logout functionality removes the token from the DB
 @app.route('/api/logout',methods=['DELETE'])
 def logout():
+
+    user = authenticate_user(request)
+
     token = AuthToken.query.filter_by(token=request.args['token']).first()
 
-    #user.token.remove(token.auth_token)
-    #db.session.delete(token)
-    #db.session.commit()
+    user.auth_tokens.remove(token.token)
+    db.session.delete(token)
+    db.session.commit()
 
     return response('', 200)
 
