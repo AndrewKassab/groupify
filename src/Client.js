@@ -70,12 +70,16 @@ function getToken() {
 }
 
 function setToken(token) {
-  Cookies.set('token', token);
+  Cookies.set('token', token, { expires: 180 });
 }
 
 function login(query, history) {
   const spotifyArgs = queryString.parse(query);
   console.log(spotifyArgs);
+
+  if (spotifyArgs['error']) {
+    history.push("/");
+  }
 
   postData('/api/callback', spotifyArgs, false)
   .then(res => {
@@ -93,21 +97,25 @@ function logout() {
 }
 
 // Playlist methods
-function createPlaylist(name, users, playlists, duration, userPlaylists) {
+function createPlaylist(name, users, playlists, duration, userPlaylists, defaultAdd = false) {
   const dat = {
     name: name,
     duration: duration,
     users: users,
     playlists: playlists,
-    userPlaylists: userPlaylists
+    userPlaylists: userPlaylists,
+    defaultAdd: defaultAdd
   };
 
-  console.log(dat);
   return postData('/api/playlists/create', dat);
 }
 
 function editPlaylist(id, name) {
   return postData(`/api/playlists/${id}`, {name: name});
+}
+
+function addToSpotify(id) {
+  return postData(`/api/playlists/${id}/spotify`);
 }
 
 function getPlaylist(id) {
@@ -144,6 +152,7 @@ const Client = {
   editPlaylist,
   getPlaylist,
 
+  addToSpotify,
   spotifyPlaylists,
   listUsers,
 

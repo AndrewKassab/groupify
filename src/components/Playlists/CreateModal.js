@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Spinner } from 'react-bootstrap';
 
 import UserSelector from './create/UserSelector';
 import PlaylistSelector from './create/PlaylistSelector';
@@ -18,6 +18,7 @@ const defaultState = {
   users: [],
   page: 'playlists',
   next: 'Next',
+  saving: false
 };
 
 const generateData = (state) =>
@@ -59,7 +60,9 @@ class CreateModal extends Component {
   }
 
   handleClose() {
-    this.setState({ show: false });
+    if (this.state.page !== 'save') {
+      this.setState({ show: false });
+    }
   }
 
   handleShow() {
@@ -84,28 +87,31 @@ class CreateModal extends Component {
     });
 
     Client.createPlaylist(name, userList, playlists, duration, userPlaylists).then(res => {
-      console.log(res);
-      this.props.store.get('reloadPlaylists')();
+      const plist = res.playlist;
+      this.props.store.get('reloadPlaylists')(`/playlists/${plist.id}`).then(() => {
+        this.resetState();
+      });
     });
-    // dispatch requests or something
-    // TODO: Actually save
-    this.resetState();
   }
 
   resetState() {
+    this.state.users.forEach(({id}) => {this.setState(updateData(id, []))});
     this.setState(defaultState);
     this.loadUsers();
   }
 
   handleNext() {
-    console.log(this.data);
-
     switch (this.state.page) {
       case 'playlists':
-        this.setState({ page: 'config', next: 'Save' });
+        this.setState({ page: 'config', next: 'Create Playlist' });
         break;
 
       case 'config':
+        this.setState({
+          page: 'save',
+          saving: true,
+          next: 'Saving...'
+        });
         this.createPlaylist();
         break;
 
@@ -158,15 +164,38 @@ class CreateModal extends Component {
     });
   }
 
+  backButton() {
+    switch (this.state.page) {
+      case 'playlists':
+        return <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>;
+      case 'config':
+        return <Button variant="secondary" onClick={this.goBack}>Go Back</Button>;
+    }
+  }
+
   render() {
     const playlistShower = () => {
+      switch(this.state.page) {
+        case 'playlists':
+          return (<>
+            <UserSelector update={this.updateUsers} options={this.state.options} values={this.state.users} />
+            <PlaylistSelector update={this.updatePlaylists} data={generateData(this.state)} />
+          </>);
+
+        case 'config':
+          return <PlaylistParams updateName={this.updateName} updateDuration={this.updateDuration} name={this.state.name} duration={this.state.duration} />;
+
+        case 'save':
+          return (<div className="d-flex justify-content-center flex-column" style={{height: '200px'}}>
+            <h2 className="text-center">Saving playlist...</h2>
+            <div className="mt-2 d-flex justify-content-center">
+              <Spinner animation="border" />
+            </div>
+          </div>);
+      }
       if (this.state.page === 'playlists') {
-        return (<>
-          <UserSelector update={this.updateUsers} options={this.state.options} values={this.state.users} />
-          <PlaylistSelector update={this.updatePlaylists} data={generateData(this.state)} />
-        </>);
+
       } else {
-        return <PlaylistParams updateName={this.updateName} updateDuration={this.updateDuration} name={this.state.name} duration={this.state.duration} />;
       }
     };
 
@@ -177,23 +206,15 @@ class CreateModal extends Component {
         </Button>
 
         <Modal show={this.state.show} onHide={this.handleClose} size="lg">
-          <Modal.Header closeButton>
+          <Modal.Header closeButton={!this.state.saving}>
             <Modal.Title>Create Playlist</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{minHeight: '200px'}}>
             { !this.state.loading && playlistShower() }
           </Modal.Body>
           <Modal.Footer>
-            {
-              this.state.page === 'playlists' &&
-              <Button variant="secondary" onClick={this.handleCancel}>
-                Cancel
-              </Button> ||
-              <Button variant="secondary" onClick={this.goBack}>
-                Go Back
-              </Button>
-            }
-            <Button variant="primary" onClick={this.handleNext} disabled={this.state.users.length < 2}>
+            { this.backButton() }
+            <Button variant="primary" onClick={this.handleNext} disabled={this.state.users.length < 2 || this.state.saving}>
               { this.state.next }
             </Button>
           </Modal.Footer>

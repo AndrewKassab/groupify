@@ -3,7 +3,6 @@ import { Row, Col, Container } from 'react-bootstrap';
 import { Switch, Route } from 'react-router';
 import PlaylistList from '../components/Playlists/PlaylistList';
 import Playlist from '../components/Playlists/Playlist';
-import mockdata from './mockdata';
 import Client from '../Client';
 import Header from '../Header';
 
@@ -25,12 +24,16 @@ class Main extends Component {
     this.reloadPlaylists();
   }
 
-  reloadPlaylists() {
+  reloadPlaylists(redirect = null) {
     const { store } = this.props;
 
-    Client.listPlaylists().then(res => {
+    return Client.listPlaylists().then(res => {
       const plists = res.playlists.sort((a, b) => b.id - a.id);
       store.set('playlists', plists);
+    }).then(() => {
+      if (redirect) {
+        this.props.history.push(redirect);
+      }
     });
   }
 
@@ -45,7 +48,7 @@ class Main extends Component {
             </Col>
             <Col className="ml-sm-auto">
               <Switch>
-                <Route path="/playlists/:id" render={props => <Playlist {...props} />} />
+                <Route path="/playlists/:id" component={Playlist} />
                 <Route component={NoPlaylist} />
               </Switch>
             </Col>
