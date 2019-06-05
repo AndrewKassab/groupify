@@ -7,7 +7,7 @@ This application uses the Spotify API to retrieve information about a user's
 playlists and most listened tracks. It then allows a user to generate a playlist of
 a specified length, taking multiple specified users' preferences into account.
 
-[Try out Groupify](https://www.groupify.com)
+[Try out Groupify](https://www.groupify.com) (currently unavailable)
 
 # Spotify API
 
