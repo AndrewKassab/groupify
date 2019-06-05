@@ -17,7 +17,7 @@ Application takes advantage of the following parts of the Spotify API:
 - [Get users Playlists](https://developer.spotify.com/documentation/web-api/reference/playlists/get-list-users-playlists/)
 - [Create a Playlist](https://developer.spotify.com/documentation/web-api/reference/playlists/create-playlist/)
 - [Add tracks to a playlist](https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/)
-- Application uses spotipy on the backend to connect with the API.
+Application uses spotipy on the backend to connect with the API.
 
 # Development Set Up
 
