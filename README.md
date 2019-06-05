@@ -1,9 +1,12 @@
 # Groupify
 ` Create group playlists on Spotify at will`
-![Groupify Image Logo..](https://github.com/andrewkassab/groupify/src/images/logo.svg)
-- This application uses the Spotify API to retrieve information about a user's
+
+![Groupify Image Logo](https://github.com/AndrewKassab/groupify/blob/master/src/images/logo.svg)
+
+This application uses the Spotify API to retrieve information about a user's
 playlists and most listened tracks. It then allows a user to generate a playlist of
 a specified length, taking multiple specified users' preferences into account.
+
 [Try out Groupify](https://www.groupify.com)
 
 # Spotify API
