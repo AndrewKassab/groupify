@@ -1,26 +1,36 @@
 # Groupify
+` Create group playlists on Spotify at will`
+![Groupify Image Logo..](https://github.com/andrewkassab/groupify/src/images/logo.svg)
+- This application uses the Spotify API to retrieve information about a user's
+playlists and most listened tracks. It then allows a user to generate a playlist of
+a specified length, taking multiple specified users' preferences into account.
+[Try out Groupify](https://www.groupify.com)
 
-## Installation
+# Spotify API
+
+Application takes advantage of the following parts of the Spotify API:
+- [Authorization](https://developer.spotify.com/documentation/general/guides/authorization-guide/#implicit-grant-flow)
+- [Get users Top Tracks](https://developer.spotify.com/documentation/web-api/reference/personalization/get-users-top-artists-and-tracks/)
+- [Get users Playlists](https://developer.spotify.com/documentation/web-api/reference/playlists/get-list-users-playlists/)
+- [Create a Playlist](https://developer.spotify.com/documentation/web-api/reference/playlists/create-playlist/)
+- [Add tracks to a playlist](https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/)
+- Application uses spotipy on the backend to connect with the API.
+
+# Development Set Up
 
 The app is designed to be installed/run through [Docker](https://docs.docker.com/).
-This has been done to simplify setup and make the application essentialy platform
-agnostic (read: I don't care if you're on linux, windows, mac, haiku, or something
-else. If youcan run docker, you can run this app in development.)
 
-### Docker setup
+Install docker [following their install instructions](https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/)
 
-Before anything, you need to install Docker [following their install instruction](https://docs.docker.com/install/#supported-platforms).
+For Linux users, after installing Docker you must also install docker-compose separately following the instructions found [here](https://docs.docker.com/compose/install/). (Mac and Windows users should already have docker-compose included with Docker Desktop.)
 
-After installing Docker, you also need to install Docker Compose so that you can
-boot the app all at once. Install instructions are [here](https://docs.docker.com/compose/install/). (Note: If you are on Mac or Windows, this is already included with
-Docker Desktop, so this step is pretty much only needed for linux users.)
+# Start Up
 
-On first startup, from the root folder, you need to run `docker-compose build`.
-This will compile all the base images.
+On first startup, from the root folder run `docker-compose build` .
 
-### Running the application
+# Running the application
 
-To actually run the application, in a terminal window run:
+To run the application, in a terminal window run: 
 
 ```bash
 docker-compose up
@@ -76,6 +86,6 @@ and no trailing whitespace. This can be automatically set in your editor using
 package to Atom/VS Code/IntelliJ/PyCharm/Textmate etc.)
 
 ## TODOs
-
-1. Possibly install `pylint` to keep the backend code tidy
-2. Enfocing `eslint` usage and getting that ruleset working to keep frontend in line
+- Create info and faq page
+- Default to say Most Played instead of 0 selected 
+- Randomly select 100 songs when pulling from a playlist instead of sequentially
