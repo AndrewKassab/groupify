@@ -10,27 +10,16 @@ class PlaylistFactory():
         self.current_length = 0
         self.tracks = {}
 
-    # creates our playlist
-    def create(self, user):
-        self.__determine_track_list()
-        playlist = user.sp.user_playlist_create(user.username, name=self.name, public=True)#, description=",".join(usernames))
-        track_ids = [t for t in self.tracks]
-        user.sp.user_playlist_add_tracks(user.username, playlist['id'], track_ids)
-
-    # determines track list
-    def __determine_track_list(self):
+    # determines track list for our playlist
+    def create(self):
         for user in self.users:
             self.__grab_users_tracks(user)
 
     def get_tracks(self):
-        return self.tracks
-
-    def get_track_objects(self):
         tracks = []
         for id, track in self.tracks.items():
             tracks.append(track)
         return tracks
-
 
     # Takes tracks from this user's pool for the final track list
     def __grab_users_tracks(self, user):
