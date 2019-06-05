@@ -30,7 +30,10 @@ For Linux users, after installing Docker you must also install docker-compose se
 
 # Start Up
 
-On first startup, from the root folder run `docker-compose build` .
+On first startup, from the root folder run:
+```bash
+docker-compose build
+```
 
 # Running the application
 
