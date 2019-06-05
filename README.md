@@ -24,7 +24,7 @@ Application uses spotipy on the backend to connect with the API.
 
 The app is designed to be installed/run through [Docker](https://docs.docker.com/).
 
-Install docker [following their install instructions](https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/)
+Install docker [following their install instructions](https://docs.docker.com/install/)
 
 For Linux users, after installing Docker you must also install docker-compose separately following the instructions found [here](https://docs.docker.com/compose/install/). (Mac and Windows users should already have docker-compose included with Docker Desktop.)
 
