@@ -62,7 +62,8 @@ ALTER SEQUENCE public.auth_tokens_id_seq OWNED BY public.auth_tokens.id;
 CREATE TABLE public.group_users (
     id bigint NOT NULL,
     group_id integer NOT NULL,
-    user_id integer NOT NULL
+    user_id integer NOT NULL,
+    visible boolean DEFAULT true NOT NULL
 );
 
 
@@ -453,6 +454,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190506201347'),
 ('20190509235700'),
 ('20190510001300'),
-('20190517010956');
+('20190517010956'),
+('20190604235212');
 
 
