@@ -229,7 +229,7 @@ def logout():
 
     token = AuthToken.query.filter_by(token=request.args['token']).first()
 
-    user.auth_tokens.remove(token.token)
+    user.auth_tokens.remove(token)
     db.session.delete(token)
     db.session.commit()
 
