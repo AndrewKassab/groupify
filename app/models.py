@@ -126,6 +126,16 @@ class Group(Base):
 
         return data
 
+    def short_details(self, user):
+        data = {
+            "id": self.id,
+            "name": self.title,
+            "visible": self.visible(user),
+            "state": "done"
+        }
+
+        return data
+
     owner = relationship('User')
     users = relationship('User',
         secondary='group_users',

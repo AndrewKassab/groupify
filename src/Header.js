@@ -18,7 +18,7 @@ export default function Header() {
             <Nav.Link as={Link} to="/playlists">All Playlists</Nav.Link>
           </Nav>
           <Nav>
-            <CreateModal />
+            <Nav.Item><CreateModal /></Nav.Item>
             <Nav.Link onClick={Client.logout}>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>

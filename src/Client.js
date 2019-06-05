@@ -110,8 +110,8 @@ function createPlaylist(name, users, playlists, duration, userPlaylists, default
   return postData('/api/playlists/create', dat);
 }
 
-function editPlaylist(id, name) {
-  return postData(`/api/playlists/${id}`, {name: name});
+function editPlaylist(id, attr) {
+  return postData(`/api/playlists/${id}`, attr);
 }
 
 function addToSpotify(id) {

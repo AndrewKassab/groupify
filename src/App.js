@@ -4,8 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
-import Client from './Client';
-
 import Routes from './Routes';
 import { createStore } from '@spyna/react-store';
 
@@ -15,6 +13,7 @@ const defaultValues = {
   uid: null,
   users: [],
   playlists: [],
+  'playlist.active': null,
 }
 
 class App extends Component {

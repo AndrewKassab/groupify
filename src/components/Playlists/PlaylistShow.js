@@ -6,7 +6,7 @@ import { Button, ButtonToolbar, InputGroup, FormControl, Dropdown, Tabs, Tab } f
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-function PlaylistShow({ playlist, rename }) {
+function PlaylistShow({ playlist, rename, changeVisibility }) {
 
   const [name, setName] = useState(playlist.name);
   const [editName, setEditName] = useState(name);
@@ -32,7 +32,7 @@ function PlaylistShow({ playlist, rename }) {
   );
 
   const handleToggle = () => {
-    console.log("TOGGLE");
+    changeVisibility(!playlist.visible);
   };
 
   const display = (
@@ -49,8 +49,8 @@ function PlaylistShow({ playlist, rename }) {
         <Dropdown.Menu>
           <Dropdown.Item onClick={() => setEditMode(true)}>Change Name</Dropdown.Item>
           <Dropdown.Item>Add to Spotify</Dropdown.Item>
-          {/* <Dropdown.Divider />
-          <Dropdown.Item onClick={handleToggle}>Hide Playlist</Dropdown.Item> */}
+          <Dropdown.Divider />
+          <Dropdown.Item onClick={handleToggle}>{ playlist.visible ? 'Hide' : 'Show' } Playlist</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     </ButtonToolbar>

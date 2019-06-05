@@ -63,7 +63,7 @@ def list_playlists():
     auser = authenticate_user(request)
 
     # The list of playlists to eventually be returned
-    playlists = [{'id': group.id, 'name': group.title, 'state':'done'} for group in auser.groups]
+    playlists = [group.short_details(auser) for group in auser.groups]
 
     return response({'playlists': playlists, 'status':'success'},200)
 

@@ -21,6 +21,10 @@ function Playlist({ match, playlists, store }) {
   const pid = parseInt(match.params.id);
   const playlist = findPlaylist(pid, playlists);
 
+  if (store.get('playlist.active') !== pid) {
+    store.set('playlist.active', pid);
+  }
+
   if (!playlist) {
     return (
       <Alert variant="danger">
@@ -32,17 +36,27 @@ function Playlist({ match, playlists, store }) {
 
   const rename = name => {
     const id = playlist.id;
-    Client.editPlaylist(id, name).then(res => {
+    Client.editPlaylist(id, {name: name}).then(res => {
       modifyPlaylist(id, store, p => {
-        p.name = name;
-        p.details.name = name;
+        p.name = res.playlist.name;
+        p.details.name = res.playlist.name;
+      })
+    });
+  }
+
+  const changeVisibility = state => {
+    const id = playlist.id;
+    Client.editPlaylist(id, {visible: state}).then(res => {
+      modifyPlaylist(id, store, p => {
+        p.visible = res.playlist.visible;
+        p.details.visible = res.playlist.visible;
       })
     });
   }
 
   let show;
   if (playlist.cached) {
-    show = (props => <PlaylistShow {...props} playlist={playlist.details} key={playlist.id} rename={rename} />);
+    show = (props => <PlaylistShow {...props} playlist={playlist.details} key={playlist.id} rename={rename} changeVisibility={changeVisibility} />);
   } else {
     show = () => <Spinner animation="border" />;
     Client.getPlaylist(pid).then(res => {

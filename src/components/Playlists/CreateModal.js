@@ -201,7 +201,7 @@ class CreateModal extends Component {
 
     return (
       <>
-        <Button variant="outline-primary" onClick={this.handleShow}>
+        <Button variant="outline-primary" onClick={this.handleShow} className="mr-md-2">
           Create Playlist
         </Button>
 
