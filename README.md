@@ -1,5 +1,5 @@
 # Groupify
-` Create group playlists on Spotify at will`
+> Create group playlists that everyone will love
 
 ![Groupify Image Logo](https://github.com/AndrewKassab/groupify/blob/master/src/images/logo.svg)
 
