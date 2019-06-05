@@ -50,7 +50,7 @@ function PlaylistShow({ playlist, rename, changeVisibility }) {
           <Dropdown.Item onClick={() => setEditMode(true)}>Change Name</Dropdown.Item>
           <Dropdown.Item>Add to Spotify</Dropdown.Item>
           <Dropdown.Divider />
-          <Dropdown.Item onClick={handleToggle}>{ playlist.visible ? 'Hide' : 'Show' } Playlist</Dropdown.Item>
+          <Dropdown.Item onClick={handleToggle}>{ playlist.visible ? 'Hide' : 'Unhide' } Playlist</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     </ButtonToolbar>
