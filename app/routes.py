@@ -61,18 +61,6 @@ def search_users():
 
     return response({'users':users},200)
 
-@app.route('/api/db/User/clear')
-def clear_db():
-    users = User.query.all()
-
-    for auser in users:
-        for auth_token in auser.auth_tokens:
-            db.session.delete(auth_token)
-
-    db.session.query(User).delete()
-    db.session.commit()
-    return redirect('/api/signup')
-
 #DONE
 @app.route('/api/signup')
 def signup():
@@ -204,22 +192,6 @@ def create():
         },
         'status': 'success'
     },200)
-
-# Delete playlist
-@app.route('/api/playlists/<int:group_id>',methods=['DELETE'])
-def delete_playlist(group_id):
-
-    auser = authenticate_user(request)
-
-    group = Group.query.filter_by(id=group_id).first()
-
-    for track in group.tracks:
-        db.session.delete(track)
-
-    db.session.delete(group)
-    db.session.commit()
-
-    return response({'status':'success'},200)
 
 # User logout functionality removes the token from the DB
 @app.route('/api/logout',methods=['DELETE'])
