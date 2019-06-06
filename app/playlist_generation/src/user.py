@@ -4,7 +4,7 @@ import spotipy
 import spotipy.util as util
 import os
 import random
-import app
+from app import app
 
 class user:
 
@@ -41,7 +41,6 @@ class user:
             self.tracks.remove(track)
 
     def has_track_saved(self, track_ids):
-        app.app.logger.debug(track_ids)
         if len(track_ids) > 50:
             del track_ids[50:]
         elif track_ids == []:

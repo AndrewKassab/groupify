@@ -76,7 +76,6 @@ function setToken(token) {
 
 function login(query, history) {
   const spotifyArgs = queryString.parse(query);
-  console.log(spotifyArgs);
 
   if (spotifyArgs['error']) {
     history.push("/");

@@ -141,8 +141,6 @@ def create():
     name = request.json['name']
     duration = request.json['duration']
 
-    app.logger.debug(request.json)
-
     # {"<username>": ["<id1>", "<id2>"]}
     user_playlists = request.json['userPlaylists']
 
@@ -154,8 +152,6 @@ def create():
     # Need to get auth tokens from users
     # will refresh
     users = [main_user] + User.query.filter(User.id.in_(user_ids)).all()
-
-    app.logger.debug(users)
 
     for auser in users:
         refresh_if_needed(auser)
