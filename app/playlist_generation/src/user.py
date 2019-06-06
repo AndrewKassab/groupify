@@ -45,4 +45,9 @@ class user:
             del track_ids[50:]
         elif track_ids == []:
             return []
-        return self.sp.current_user_saved_tracks_contains(track_ids)
+        try:
+            return self.sp.current_user_saved_tracks_contains(track_ids)
+        except Exception as err:
+            app.logger.info(track_ids)
+            app.logger.error(err)
+            return []

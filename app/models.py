@@ -114,9 +114,9 @@ class Group(Base):
         tracks = [track.to_dict() for track in self.tracks]
         users = []
 
-        for user in self.users:
-            u = user.to_dict()
-            if user.id == self.user_id:
+        for nuser in self.users:
+            u = nuser.to_dict()
+            if nuser.id == self.user_id:
                 u['owner'] = True
             users.append(u)
 
