@@ -66,10 +66,8 @@ class CreateModal extends Component {
 
   populateUsers(userIds=[]) {
     const options = this.state.options.filter(({id}) => userIds.includes(id)).sort((u1, u2) => u1.isFixed ? -1 : 1)
-    this.setState({
-      users: options,
-      show: true
-    });
+    this.setState({users: options});
+    this.handleShow();
   }
 
   handleClose() {
@@ -79,13 +77,7 @@ class CreateModal extends Component {
   }
 
   handleShow() {
-    let update = {show: true}
-
-    if (!this.state.name) {
-      update.name = moment().format('[Groupify -] MMM Do YYYY, h:mm a')
-    }
-
-    this.setState(update);
+    this.setState({show: true});
   }
 
   createPlaylist() {
@@ -128,6 +120,10 @@ class CreateModal extends Component {
   }
 
   handleNext() {
+    if (!this.state.name) {
+      this.setState({name: moment().format('[Groupify -] MMM Do YYYY, h:mm a')});
+    }
+
     switch (this.state.page) {
       case 'playlists':
         this.setState({ page: 'config', next: 'Create Playlist' });
@@ -177,7 +173,7 @@ class CreateModal extends Component {
   }
 
   loadUsers() {
-    Client.listUsers().then(res => {
+    return Client.listUsers().then(res => {
       const uid = Client.userId();
       const options = res.users.map(({id, name, username}) => ({
         label: `${name} - ${username}`,
