@@ -7,6 +7,12 @@ from flask import jsonify, request, abort, Response, redirect
 from app.playlist_generation.src.createplaylist import create_playlist, add_to_spotify
 from datetime import datetime, timedelta
 
+@app.route('/api/me',methods=['GET'])
+def who_am_i():
+    auser = authenticate_user(request)
+
+    return response({'user': auser.to_dict(), 'status': 'success'},200)
+
 @app.route('/api/playlists/<int:group_id>/spotify',methods=['POST'])
 def add_spotify(group_id):
     auser = authenticate_user(request)
@@ -26,10 +32,10 @@ def add_spotify(group_id):
     playlist_id = add_to_spotify(auser.username, auser.access_token, tracks, playlist.title)
 
     new_playlist = SpotifyPlaylist(group_id=playlist.id,user_id=auser.id,spotify_id=playlist_id,group=playlist,user=auser)
-    db.add(new_playlist)
-    db.commit()
+    db.session.add(new_playlist)
+    db.session.commit()
 
-    return response({'status':'success'},200)
+    return response({'spotify_id':playlist_id,'status':'success'},200)
 
 # This is for finding a user's playlists
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
@@ -141,19 +147,22 @@ def create():
     user_playlists = request.json['userPlaylists']
 
     usernames = []
-    users = []
     tokens = []
+
+    user_ids.remove(main_user.id)
 
     # Need to get auth tokens from users
     # will refresh
-    for user_id in user_ids:
-        auser = User.query.filter_by(id=user_id).first()
+    users = [main_user] + User.query.filter(User.id.in_(user_ids)).all()
+
+    for auser in users:
         refresh_if_needed(auser)
 
         # Make users array
-        users.append(auser)
         usernames.append(auser.username)
         tokens.append(auser.access_token)
+
+    db.session.commit()
 
     # duration comes in minutes
     # this is going to pass back a lot of info in for of track objects I believe

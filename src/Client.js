@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 import queryString from 'query-string';
 
 const USER_ID = 'groupify-uid';
+const NAME = 'groupify-name';
 
 function tokenURL(path, params = {}) {
   return buildUrl(path, Object.assign(params, {token: getToken()}));
@@ -143,6 +144,19 @@ function userId() {
   return parseInt(Cookies.get(USER_ID));
 }
 
+function userName() {
+  return Cookies.get(NAME);
+}
+
+function whoAmI() {
+  authReq('/api/me').then(res => {
+    Cookies.set(USER_ID, res.user.id);
+    Cookies.set(NAME, res.user.name);
+  }).catch(e => {
+    Cookies.remove('token');
+  });
+}
+
 const Client = {
   login,
   logout,
@@ -158,5 +172,9 @@ const Client = {
 
   loggedIn,
   userId,
+  userName,
+  whoAmI,
 };
+
 export default Client;
+export * from './helpers';

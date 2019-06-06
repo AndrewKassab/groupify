@@ -1,11 +1,11 @@
 from app.playlist_generation.src.user import user
 from app.playlist_generation.src.p_factory import PlaylistFactory
-import spotipy 
+import spotipy
 import spotipy.util as util
 import os
 
 def create_playlist(name, usernames, tokens, user_playlist_ids, desired_length,
-        to_add=True):
+        to_add=False):
     if len(usernames) != len(tokens):
       return None
 
@@ -24,7 +24,7 @@ def create_playlist(name, usernames, tokens, user_playlist_ids, desired_length,
         track_ids.append(track.id)
 
     # If user wants to auto-create on spotify
-    if to_add is True: 
+    if to_add:
       add_to_spotify(users[0].username, users[0].token, track_ids, name)
 
     return tracks
@@ -35,4 +35,3 @@ def add_to_spotify(username, token, tracks_ids, playlist_name):
     playlist = sp.user_playlist_create(username, playlist_name, public=True)
     sp.user_playlist_add_tracks(username, playlist['id'], tracks_ids)
     return playlist['id']
-

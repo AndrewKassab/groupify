@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, Spinner } from 'react-bootstrap';
+import { Alert, Modal, Button, Spinner } from 'react-bootstrap';
 
 import UserSelector from './create/UserSelector';
 import PlaylistSelector from './create/PlaylistSelector';
@@ -7,7 +7,7 @@ import PlaylistParams from './create/PlaylistParams';
 
 import { withStore } from '@spyna/react-store';
 
-import Client from '../../Client';
+import Client, { modifyPlaylist } from '../../Client';
 import moment from 'moment';
 
 const defaultState = {
@@ -18,7 +18,9 @@ const defaultState = {
   users: [],
   page: 'playlists',
   next: 'Next',
-  saving: false
+  saving: false,
+  save: false,
+  failed: false
 };
 
 const generateData = (state) =>
@@ -53,10 +55,20 @@ class CreateModal extends Component {
 
     this.updateDuration = this.updateDuration.bind(this);
     this.updateName = this.updateName.bind(this);
+    this.updateSave = this.updateSave.bind(this);
+    this.populateUsers = this.populateUsers.bind(this);
 
     this.state = defaultState;
 
     this.loadUsers();
+  }
+
+  populateUsers(userIds=[]) {
+    const options = this.state.options.filter(({id}) => userIds.includes(id)).sort((u1, u2) => u1.isFixed ? -1 : 1)
+    this.setState({
+      users: options,
+      show: true
+    });
   }
 
   handleClose() {
@@ -76,7 +88,8 @@ class CreateModal extends Component {
   }
 
   createPlaylist() {
-    const { name, duration, users } = this.state;
+    const { name, duration, users, save } = this.state;
+    const { store } = this.props;
     const userList = users.map(u => u.id);
     const playlists = generateData(this.state).map(
       ({playlists}) => playlists.map(p => p.value)
@@ -88,9 +101,20 @@ class CreateModal extends Component {
 
     Client.createPlaylist(name, userList, playlists, duration, userPlaylists).then(res => {
       const plist = res.playlist;
-      this.props.store.get('reloadPlaylists')(`/playlists/${plist.id}`).then(() => {
+      store.get('reloadPlaylists')(`/playlists/${plist.id}`).then(() => {
         this.resetState();
       });
+
+      if (save) {
+        const id = plist.id;
+        Client.addToSpotify(id).then(res => {
+          modifyPlaylist(id, store, p => {
+            p.details.spotify_id = res.spotify_id;
+          });
+        });
+      }
+    }).catch(e => {
+      this.setState({failed: true, saving: false, page: 'config', next: 'Create Playlist'});
     });
   }
 
@@ -145,6 +169,10 @@ class CreateModal extends Component {
     this.setState({duration: parseInt(duration)});
   }
 
+  updateSave(save) {
+    this.setState({save: save})
+  }
+
   loadUsers() {
     Client.listUsers().then(res => {
       const uid = Client.userId();
@@ -173,6 +201,12 @@ class CreateModal extends Component {
     }
   }
 
+  componentDidMount() {
+    const { store } = this.props;
+
+    store.set('populateUsers', this.populateUsers)
+  }
+
   render() {
     const playlistShower = () => {
       switch(this.state.page) {
@@ -183,7 +217,16 @@ class CreateModal extends Component {
           </>);
 
         case 'config':
-          return <PlaylistParams updateName={this.updateName} updateDuration={this.updateDuration} name={this.state.name} duration={this.state.duration} />;
+          return (
+            <PlaylistParams
+              updateName={this.updateName}
+              updateDuration={this.updateDuration}
+              updateSave={this.updateSave}
+              name={this.state.name}
+              duration={this.state.duration}
+              save={this.state.save}
+            />
+          );
 
         case 'save':
           return (<div className="d-flex justify-content-center flex-column" style={{height: '200px'}}>
@@ -192,10 +235,6 @@ class CreateModal extends Component {
               <Spinner animation="border" />
             </div>
           </div>);
-      }
-      if (this.state.page === 'playlists') {
-
-      } else {
       }
     };
 
@@ -210,6 +249,7 @@ class CreateModal extends Component {
             <Modal.Title>Create Playlist</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{minHeight: '200px'}}>
+            { this.state.failed && <Alert variant="danger">Error: unable to create Playlist</Alert> }
             { !this.state.loading && playlistShower() }
           </Modal.Body>
           <Modal.Footer>

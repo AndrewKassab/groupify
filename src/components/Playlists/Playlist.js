@@ -6,16 +6,7 @@ import {
 import PlaylistShow from './PlaylistShow';
 
 import { withStore } from '@spyna/react-store';
-import Client from '../../Client';
-
-const findPlaylist = (pid, playlists) => playlists.find(plist => plist.id === pid);
-
-const modifyPlaylist = (id, store, func) => {
-  let playlists = store.get('playlists');
-  let plist = findPlaylist(id, playlists);
-  func(plist);
-  store.set('playlists', playlists);
-}
+import Client, { findPlaylist, modifyPlaylist } from '../../Client';
 
 function Playlist({ match, playlists, store }) {
   const pid = parseInt(match.params.id);
@@ -40,9 +31,17 @@ function Playlist({ match, playlists, store }) {
       modifyPlaylist(id, store, p => {
         p.name = res.playlist.name;
         p.details.name = res.playlist.name;
-      })
+      });
     });
   }
+
+  const addToSpotify = id => {
+    Client.addToSpotify(id).then(res => {
+      modifyPlaylist(id, store, p => {
+        p.details.spotify_id = res.spotify_id;
+      });
+    });
+  };
 
   const changeVisibility = state => {
     const id = playlist.id;
@@ -50,13 +49,21 @@ function Playlist({ match, playlists, store }) {
       modifyPlaylist(id, store, p => {
         p.visible = res.playlist.visible;
         p.details.visible = res.playlist.visible;
-      })
+      });
     });
   }
 
   let show;
   if (playlist.cached) {
-    show = (props => <PlaylistShow {...props} playlist={playlist.details} key={playlist.id} rename={rename} changeVisibility={changeVisibility} />);
+    show = (props =>
+      <PlaylistShow {...props}
+        playlist={playlist.details}
+        key={playlist.id}
+        rename={rename}
+        changeVisibility={changeVisibility}
+        addToSpotify={addToSpotify}
+        withUsers={store.get('populateUsers')}
+      />);
   } else {
     show = () => <Spinner animation="border" />;
     Client.getPlaylist(pid).then(res => {

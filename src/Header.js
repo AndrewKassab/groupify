@@ -19,7 +19,7 @@ export default function Header() {
           </Nav>
           <Nav>
             <Nav.Item><CreateModal /></Nav.Item>
-            <Nav.Link onClick={Client.logout}>Logout</Nav.Link>
+            <Nav.Link onClick={Client.logout}>Logout ({Client.userName()})</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

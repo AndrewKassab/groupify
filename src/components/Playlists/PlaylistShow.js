@@ -6,7 +6,7 @@ import { Button, ButtonToolbar, InputGroup, FormControl, Dropdown, Tabs, Tab } f
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-function PlaylistShow({ playlist, rename, changeVisibility }) {
+function PlaylistShow({ playlist, rename, changeVisibility, addToSpotify, withUsers }) {
 
   const [name, setName] = useState(playlist.name);
   const [editName, setEditName] = useState(name);
@@ -35,6 +35,9 @@ function PlaylistShow({ playlist, rename, changeVisibility }) {
     changeVisibility(!playlist.visible);
   };
 
+  const spotifyLink = !!playlist.spotify_id ?
+    `https://open.spotify.com/playlist/${playlist.spotify_id}` : false;
+
   const display = (
     <ButtonToolbar className="d-flex justify-content-between">
       <h2>{ name }</h2>
@@ -48,7 +51,12 @@ function PlaylistShow({ playlist, rename, changeVisibility }) {
 
         <Dropdown.Menu>
           <Dropdown.Item onClick={() => setEditMode(true)}>Change Name</Dropdown.Item>
-          <Dropdown.Item>Add to Spotify</Dropdown.Item>
+          {
+            spotifyLink ?
+            <Dropdown.Item href={spotifyLink} target="_blank">Open on Spotify</Dropdown.Item> :
+            <Dropdown.Item onClick={e => addToSpotify(playlist.id)}>Add to Spotify</Dropdown.Item>
+          }
+          <Dropdown.Item onClick={() => withUsers(playlist.users.map(({id}) => id))}>New with Same Users</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={handleToggle}>{ playlist.visible ? 'Hide' : 'Unhide' } Playlist</Dropdown.Item>
         </Dropdown.Menu>
