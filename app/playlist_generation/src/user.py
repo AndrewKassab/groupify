@@ -23,12 +23,15 @@ class user:
     # Adds tracks from a specified list of playlists into the track pool
     def __retrieve_playlist_tracks(self, playlist_ids):
         for id in playlist_ids:
-            # TODO: Retrieve the 100 tracks randomly
-            tracks = self.sp.user_playlist_tracks(self.username, id, fields=None, limit = 100, offset = 0, market = None)
-            for j, item in enumerate(tracks['items']):
-                artist_list = [artist['name'] for artist in item['track'].get('artists', [])]
-                track = Track(item['track']['id'], item['track']['name'], artist_list, item['track']['duration_ms'])
-                self.tracks.append(track)
+            offset = 0
+            tracks = self.sp.user_playlist_tracks(self.username, id, fields=None, limit = 100, offset = offset, market = None)
+            while len(tracks['items']) > 0:
+                for j, item in enumerate(tracks['items']):
+                    artist_list = [artist['name'] for artist in item['track'].get('artists', [])]
+                    track = Track(item['track']['id'], item['track']['name'], artist_list, item['track']['duration_ms'])
+                    self.tracks.append(track)
+                offset += 100
+                tracks = self.sp.user_playlist_tracks(self.username, id, fields=None, limit = 100, offset = offset, market = None)
 
     def __retrieve_most_listened_tracks(self):
         tracks = self.sp.current_user_top_tracks(limit=50, time_range='short_term')
@@ -41,7 +44,6 @@ class user:
             self.tracks.remove(track)
 
     def has_track_saved(self, track_ids):
-        app.app.logger.debug(track_ids)
         if len(track_ids) > 50:
             del track_ids[50:]
         elif track_ids == []:
