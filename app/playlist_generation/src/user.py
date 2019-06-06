@@ -44,13 +44,17 @@ class user:
             self.tracks.remove(track)
 
     def has_track_saved(self, track_ids):
-        if len(track_ids) > 50:
-            del track_ids[50:]
-        elif track_ids == []:
+        if track_ids == []:
             return []
-        try:
-            return self.sp.current_user_saved_tracks_contains(track_ids)
-        except Exception as err:
-            app.logger.info(track_ids)
-            app.logger.error(err)
-            return []
+        result = []
+        i = 0
+        while i < len(track_ids):
+            try:
+                result += self.sp.current_user_saved_tracks_contains(track_ids[i:i+50])
+            except Exception as err:
+                app.logger.info(track_ids)
+                app.logger.error(err)
+                return []
+            i += 50
+        return result
+
