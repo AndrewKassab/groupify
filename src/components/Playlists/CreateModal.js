@@ -250,7 +250,16 @@ class CreateModal extends Component {
           </Modal.Header>
           <Modal.Body style={{minHeight: '200px'}}>
             { this.state.failed && <Alert variant="danger">Error: unable to create Playlist</Alert> }
-            { !this.state.loading && playlistShower() }
+            {
+              this.state.loading ?
+              (<div className="d-flex justify-content-center flex-column" style={{height: '200px'}}>
+                <h2 className="text-center">Loading data...</h2>
+                <div className="mt-2 d-flex justify-content-center">
+                  <Spinner animation="border" />
+                </div>
+              </div>) :
+              playlistShower()
+            }
           </Modal.Body>
           <Modal.Footer>
             { this.backButton() }
