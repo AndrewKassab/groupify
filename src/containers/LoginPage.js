@@ -14,7 +14,7 @@ export default class LoginPage extends Component {
       <Container>
         <Row>
           <Col style={{height: '100vh'}} className="d-flex flex-column align-items-center py-3">
-            <h1 className="text-center mb-2" > Generate playlists with Groupify.</h1>
+            <h1 className="text-center mb-2" > Create a playlist that everyone can enjoy.</h1>
             <div className="flex-fill">
               <div className="mb-2 d-flex justify-content-center flex-fill">
                 <img src={Background} className="h-100 flex-shrink-1" />
