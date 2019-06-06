@@ -25,7 +25,7 @@ class user:
         for id in playlist_ids:
             offset = 0
             tracks = self.sp.user_playlist_tracks(self.username, id, fields=None, limit = 100, offset = offset, market = None)
-            while tracks['next'] and offset < 1000:
+            while tracks['next'] and offset <= 9900:
                 for j, item in enumerate(tracks['items']):
                     artist_list = [artist['name'] for artist in item['track'].get('artists', [])]
                     track = Track(item['track']['id'], item['track']['name'], artist_list, item['track']['duration_ms'])
