@@ -44,8 +44,12 @@ class user:
             self.tracks.remove(track)
 
     def has_track_saved(self, track_ids):
-        if len(track_ids) > 50:
-            del track_ids[50:]
-        elif track_ids == []:
+        if track_ids == []:
             return []
-        return self.sp.current_user_saved_tracks_contains(track_ids)
+        result = []
+        i = 0
+        while i < len(track_ids):
+            result += self.sp.current_user_saved_tracks_contains(track_ids[i:i+50])
+            i += 50
+        return result
+
