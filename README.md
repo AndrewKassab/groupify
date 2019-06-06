@@ -93,6 +93,5 @@ and no trailing whitespace. This can be automatically set in your editor using
 package to Atom/VS Code/IntelliJ/PyCharm/Textmate etc.)
 
 ## TODOs
-- Create info and faq page
+- Add in info and faq page
 - Default to say Most Played instead of 0 selected 
-- Randomly select 100 songs when pulling from a playlist instead of sequentially
