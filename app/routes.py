@@ -58,12 +58,12 @@ def get_playlists(user_id):
 # Search for all users, thius prints too much info rn
 @app.route('/api/search/users',methods=['GET'])
 def search_users():
+    authenticate_user(request)
 
-    users = []
-
-    users_db = User.query.all()
-    for auser in users_db:
-        users.append({'name':auser.name,'username':auser.username,'id':auser.id,'auth_token':AuthToken.query.filter_by(user_id=auser.id).first().token})
+    users = [ \
+        {'id': Id, 'name': name, 'username': username} \
+        for (Id, name, username) in db.session.query(User.id, User.name, User.username).all() \
+    ]
 
     return response({'users':users},200)
 
