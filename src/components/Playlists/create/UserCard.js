@@ -16,7 +16,11 @@ const UserCard = ({uid, label, playlists, onChange}) => {
     <Card>
       <Accordion.Toggle eventKey={key} as={Card.Header} >
         { label }
-        <span className="float-right">{ count } selected</span>
+        {count == 0 ? (
+          <span className="float-right">Track pool: Most Played</span>
+        ) : (
+        <span className="float-right">Track pool: { count } selected</span>
+        )}
       </Accordion.Toggle>
       <Accordion.Collapse eventKey={key}>
         <Card.Body>

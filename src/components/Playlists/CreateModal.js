@@ -212,6 +212,7 @@ class CreateModal extends Component {
         case 'playlists':
           return (<>
             <UserSelector update={this.updateUsers} options={this.state.options} values={this.state.users} />
+            <p></p>
             <PlaylistSelector update={this.updatePlaylists} data={generateData(this.state)} />
           </>);
 
@@ -229,7 +230,7 @@ class CreateModal extends Component {
 
         case 'save':
           return (<div className="d-flex justify-content-center flex-column" style={{height: '200px'}}>
-            <h2 className="text-center">Saving playlist...</h2>
+            <h2 className="text-center">Generating playlist...</h2>
             <div className="mt-2 d-flex justify-content-center">
               <Spinner animation="border" />
             </div>
@@ -248,7 +249,7 @@ class CreateModal extends Component {
             <Modal.Title>Create Playlist</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{minHeight: '200px'}}>
-            { this.state.failed && <Alert variant="danger">Error: unable to create Playlist</Alert> }
+            { this.state.failed && <Alert variant="danger">Error: unable to create Playlist, please try again.</Alert> }
             {
               this.state.loading ?
               (<div className="d-flex justify-content-center flex-column" style={{height: '200px'}}>
