@@ -24,11 +24,10 @@ export default class InfoPage extends Component {
           <p>
             Groupify will generate a playlist where every user gets a roughly 
             equal share of the track pool. By default, a user's track pool will consist 
-            of a shuffled list of their most-played tracks over the past month. 
-            You can replace this track pool with tracks from a pre-existing playlist 
-            just by selecting it. Our algorithm will then go through each user's track pool and 
-            add in songs, making sure to prioritize tracks that more group members are familiar 
-            with. 
+            of their most-played tracks over the past month. You can replace this 
+            track pool with tracks from pre-existing playlists just by selecting them.  
+            Our algorithm will then go through each user's track pool and add in songs, 
+            making sure to prioritize tracks that more group members are familiar with. 
           </p>
           <p>
             The result is a playlist that reflects everyone's tastes!
