@@ -20,7 +20,6 @@ class Main extends Component {
   componentDidMount() {
     const { store } = this.props;
 
-    store.set('uid', Client.userId());
     store.set('reloadPlaylists', this.reloadPlaylists)
 
     this.reloadPlaylists();

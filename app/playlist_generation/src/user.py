@@ -4,6 +4,7 @@ import spotipy
 import spotipy.util as util
 import os
 import random
+import app
 
 class user:
 
@@ -23,9 +24,9 @@ class user:
     def __retrieve_playlist_tracks(self, playlist_ids):
         for id in playlist_ids:
             # TODO: Retrieve the 100 tracks randomly
-            tracks = self.sp.user_playlist_tracks(self.username, id, fields=None, limit = 100, offset = 0, market = None) 
+            tracks = self.sp.user_playlist_tracks(self.username, id, fields=None, limit = 100, offset = 0, market = None)
             for j, item in enumerate(tracks['items']):
-                artist_list = [artist['name'] for artist in item['track']['artists']]
+                artist_list = [artist['name'] for artist in item['track'].get('artists', [])]
                 track = Track(item['track']['id'], item['track']['name'], artist_list, item['track']['duration_ms'])
                 self.tracks.append(track)
 
@@ -40,6 +41,9 @@ class user:
             self.tracks.remove(track)
 
     def has_track_saved(self, track_ids):
+        app.app.logger.debug(track_ids)
         if len(track_ids) > 50:
             del track_ids[50:]
+        elif track_ids == []:
+            return []
         return self.sp.current_user_saved_tracks_contains(track_ids)

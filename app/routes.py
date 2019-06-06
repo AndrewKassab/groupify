@@ -155,6 +155,8 @@ def create():
     # will refresh
     users = [main_user] + User.query.filter(User.id.in_(user_ids)).all()
 
+    app.logger.debug(users)
+
     for auser in users:
         refresh_if_needed(auser)
 
