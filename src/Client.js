@@ -76,7 +76,6 @@ function setToken(token) {
 
 function login(query, history) {
   const spotifyArgs = queryString.parse(query);
-  console.log(spotifyArgs);
 
   if (spotifyArgs['error']) {
     history.push("/");
@@ -157,6 +156,44 @@ function whoAmI() {
   });
 }
 
+let previous;
+let lastTimeout;
+let callback;
+
+const periodicCheck = () => {
+  lastTimeout = setTimeout(periodicCheck, 5000);
+  const id = lastTimeout;
+
+  return api('/api/search/latest').then(latest => {
+    if (previous === undefined) {
+      previous = latest;
+    } else if (id !== lastTimeout) {
+      // Ensure we are the latest executing instance
+      return;
+    }
+
+    if (JSON.stringify(latest) !== JSON.stringify(previous)) {
+      console.log('Change detected!', previous, ' => ', latest);
+      callback({previous, latest});
+      previous = latest;
+    }
+  });
+};
+
+function startPoll(onChange) {
+  callback = onChange;
+  periodicCheck();
+}
+
+function manualPoll() {
+  clearTimeout(lastTimeout);
+  return periodicCheck();
+}
+
+function stopPolling() {
+  clearTimeout(lastTimeout);
+}
+
 const Client = {
   login,
   logout,
@@ -174,6 +211,10 @@ const Client = {
   userId,
   userName,
   whoAmI,
+
+  startPoll,
+  manualPoll,
+  stopPolling
 };
 
 export default Client;

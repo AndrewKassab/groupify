@@ -37,6 +37,13 @@ def add_spotify(group_id):
 
     return response({'spotify_id':playlist_id,'status':'success'},200)
 
+@app.route('/api/search/latest', methods=['GET'])
+def poll_count():
+    return response({
+        'playlists': db.session.query(Group.id).order_by(Group.id.desc()).first()[0],
+        'users': db.session.query(User.id).order_by(User.id.desc()).first()[0],
+    }, 200)
+
 # This is for finding a user's playlists
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
 def get_playlists(user_id):
@@ -141,8 +148,6 @@ def create():
     name = request.json['name']
     duration = request.json['duration']
 
-    app.logger.debug(request.json)
-
     # {"<username>": ["<id1>", "<id2>"]}
     user_playlists = request.json['userPlaylists']
 
@@ -154,8 +159,6 @@ def create():
     # Need to get auth tokens from users
     # will refresh
     users = [main_user] + User.query.filter(User.id.in_(user_ids)).all()
-
-    app.logger.debug(users)
 
     for auser in users:
         refresh_if_needed(auser)

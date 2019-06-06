@@ -4,7 +4,7 @@ import spotipy
 import spotipy.util as util
 import os
 import random
-import app
+from app import app
 
 class user:
 

@@ -12,10 +12,6 @@ function Playlist({ match, playlists, store }) {
   const pid = parseInt(match.params.id);
   const playlist = findPlaylist(pid, playlists);
 
-  if (store.get('playlist.active') !== pid) {
-    store.set('playlist.active', pid);
-  }
-
   if (!playlist) {
     return (
       <Alert variant="danger">
@@ -65,7 +61,12 @@ function Playlist({ match, playlists, store }) {
         withUsers={store.get('populateUsers')}
       />);
   } else {
-    show = () => <Spinner animation="border" />;
+    show = () => (<div className="d-flex justify-content-center flex-column" style={{height: 'calc(100vh-56px)'}}>
+      <h2 className="text-center">Loading playlist...</h2>
+      <div className="mt-2 d-flex justify-content-center">
+        <Spinner animation="border" />
+      </div>
+    </div>);
     Client.getPlaylist(pid).then(res => {
       modifyPlaylist(pid, store, p => {
         p.details = res.playlist;

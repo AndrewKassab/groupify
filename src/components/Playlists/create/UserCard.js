@@ -68,7 +68,7 @@ class SelectPlaylists extends React.Component {
       );
     } else {
       return (
-        <div style={{minHeight: "200px"}}>
+        <div style={{minHeight: "100px"}}>
           <Select
             placeholder='Playlists for user...'
             closeMenuOnSelect={false}
@@ -76,6 +76,7 @@ class SelectPlaylists extends React.Component {
             options={this.state.options}
             onChange={this.props.onChange}
             defaultValue={this.props.selected}
+            styles={{ menu: base => ({ ...base, position: 'relative' }) }}
           />
         </div>
       );

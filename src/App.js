@@ -13,7 +13,8 @@ const defaultValues = {
   uid: null,
   users: [],
   playlists: [],
-  'playlist.active': null,
+  redirect: null,
+  lastId: -1,
 }
 
 class App extends Component {

@@ -112,7 +112,16 @@ class Group(Base):
 
     def full_details(self, user):
         tracks = [track.to_dict() for track in self.tracks]
-        users = [user.to_dict() for user in self.users]
+        users = []
+
+        for user in self.users:
+            u = user.to_dict()
+            if user.id == self.user_id:
+                u['owner'] = True
+            users.append(u)
+
+        users.sort(key=lambda u: u['id'])
+        tracks.sort(key=lambda t: t['id'])
 
         data = {
             "id": self.id,
@@ -121,6 +130,7 @@ class Group(Base):
             "users": users,
             "visible": self.visible(user),
             "spotify_id": self.spotify_id(user),
+            "owner_id": self.user_id,
             "state": "done"
         }
 
@@ -131,6 +141,7 @@ class Group(Base):
             "id": self.id,
             "name": self.title,
             "visible": self.visible(user),
+            "owner": user.id == self.user_id,
             "state": "done"
         }
 
