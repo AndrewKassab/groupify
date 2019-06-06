@@ -1,14 +1,14 @@
 .app-help {
   display: block;
-  max-width: 615.2px;
-  margin: 3em auto;
+  max-width: 815.2px;
+  margin: 6em auto;
   animation: mic-drop 0.75s; 
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 17px;
 }
 
-p {
-  flex-wrap: wrap;
+img{
+  margin-left: 200px;
 }
 
-body {
-  left: 50px;
-}
+
