@@ -20,7 +20,8 @@ const defaultState = {
   next: 'Next',
   saving: false,
   save: false,
-  failed: false
+  failed: false,
+  lastId: -1,
 };
 
 const generateData = (state) =>
@@ -101,7 +102,9 @@ class CreateModal extends Component {
 
     Client.createPlaylist(name, userList, playlists, duration, userPlaylists).then(res => {
       const plist = res.playlist;
-      store.get('reloadPlaylists')(`/playlists/${plist.id}`).then(() => {
+
+      store.set('redirect', `/playlists/${plist.id}`);
+      Client.manualPoll().then(() => {
         this.resetState();
       });
 
@@ -176,7 +179,7 @@ class CreateModal extends Component {
   loadUsers() {
     Client.listUsers().then(res => {
       const uid = Client.userId();
-      let options = res.users.map(({id, name, username}) => ({
+      const options = res.users.map(({id, name, username}) => ({
         label: `${name} - ${username}`,
         value: id,
         username: username,

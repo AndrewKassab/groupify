@@ -20,9 +20,24 @@ class Main extends Component {
   componentDidMount() {
     const { store } = this.props;
 
-    store.set('reloadPlaylists', this.reloadPlaylists)
+    store.set('reloadPlaylists', this.reloadPlaylists);
 
     this.reloadPlaylists();
+
+    this.timer = Client.startPoll(({previous, latest}) => {
+      if (previous.playlists !== latest.playlists) {
+        this.reloadPlaylists(store.get('redirect'));
+        store.set('redirect', null);
+      }
+
+      if (previous.users !== latest.users) {
+        store.set('lastId', latest.users)
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   reloadPlaylists(redirect = null) {
