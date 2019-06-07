@@ -230,7 +230,7 @@ class CreateModal extends Component {
 
         case 'save':
           return (<div className="d-flex justify-content-center flex-column" style={{height: '200px'}}>
-            <h2 className="text-center">Saving playlist...</h2>
+            <h2 className="text-center">Generating playlist...</h2>
             <div className="mt-2 d-flex justify-content-center">
               <Spinner animation="border" />
             </div>
