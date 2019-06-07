@@ -21,11 +21,12 @@ function PlaylistShow({ playlist, rename, changeVisibility, addToSpotify, withUs
   const editor = (
     <InputGroup className="mb-2">
       <FormControl
+        placeholder="Playlist name"
         defaultValue={name}
         onChange={e => setEditName(e.target.value)}
       />
       <InputGroup.Append>
-        <Button variant="outline-primary" onClick={saveName}>Save</Button>
+        <Button variant="outline-primary" onClick={saveName} disabled={!editName}>Save</Button>
         <Button variant="outline-secondary" onClick={() => setEditMode(false)}>Cancel</Button>
       </InputGroup.Append>
     </InputGroup>

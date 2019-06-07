@@ -64,7 +64,7 @@ function PlaylistList({ playlists, location }) {
     if (focus) {
       return (
         <div>
-          <Form.Check inline type="checkbox" label="Hidden" onChange={e => setShowHidden(e.target.checked)} checked={showHidden} />
+          <Form.Check inline type="checkbox" label="Show Hidden" onChange={e => setShowHidden(e.target.checked)} checked={showHidden} />
           <Form.Check inline type="checkbox" label="Mine Only" onChange={e => setOwner(e.target.checked)} checked={owner} />
         </div>
       );
@@ -75,16 +75,18 @@ function PlaylistList({ playlists, location }) {
     <div>
       <h3>Playlists:</h3>
 
-      <InputGroup className="mb-3">
-        <FormControl
-          type="text"
-          placeholder="Search"
-          onChange={handleSearch}
-          onFocus={() => setFocus(true)}
-        />
-        { showClear() }
-      </InputGroup>
-      { showFilters() }
+      <div className="mb-3">
+        <InputGroup className="mb-1">
+          <FormControl
+            type="text"
+            placeholder="Search"
+            onChange={handleSearch}
+            onFocus={() => setFocus(true)}
+          />
+          { showClear() }
+        </InputGroup>
+        { showFilters() }
+      </div>
 
       <ListGroup variant="flush">
         { filteredResults() }
