@@ -38,7 +38,7 @@ export default class InfoPage extends Component {
           </h3>
           <p>
             No problem at all! In order to create a group playlist with Spotify, each group member 
-            in the group must have logged into Groupify before. Go ahead and send your friends 
+            must have logged into Groupify before. Go ahead and send your friends 
             our link at 
             <a href="http://groupify.com/" target="_blank" rel="noopener noreferrer">
               groupify.com

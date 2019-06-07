@@ -133,7 +133,7 @@ class CreateModal extends Component {
         this.setState({
           page: 'save',
           saving: true,
-          next: 'Saving...'
+          next: 'Generating...'
         });
         this.createPlaylist();
         break;
@@ -211,9 +211,16 @@ class CreateModal extends Component {
       switch(this.state.page) {
         case 'playlists':
           return (<>
-            <UserSelector update={this.updateUsers} options={this.state.options} values={this.state.users} />
-            <p></p>
-            <PlaylistSelector update={this.updatePlaylists} data={generateData(this.state)} />
+            <UserSelector
+              className="mb-3"
+              update={this.updateUsers}
+              options={this.state.options}
+              values={this.state.users}
+            />
+            <PlaylistSelector
+              update={this.updatePlaylists}
+              data={generateData(this.state)}
+            />
           </>);
 
         case 'config':
@@ -237,6 +244,9 @@ class CreateModal extends Component {
           </div>);
       }
     };
+
+    const { saving, users, page, name } = this.state;
+    const disableNext = users.length < 2 || saving || (page === 'config' && !name);
 
     return (
       <>
@@ -263,7 +273,10 @@ class CreateModal extends Component {
           </Modal.Body>
           <Modal.Footer>
             { this.backButton() }
-            <Button variant="primary" onClick={this.handleNext} disabled={this.state.users.length < 2 || this.state.saving}>
+            <Button variant="primary"
+              onClick={this.handleNext}
+              disabled={disableNext}
+            >
               { this.state.next }
             </Button>
           </Modal.Footer>

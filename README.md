@@ -4,8 +4,8 @@
 ![Groupify Image Logo](https://github.com/AndrewKassab/groupify/blob/master/src/images/logo.svg)
 
 This application uses the Spotify API to retrieve information about a user's
-playlists and most listened tracks. It then allows a user to generate a playlist of
-a specified length, taking multiple specified users' preferences into account.
+playlists and most listened tracks. It then allows a user to combine multiple people's 
+listening preferences to generate a new playlist.
 
 [Try out Groupify](https://www.groupify.com) (currently unavailable)
 

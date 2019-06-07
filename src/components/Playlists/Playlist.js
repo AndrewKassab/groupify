@@ -8,7 +8,7 @@ import PlaylistShow from './PlaylistShow';
 import { withStore } from '@spyna/react-store';
 import Client, { findPlaylist, modifyPlaylist } from '../../Client';
 
-function Playlist({ match, playlists, store }) {
+function Playlist({ match, playlists, store, history }) {
   const pid = parseInt(match.params.id);
   const playlist = findPlaylist(pid, playlists);
 
@@ -39,13 +39,17 @@ function Playlist({ match, playlists, store }) {
     });
   };
 
-  const changeVisibility = state => {
+  const changeVisibility = visible => {
     const id = playlist.id;
-    Client.editPlaylist(id, {visible: state}).then(res => {
+    Client.editPlaylist(id, {visible: visible}).then(res => {
       modifyPlaylist(id, store, p => {
         p.visible = res.playlist.visible;
         p.details.visible = res.playlist.visible;
       });
+
+      if (!res.playlist.visible) {
+        history.push('/playlists');
+      }
     });
   }
 

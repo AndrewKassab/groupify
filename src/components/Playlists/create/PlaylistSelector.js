@@ -12,7 +12,7 @@ const PlaylistSelector = ({ update, data }) => {
 
   return (
     <>
-      <h3>Select Playlists (optional):</h3>
+      <h3>Select Playlists: <span className="text-muted h5">(optional)</span></h3>
       <Accordion>
         { cards }
         {
