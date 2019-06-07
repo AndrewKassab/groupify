@@ -212,6 +212,7 @@ class CreateModal extends Component {
         case 'playlists':
           return (<>
             <UserSelector update={this.updateUsers} options={this.state.options} values={this.state.users} />
+            <p></p>
             <PlaylistSelector update={this.updatePlaylists} data={generateData(this.state)} />
           </>);
 

@@ -12,7 +12,7 @@ const PlaylistSelector = ({ update, data }) => {
 
   return (
     <>
-      <h3>Select Playlists:</h3>
+      <h3>Select Playlists (optional):</h3>
       <Accordion>
         { cards }
         {
