@@ -46,7 +46,7 @@ const About = () => (
             No problem at all! In order to create a group playlist with Spotify, each group member
             must have logged into Groupify before. Go ahead and send your friends
             {/* our link at <a href="http://groupify.com/" target="_blank" rel="noopener noreferrer">groupify.com</a> and have them hit sign in. */}
-            here and have them signin!
+            here and have them sign in!
           </p>
           <p>
             You should now be set to find your friend and begin creating a playlist!
