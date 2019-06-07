@@ -16,6 +16,7 @@ export default function Header() {
         <Navbar.Collapse>
           <Nav className="mr-auto">
             <Nav.Link as={Link} to="/playlists">All Playlists</Nav.Link>
+            <Nav.Link as={Link} to="/about">About</Nav.Link>
           </Nav>
           <Nav>
             <Nav.Item><CreateModal /></Nav.Item>
