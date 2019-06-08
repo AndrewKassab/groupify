@@ -21,7 +21,7 @@ const About = () => (
           <p>
             With Groupify you can create playlists that everyone is sure to enjoy.
             Whether you're just hanging out with friends or going for a drive, Groupify is sure to
-            generate a playlist where every user gets their fair share of music.
+            generate a playlist where everyone gets their fair share of music.
           </p>
           <p>
             Enjoy music together.
