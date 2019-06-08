@@ -8,7 +8,7 @@ const About = () => (
   <div>
     { Client.loggedIn() && <Header /> }
     <Container>
-      <Row>
+      <Row className="mt-4">
         <Col xs lg={{span: 10, offset: 1}}>
           <Row className="my-2">
             <Col xs="12" sm="5">
@@ -21,13 +21,13 @@ const About = () => (
           <p>
             With Groupify you can create playlists that everyone is sure to enjoy.
             Whether you're just hanging out with friends or going for a drive, Groupify is sure to
-            generate a playlist where every user gets their fair share of music.
+            generate a playlist where everyone gets their fair share of music.
           </p>
           <p>
             Enjoy music together.
           </p>
           <h2>How It Works</h2>
-          <p>
+          <p className="mt-4">
             Groupify will generate a playlist where every user gets a roughly
             equal share of the track pool. By default, a user's track pool will consist
             of their most-played tracks over the past month. You can replace this
@@ -42,7 +42,7 @@ const About = () => (
             I can't find my friend's Spotify accounts! <span role="img" arial-label="OMG" />
             😬
           </h3>
-          <p>
+          <p className="mt-4">
             No problem at all! In order to create a group playlist with Spotify, each group member
             must have logged into Groupify before. Go ahead and send your friends
             {/* our link at <a href="http://groupify.com/" target="_blank" rel="noopener noreferrer">groupify.com</a> and have them hit sign in. */}
@@ -52,7 +52,7 @@ const About = () => (
             You should now be set to find your friend and begin creating a playlist!
           </p>
           <h3>Spotify Access / Privacy</h3>
-          <p>
+          <p className="mt-4">
             Application requires a Spotify account. It also needs access to your Spotify account.
             Application does not save your Spotify data and only accesses it for the purpose
             of generating a playlist.
