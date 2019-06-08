@@ -92,6 +92,4 @@ and no trailing whitespace. This can be automatically set in your editor using
 [Editorconfig](https://editorconfig.org/) (just a case of adding or enabling a
 package to Atom/VS Code/IntelliJ/PyCharm/Textmate etc.)
 
-## TODOs
-- Add in info and faq page
-- Default to say Most Played instead of 0 selected 
+# TODO
