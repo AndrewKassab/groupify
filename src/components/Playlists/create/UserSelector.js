@@ -8,7 +8,7 @@ function UserSelector({ update, values, options, className }) {
 
   return (
     <div className={className}>
-      <h3>Add users:</h3>
+      <h3 className="mb-3">Add Group Members:</h3>
       <FixedSelect
         placeholder='Users for playlist...'
         closeMenuOnSelect={false}

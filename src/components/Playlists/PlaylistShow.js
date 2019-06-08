@@ -57,7 +57,7 @@ function PlaylistShow({ playlist, rename, changeVisibility, addToSpotify, withUs
             <Dropdown.Item href={spotifyLink} target="_blank">Open on Spotify</Dropdown.Item> :
             <Dropdown.Item onClick={e => addToSpotify(playlist.id)}>Add to Spotify</Dropdown.Item>
           }
-          <Dropdown.Item onClick={() => withUsers(playlist.users.map(({id}) => id))}>New Playlist with Same Users</Dropdown.Item>
+          <Dropdown.Item onClick={() => withUsers(playlist.users.map(({id}) => id))}>New Playlist with Same Group</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={handleToggle}>{ playlist.visible ? 'Hide' : 'Unhide' } Playlist</Dropdown.Item>
         </Dropdown.Menu>
@@ -73,7 +73,7 @@ function PlaylistShow({ playlist, rename, changeVisibility, addToSpotify, withUs
         <Tab eventKey="tracks" title="Tracks">
           <TrackList tracks={playlist.tracks} />
         </Tab>
-        <Tab eventKey="users" title="Users">
+        <Tab eventKey="users" title="Group Members">
           <UserList users={playlist.users} />
         </Tab>
       </Tabs>

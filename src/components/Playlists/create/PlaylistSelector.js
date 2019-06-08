@@ -12,12 +12,12 @@ const PlaylistSelector = ({ update, data }) => {
 
   return (
     <>
-      <h3>Select Playlists: <span className="text-muted h5">(optional)</span></h3>
+      <h3 className="mb-4">Select Playlists: <span className="text-muted h5">(optional)</span></h3>
       <Accordion>
         { cards }
         {
           cards.length < 2 &&
-          <Card><Card.Header>You must add another user</Card.Header></Card>
+          <Card><Card.Header>You must add another group member</Card.Header></Card>
         }
       </Accordion>
     </>

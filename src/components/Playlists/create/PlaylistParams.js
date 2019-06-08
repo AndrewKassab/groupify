@@ -19,7 +19,7 @@ const PlaylistParams = ({updateName, updateDuration, updateSave, name, duration,
       </Form.Group>
 
       <Form.Group controlId="playlistDuration">
-        <Form.Label><h3>Target Duration: {formatTime(duration)}</h3></Form.Label>
+        <Form.Label><h3>Desired Length: {formatTime(duration)}</h3></Form.Label>
         <Form.Control type="range" defaultValue={duration} onChange={wrapChange(updateDuration)} min="15" max="300" />
       </Form.Group>
 
