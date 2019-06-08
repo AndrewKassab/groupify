@@ -19,7 +19,7 @@ COPY . /app/
 RUN yarn build
 
 # Host the files
-FROM nginx:1.15-alpine
+FROM nginx:1.15-alpine as prod
 
 COPY --from=build-stage /app/public/ /usr/share/nginx/html
 COPY --from=build-stage /app/dist/ /usr/share/nginx/html/

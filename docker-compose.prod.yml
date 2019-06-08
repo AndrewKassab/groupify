@@ -1,0 +1,85 @@
+version: "3.7"
+services:
+  python:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-python
+      cache_from:
+        - python:3.7.3-alpine3.9
+    command: start-python.sh
+    depends_on:
+      - database
+    environment:
+      - PORT=5000
+      - HOST=0.0.0.0
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=groupifyuser
+      - DB_PASS=groupifypass
+      - FLASK_ENV=production
+      - CALLBACK_URL=https://localhost:3000/callback
+    restart: always
+    volumes:
+      - ./:/app:cached
+
+  react:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-react
+      cache_from:
+        - node:12.1.0-alpine
+        - nginx:1.15-alpine
+      target: prod
+    restart: always
+
+  database:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-ruby
+      cache_from:
+        - ruby:2.6.3-alpine3.9
+    command: run-migrations.sh
+    environment:
+      - RAILS_ENV=production
+      - DB_HOST=postgres
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app:cached
+
+  postgres:
+    image: postgres:11.2-alpine
+    volumes:
+      - type: volume
+        source: postgres_data
+        target: /var/lib/postgresql/data
+        volume:
+          nocopy: true
+    environment:
+      POSTGRES_USER: groupifyuser
+      POSTGRES_PASSWORD: groupifypass
+      POSTGRES_DB: groupify_development
+    ports:
+      - target: 5432
+        published: 5432
+        protocol: tcp
+        mode: host
+
+  proxy:
+    image: nginx:1.15-alpine
+    restart: always
+    logging:
+      driver: "none"
+    depends_on:
+      - python
+      - react
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./docker/nginx.prod.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./secrets/certs:/etc/nginx/certs:ro
+
+volumes:
+  postgres_data:
+    driver: local
