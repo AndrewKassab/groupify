@@ -24,7 +24,7 @@ class Main extends Component {
 
     this.reloadPlaylists();
 
-    this.timer = Client.startPoll(({previous, latest}) => {
+    Client.startPoll(({previous, latest}) => {
       if (previous.playlists !== latest.playlists) {
         this.reloadPlaylists(store.get('redirect'));
         store.set('redirect', null);
@@ -37,7 +37,7 @@ class Main extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+    Client.stopPolling();
   }
 
   reloadPlaylists(redirect = null) {

@@ -164,7 +164,7 @@ const periodicCheck = () => {
   lastTimeout = setTimeout(periodicCheck, 5000);
   const id = lastTimeout;
 
-  return api('/api/search/latest').then(latest => {
+  return authReq('/api/search/latest').then(latest => {
     if (previous === undefined) {
       previous = latest;
     } else if (id !== lastTimeout) {
@@ -181,6 +181,7 @@ const periodicCheck = () => {
 };
 
 function startPoll(onChange) {
+  stopPolling();
   callback = onChange;
   periodicCheck();
 }

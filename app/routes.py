@@ -39,10 +39,19 @@ def add_spotify(group_id):
 
 @app.route('/api/search/latest', methods=['GET'])
 def poll_count():
-    return response({
-        'playlists': db.session.query(Group.id).order_by(Group.id.desc()).first()[0],
-        'users': db.session.query(User.id).order_by(User.id.desc()).first()[0],
-    }, 200)
+    auser = authenticate_user(request, refresh=False)
+
+    last_group = db.session.query(GroupUsers.id) \
+        .filter(GroupUsers.user_id == auser.id) \
+        .order_by(GroupUsers.id.desc()).first()
+    last_user = db.session.query(User.id).order_by(User.id.desc()).first()
+
+    res = {
+        'playlists': (last_group and last_group[0]) or 0,
+        'users': (last_user and last_user[0]) or 0,
+    }
+
+    return response(res, 200)
 
 # This is for finding a user's playlists
 @app.route('/api/search/playlists/<int:user_id>',methods=['GET'])
@@ -272,7 +281,7 @@ def callback():
     return response({'token':userAuthToken,'user_id':auser.id},200)
 
 
-def authenticate_user(req):
+def authenticate_user(req, refresh=True):
     token = AuthToken.query.filter_by(token=req.args['token']).first()
 
     if token is None:
@@ -283,8 +292,9 @@ def authenticate_user(req):
     if auser is None:
         abort(401)
 
-    # refresh token if needed
-    refresh_if_needed(auser)
+    # refresh token if needed and we want to
+    if refresh:
+        refresh_if_needed(auser)
 
     return auser
 
