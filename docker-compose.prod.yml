@@ -1,6 +1,7 @@
 version: "3.7"
 services:
   python:
+    env_file: ./secrets/.env.prod
     build:
       context: .
       dockerfile: docker/Dockerfile-python
