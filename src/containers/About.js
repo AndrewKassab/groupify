@@ -8,7 +8,7 @@ const About = () => (
   <div>
     { Client.loggedIn() && <Header /> }
     <Container>
-      <Row>
+      <Row className="mt-4">
         <Col xs lg={{span: 10, offset: 1}}>
           <Row className="my-2">
             <Col xs="12" sm="5">
