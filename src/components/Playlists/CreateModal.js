@@ -60,13 +60,11 @@ class CreateModal extends Component {
     this.populateUsers = this.populateUsers.bind(this);
 
     this.state = defaultState;
+    this.loading = null;
   }
 
   populateUsers(userIds=[]) {
-    this.loadUsers.then((opts) => {
-      const options = opts.filter(({id}) => userIds.includes(id)).sort((u1, u2) => u1.isFixed ? -1 : 1)
-      this.setState({users: options});
-    });
+    this.loadUsers(({id}) => userIds.includes(id));
     this.handleShow();
   }
 
@@ -77,7 +75,7 @@ class CreateModal extends Component {
   }
 
   handleShow() {
-    if (this.state.loading === null) {
+    if (this.loading === null) {
       this.loadUsers();
     }
     this.setState({show: true});
@@ -119,6 +117,7 @@ class CreateModal extends Component {
   resetState() {
     this.state.users.forEach(({id}) => {this.setState(updateData(id, []))});
     this.setState(defaultState);
+    this.loading = null;
   }
 
   handleNext() {
@@ -174,10 +173,11 @@ class CreateModal extends Component {
     this.setState({save: save})
   }
 
-  loadUsers() {
+  loadUsers(filter = (({isFixed}) => isFixed)) {
     this.setState({loading: true})
+    this.loading = 'started';
 
-    return Client.listUsers().then(res => {
+    Client.listUsers().then(res => {
       const uid = Client.userId();
       const options = res.users.map(({id, name, username}) => ({
         label: `${name} - ${username}`,
@@ -187,13 +187,14 @@ class CreateModal extends Component {
         isFixed: (id === uid),
       }));
 
+      const selected = options.filter(filter).sort((u1, u2) => u1.isFixed ? -1 : 1);
+
       this.setState({
         options: options,
         loading: false,
-        users: options.filter(({isFixed}) => isFixed)
+        users: selected
       });
-
-      return options;
+      this.loading = 'done';
     });
   }
 
