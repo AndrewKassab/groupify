@@ -63,7 +63,7 @@ class CreateModal extends Component {
   }
 
   populateUsers(userIds=[]) {
-    this.loadUsers.then((opts) => {
+    this.loadUsers().then((opts) => {
       const options = opts.filter(({id}) => userIds.includes(id)).sort((u1, u2) => u1.isFixed ? -1 : 1)
       this.setState({users: options});
     });
