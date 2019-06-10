@@ -13,7 +13,7 @@ RUN apk add --no-cache --virtual .deps --no-cache build-base libxml2-dev \
 
 ENV PATH="/scripts:${PATH}"
 
-COPY docker/ /scripts/
+COPY docker/scripts/ /scripts/
 RUN dos2unix /scripts/*
 
 EXPOSE 25569
