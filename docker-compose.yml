@@ -18,8 +18,8 @@ services:
       - DB_PASS=groupifypass
       - FLASK_ENV=development
       - CALLBACK_URL=http://localhost:3000/callback
-      - CLIENT_ID=539ee5becac647e78e797f9bbe6bd062
-      - CLIENT_SECRET=6fc5f4f40b0d4acbbfe01d3ac538a607
+      - CLIENT_ID=
+      - CLIENT_SECRET=
     ports:
       - 5000:5000
     stop_signal: SIGINT
