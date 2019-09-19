@@ -4,8 +4,6 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile-python
-      cache_from:
-        - python:3.7.3-alpine3.9
     command: start-python.sh
     depends_on:
       - database
@@ -30,8 +28,6 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile-react
-      cache_from:
-        - node:12.1.0-alpine
       target: base-stage
     environment:
       - PORT=80
@@ -53,8 +49,6 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile-ruby
-      cache_from:
-        - ruby:2.6.3-alpine3.9
     command: run-migrations.sh
     environment:
       - DB_HOST=postgres

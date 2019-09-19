@@ -2,13 +2,15 @@
 
 FROM ruby:2.6.3-alpine3.9
 
-COPY Gemfile Gemfile.lock /app/
 WORKDIR /app
+
 RUN apk add --no-cache --virtual .run-deps postgresql
 RUN apk add --no-cache --virtual .deps --no-cache build-base libxml2-dev \
   libxslt-dev libffi-dev postgresql-dev \
-  && bundle config build.nokogiri --use-system-libraries \
-  && bundle install --no-cache \
+  && bundle config build.nokogiri --use-system-libraries
+
+COPY Gemfile Gemfile.lock /app/
+RUN bundle install --no-cache \
   && apk del .deps
 
 ENV PATH="/scripts:${PATH}"

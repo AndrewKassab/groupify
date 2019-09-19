@@ -1,4 +1,5 @@
 .env
+.git
 .docker-env
 .env.local
 node_modules
